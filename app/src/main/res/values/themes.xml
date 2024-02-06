@@ -1,0 +1,103 @@
+<resources>
+
+    <style name="Base.Theme.ProjectInternalResto" parent="Theme.Material3.DayNight.NoActionBar">
+
+    </style>
+
+    <style name="Theme.ProjectInternalResto" parent="Base.Theme.ProjectInternalResto" />
+
+    <style name="TextContent">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="TextContent.HeadlineMon">
+        <item name="fontFamily">@font/mon_bold</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.HeadlineMedium</item>
+    </style>
+
+    <style name="TextContent.Headline">
+        <item name="fontFamily">@font/pop_bold</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.HeadlineMedium</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginStart">30sp</item>
+        <item name="android:layout_marginTop">34dp</item>
+    </style>
+
+    <style name="TextContent.Body">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
+    </style>
+
+    <!--Text font Montserrat Medium-->
+    <style name="TextContent.Body.MonMedium">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/mon_reg</item>
+    </style>
+
+    <!--Text font Montserrat Bold-->
+    <style name="TextContent.Body.MonBold">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/mon_bold</item>
+    </style>
+
+    <!--Text font Poppins Reg-->
+    <style name="TextContent.Body.PopReg">
+        <item name="fontFamily">@font/pop_reg</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!--Text font Poppins Medium-->
+    <style name="TextContent.Body.PopMedium">
+        <item name="fontFamily">@font/pop_medium</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!--Text font Poppins Semi Bold-->
+    <style name="TextContent.Body.PopSemiBold">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/pop_semi_bold</item>
+    </style>
+
+    <!--Text font Poppins Bold-->
+    <style name="TextContent.Body.PopBold">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/pop_bold</item>
+    </style>
+
+
+    <!--Edit Text Style-->
+    <style name="EditTextContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">70dp</item>
+        <item name="fontFamily">@font/pop_medium</item>
+        <item name="android:background">@drawable/custom_bg_edit_txt</item>
+        <item name="android:padding">15dp</item>
+    </style>
+
+    <style name="EditTextContent.Search">
+        <item name="android:drawableEnd">@drawable/icon_rectangle_search</item>
+    </style>
+
+    <!--Button Style-->
+    <style name="ButtonContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="backgroundTint">@color/pink</item>
+        <item name="android:elevation">10dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">30sp</item>
+        <item name="fontFamily">@font/pop_semi_bold</item>
+    </style>
+
+    <!--TabLayout Style-->
+    <style name="TabLayoutContent">
+        <item name="tabBackground">@drawable/custom_tab_selector</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMode">scrollable</item>
+        <item name="tabIndicatorAnimationMode">elastic</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+        <item name="tabIndicator">@color/transparent</item>
+    </style>
+
+</resources>

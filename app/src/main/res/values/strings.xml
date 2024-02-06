@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">ProjectInternal Resto</string>
+    <string name="txt_enter">Masuk</string>
+    <string name="txt_username">Username</string>
+    <string name="example_username">contoh: achmad</string>
+    <string name="txt_password">Password</string>
+    <string name="forgot_password">Lupa Password</string>
+    <string name="logo_sushi_key">Logo Sushi Key</string>
+    <string name="title_nav_dashboard">Dashboard</string>
+    <string name="title_nav_location">Lokasi</string>
+    <string name="title_nav_menu">Menu</string>
+    <string name="title_nav_official">Pegawai</string>
+    <string name="title_nav_report">Laporan</string>
+    <string name="title_nav_logout">Keluar</string>
+    <string name="name">SushiKey</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="analytics">Analytics</string>
+    <string name="example_total">Rp. 200.000</string>
+    <string name="example_text_income">Pendapatan Bulan ini</string>
+    <string name="icon_income">icon Income</string>
+    <string name="menu_favorite">Menu Favorite</string>
+    <string name="manage_menu">Kelola Menu</string>
+    <string name="add">Tambah</string>
+    <string name="filter">Filter</string>
+    <string name="icon_description">Icon Description</string>
+    <string name="no">No</string>
+    <string name="name_resto">Nama Resto</string>
+    <string name="number_telephone">Nomor Telephone</string>
+    <string name="action">Aksi</string>
+    <string name="example_resto">SushiKey</string>
+    <string name="nomer_1">1</string>
+    <string name="example_number_phone">0878612120</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Hapus</string>
+    <string name="add_location">Tambah Lokasi</string>
+    <string name="example_name_resto">contoh : SushiKey</string>
+    <string name="location">Masukkan Lokasi Resto</string>
+    <string name="example_number_telephone">contoh : 08786890000</string>
+    <string name="search">Cari...</string>
+    <string name="manage_location">Kelola Menu</string>
+    <string name="no_product">No. Product</string>
+    <string name="category">Kategori</string>
+</resources>

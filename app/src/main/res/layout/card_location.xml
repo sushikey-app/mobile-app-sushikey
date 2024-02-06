@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="30dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/textManage"
+            style="@style/TextContent.Body.PopBold"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="21dp"
+            android:text="@string/manage_location"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonAdd"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/pink"
+            android:fontFamily="@font/pop_semi_bold"
+            android:text="@string/add"
+            android:textSize="15sp"
+            app:icon="@drawable/icon_add"
+            app:iconSize="24dp"
+            app:layout_constraintEnd_toStartOf="@id/buttonFilter"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonFilter"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="@font/pop_semi_bold"
+            android:text="@string/filter"
+            android:textColor="@color/pink"
+            android:textSize="19sp"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/icon_filter"
+            app:iconSize="24dp"
+            app:iconTint="@color/pink"
+            app:layout_constraintEnd_toStartOf="@id/buttonSearch"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/pink"
+            app:strokeWidth="2dp" />
+
+        <ImageView
+            android:id="@+id/buttonSearch"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="24dp"
+            android:contentDescription="@string/icon_description"
+            android:src="@drawable/icon_search"
+            app:layout_constraintBottom_toBottomOf="@id/textManage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textManage" />
+
+        <!--edit text search-->
+        <include
+            android:id="@+id/EdtSearch"
+            layout="@layout/search_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--Table Header-->
+        <TableLayout
+            android:id="@+id/tableHeader"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/grey"
+            app:layout_constraintTop_toBottomOf="@id/textManage">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="0dp"
+                    android:fontFamily="@font/pop_reg"
+                    android:gravity="center"
+                    android:text="@string/no"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/pop_reg"
+                    android:gravity="center_vertical"
+                    android:text="@string/name_resto"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/pop_reg"
+                    android:gravity="center_vertical"
+                    android:text="@string/title_nav_location"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/pop_reg"
+                    android:gravity="center_vertical"
+                    android:text="@string/number_telephone"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="10dp"
+                    android:text="@string/action"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+
+                    />
+            </TableRow>
+        </TableLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewContentTableLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tableHeader"
+            tools:itemCount="1"
+            tools:listitem="@layout/item_content_location" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.dashboard.DashboardFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_marginBottom="20dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textHeadline"
+            style="@style/TextContent.Headline"
+            android:text="@string/title_nav_dashboard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textAnalytics"
+            style="@style/TextContent.Body.PopMedium"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/analytics"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textHeadline" />
+
+        <include
+            android:id="@+id/cardIncomeMonth"
+            layout="@layout/card_analytic_dashboard"
+            android:layout_width="281dp"
+            android:layout_height="121dp"
+            android:layout_marginStart="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textAnalytics" />
+
+        <include
+            android:id="@+id/cardIncomeDays"
+            layout="@layout/card_analytic_dashboard"
+            android:layout_width="281dp"
+            android:layout_height="121dp"
+            android:layout_marginStart="30dp"
+            app:layout_constraintStart_toEndOf="@id/cardIncomeMonth"
+            app:layout_constraintTop_toBottomOf="@id/textAnalytics" />
+
+        <include
+            android:id="@+id/cardTotalSalesMonth"
+            layout="@layout/card_analytic_dashboard"
+            android:layout_width="281dp"
+            android:layout_height="121dp"
+            android:layout_marginStart="30dp"
+            app:layout_constraintStart_toEndOf="@id/cardIncomeDays"
+            app:layout_constraintTop_toBottomOf="@id/textAnalytics" />
+
+        <include
+            layout="@layout/card_menu_favorit_dashboard"
+            android:layout_width="900dp"
+            android:layout_height="400dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="37dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardIncomeDays" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

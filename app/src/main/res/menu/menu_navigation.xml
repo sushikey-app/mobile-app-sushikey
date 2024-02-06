@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_dashboard"
+        android:enabled="true"
+        android:icon="@drawable/icon_home"
+        android:title="@string/title_nav_dashboard" />
+
+    <item
+        android:id="@+id/nav_location"
+        android:enabled="true"
+        android:icon="@drawable/icon_location"
+        android:title="@string/title_nav_location" />
+    <item
+        android:id="@+id/nav_menu"
+        android:enabled="true"
+        android:icon="@drawable/icon_menu"
+        android:title="@string/title_nav_menu" />
+    <item
+        android:id="@+id/nav_official"
+        android:enabled="true"
+        android:icon="@drawable/icon_official"
+        android:title="@string/title_nav_official" />
+    <item
+        android:id="@+id/nav_report"
+        android:enabled="true"
+        android:icon="@drawable/icon_report"
+        android:title="@string/title_nav_report" />
+    <item
+        android:id="@+id/nav_logout"
+        android:enabled="true"
+        android:icon="@drawable/icon_logout"
+        android:title="@string/title_nav_logout" />
+</menu>

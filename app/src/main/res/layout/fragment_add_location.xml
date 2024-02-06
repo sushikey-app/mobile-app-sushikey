@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.location.AddLocationFragment">
+
+    <TextView
+        android:id="@+id/textHeadline"
+        style="@style/TextContent.Headline"
+        android:text="@string/add_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--Name Resto-->
+    <TextView
+        android:id="@+id/textNameResto"
+        style="@style/TextContent.Body.PopReg"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="70dp"
+        android:text="@string/name_resto"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textHeadline" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlNameResto"
+        android:layout_width="650dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="5dp"
+        android:autofillHints="password"
+        android:hint="@string/example_name_resto"
+        android:textColorHint="@color/grey"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textNameResto">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtNameResto"
+            style="@style/EditTextContent"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--Location-->
+    <TextView
+        android:id="@+id/textLocation"
+        style="@style/TextContent.Body.PopReg"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/title_nav_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edlNameResto" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlLocation"
+        android:layout_width="650dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="5dp"
+        android:autofillHints="password"
+        android:hint="@string/location"
+        android:textColorHint="@color/grey"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textLocation">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtLocation"
+            style="@style/EditTextContent"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--Number Telephone-->
+    <TextView
+        android:id="@+id/textNumberTelephone"
+        style="@style/TextContent.Body.PopReg"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/number_telephone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edlLocation" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlNumberTelephone"
+        android:layout_width="650dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="5dp"
+        android:autofillHints="phone"
+        android:hint="@string/example_number_telephone"
+        android:textColorHint="@color/grey"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textNumberTelephone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtNumberTelephone"
+            style="@style/EditTextContent"
+            android:inputType="phone" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonAddLocation"
+        style="@style/ButtonContent"
+        android:layout_width="650dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/add_location"
+        app:cornerRadius="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edlNumberTelephone" />
+</androidx.constraintlayout.widget.ConstraintLayout>
