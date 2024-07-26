@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.feature.admin.manage_menu.AddOrUpdateMenuFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/salted_egg">
+
+        <ImageView
+            android:id="@+id/buttonBack"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="29dp"
+            android:layout_marginTop="46dp"
+            android:contentDescription="@string/button_back"
+            android:src="@drawable/icon_button_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textHeadline"
+            style="@style/CustomTextStyle.Headline"
+            android:text="@string/add_menu"
+            app:layout_constraintStart_toEndOf="@id/buttonBack"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--Name Resto-->
+        <TextView
+            android:id="@+id/textCategory"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/title_nav_admin_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textHeadline" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlCategory"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:autofillHints="text"
+
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="@id/textCategory"
+            app:layout_constraintTop_toBottomOf="@id/textCategory"
+            app:layout_constraintWidth_percent="0.5">
+
+            <AutoCompleteTextView
+                android:id="@+id/dropdownCategory"
+                style="@style/CustomEditTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/example_category" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--Number Menu-->
+        <TextView
+            android:id="@+id/textNoMenu"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/no_menu"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlCategory" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlNoMenu"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.5"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:hint="@string/example_no_menu"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textNoMenu">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtNoMenu"
+                style="@style/CustomEditTextStyle"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--Name Menu-->
+        <TextView
+            android:id="@+id/textNameMenu"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/name_menu"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlNoMenu" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlNameMenu"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.5"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:hint="@string/example_name_menu"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textNameMenu">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtNameMenu"
+                style="@style/CustomEditTextStyle"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--composition Menu-->
+        <TextView
+            android:id="@+id/textComposition"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/composition"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlNameMenu" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlComposition"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.5"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:hint="@string/example_name_menu"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textComposition">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtComposition"
+                style="@style/CustomEditTextStyle"
+                android:layout_height="200dp"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--Name Menu-->
+        <TextView
+            android:id="@+id/textQuotaMenu"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/quota_menu"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlComposition" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlQuotaMenu"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.5"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:hint="@string/example_name_menu"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textQuotaMenu">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtQuotaMenu"
+                style="@style/CustomEditTextStyle"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--Price Menu-->
+        <TextView
+            android:id="@+id/textPriceMenu"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlQuotaMenu" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/EdlPriceMenu"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.5"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:hint="@string/example_price"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textPriceMenu">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPriceMenu"
+                style="@style/CustomEditTextStyle"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!--Topping Menu-->
+        <TextView
+            android:id="@+id/textTopping"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/topping"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/EdlPriceMenu" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/EdlTopping"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.5"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:hint="@string/example_topping"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textTopping">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtTopping"
+                style="@style/CustomEditTextStyle"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--Pri-->
+        <TextView
+            android:id="@+id/textAddTopping"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/add_topping"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/EdlTopping" />
+
+        <!--Price Menu-->
+        <TextView
+            android:id="@+id/textPhoto"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/photo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textAddTopping" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardImageMenu"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.3"
+            android:layout_height="200dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="10dp"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textPhoto">
+
+            <ImageView
+                android:id="@+id/imageMenu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/image_product_menu" />
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonAddOrUpdateMenu"
+            style="@style/CustomButtonStyle"
+            android:layout_width="0dp"
+            android:layout_margin="20dp"
+            android:text="@string/add_menu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintEnd_toEndOf="@id/EdlTopping"
+            app:layout_constraintStart_toStartOf="@id/textPhoto"
+            app:layout_constraintTop_toBottomOf="@id/cardImageMenu" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

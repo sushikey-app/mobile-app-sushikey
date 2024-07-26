@@ -10,8 +10,8 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textTotal"
-            style="@style/TextContent.Body.PopBold"
+            android:id="@+id/textValueContent"
+            style="@style/CustomTextStyle.Body.PopBold"
             android:layout_marginStart="16dp"
             android:layout_marginTop="40dp"
             android:text="@string/example_total"
@@ -20,19 +20,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textIncome"
-            style="@style/TextContent.Body.PopMedium"
+            android:id="@+id/textTitleContent"
+            style="@style/CustomTextStyle.Body.PopMedium"
             android:layout_marginStart="16dp"
             android:text="@string/example_text_income"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textTotal" />
+            app:layout_constraintTop_toBottomOf="@id/textValueContent" />
 
         <ImageView
+            android:id="@+id/iconContent"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginEnd="32dp"
             android:contentDescription="@string/icon_income"
-            android:src="@drawable/income"
+            android:src="@drawable/icon_income_today"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

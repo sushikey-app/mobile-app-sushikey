@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/salted_egg"
+    tools:context=".ui.feature.super_admin.manage_location.AddOrUpdateLocationFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/buttonBack"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="29dp"
+            android:contentDescription="@string/button_back"
+            android:src="@drawable/icon_button_back"
+            app:layout_constraintBottom_toBottomOf="@id/textHeadline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textHeadline" />
+
+        <TextView
+            android:id="@+id/textHeadline"
+            style="@style/CustomTextStyle.Headline"
+            android:text="@string/add_staff"
+            app:layout_constraintStart_toEndOf="@id/buttonBack"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--name-->
+        <TextView
+            android:id="@+id/textName"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/txtName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textHeadline" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlName"
+            android:layout_width="650dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:autofillHints="name"
+            android:hint="@string/example_full_name"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textName">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtName"
+                style="@style/CustomEditTextStyle"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--number telephone-->
+        <TextView
+            android:id="@+id/textUserName"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/txt_username"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlName" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlUserName"
+            android:layout_width="650dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:autofillHints="username"
+            android:hint="@string/example_username"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textUserName">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtEmail"
+                style="@style/CustomEditTextStyle"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--number telephone-->
+        <TextView
+            android:id="@+id/textNumberTelephone"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/number_telephone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlUserName" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlNumberTelephone"
+            android:layout_width="650dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:autofillHints="phone"
+            android:hint="@string/example_number_phone"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textNumberTelephone">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtNumberTelephone"
+                style="@style/CustomEditTextStyle"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--password-->
+        <TextView
+            android:id="@+id/textPassword"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/txt_password"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlNumberTelephone" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlPassword"
+            android:layout_width="650dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:autofillHints="password"
+            android:hint="@string/enter_password"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textPassword"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtRole"
+                style="@style/CustomEditTextStyle"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--number telephone-->
+        <TextView
+            android:id="@+id/textRole"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/role"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlPassword" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlRole"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="650dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:hint="@string/example_role_admin"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textRole">
+
+            <AutoCompleteTextView
+                android:id="@+id/dropDownRole"
+                style="@style/CustomEditTextStyle"
+                android:inputType="text"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--location-->
+        <!--by default no show-->
+        <TextView
+            android:id="@+id/textLocation"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/location_staff"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlRole" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlLocation"
+            android:layout_width="650dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:hint="@string/example_location"
+            android:textColorHint="@color/grey"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textLocation">
+
+            <AutoCompleteTextView
+                android:id="@+id/dropdownLocation"
+                style="@style/CustomEditTextStyle"
+                android:inputType="text"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonAddOfficial"
+            style="@style/CustomButtonStyle"
+            android:layout_width="0dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/add_staff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/edlRole"
+            app:layout_constraintStart_toStartOf="@id/edlRole"
+            app:layout_constraintTop_toBottomOf="@id/edlLocation"
+            app:layout_constraintVertical_bias="0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

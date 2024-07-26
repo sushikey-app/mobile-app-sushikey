@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/textId"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="5dp"
+            android:text="@string/example_id_category"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textNameCategory"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="5dp"
+            android:text="@string/example_category"
+            android:textSize="14sp" />
+
+        <include
+            android:id="@+id/action"
+            layout="@layout/custom_action_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.8" />
+
+    </TableRow>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+</LinearLayout>

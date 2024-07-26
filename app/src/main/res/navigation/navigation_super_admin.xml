@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_super_admin"
+    app:startDestination="@id/nav_super_admin_dashboard">
+
+    <fragment
+        android:id="@+id/nav_super_admin_dashboard"
+        android:name="com.am.projectinternalresto.ui.feature.super_admin.dashboard.DashboardSuperAdminFragment"
+        android:label="@string/title_nav_super_admin_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+    <fragment
+        android:id="@+id/nav_super_admin_location"
+        android:name="com.am.projectinternalresto.ui.feature.super_admin.manage_location.ManageLocationFragment"
+        android:label="@string/title_nav_super_admin_location"
+        tools:layout="@layout/fragment_manage_location" >
+        <action
+            android:id="@+id/action_nav_super_admin_location_to_addOrUpdateLocationFragment"
+            app:destination="@id/addOrUpdateLocationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_super_admin_manage_admin"
+        android:name="com.am.projectinternalresto.ui.feature.super_admin.manage_admin.ManageAdminFragment"
+        android:label="@string/title_nav_super_admin_manage_admin"
+        tools:layout="@layout/fragment_manage_employees">
+        <action
+            android:id="@+id/action_nav_super_admin_manage_admin_to_addOrUpdateAdmin"
+            app:destination="@id/addOrUpdateAdmin" />
+        <action
+            android:id="@+id/action_nav_super_admin_manage_admin_to_detail_manage_admin"
+            app:destination="@id/detailManageAdmin" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_super_admin_report"
+        android:name="com.am.projectinternalresto.ui.feature.super_admin.report.SuperAdminReportFragment"
+        android:label="@string/title_nav_super_admin_report"
+        tools:layout="@layout/fragment_report" />
+    <fragment
+        android:id="@+id/addOrUpdateAdmin"
+        android:name="com.am.projectinternalresto.ui.feature.super_admin.manage_admin.AddOrUpdateAdmin"
+        android:label="AddOrUpdateAdmin"
+        tools:layout="@layout/fragment_add_or_update_admin" />
+
+    <fragment
+        android:id="@+id/addOrUpdateLocationFragment"
+        android:name="com.am.projectinternalresto.ui.feature.super_admin.manage_location.AddOrUpdateLocationFragment"
+        android:label="AddOrUpdateLocation"
+        tools:layout="@layout/fragment_add_or_update_location" />
+
+    <fragment
+        android:id="@+id/detailManageAdmin"
+        android:name="com.am.projectinternalresto.ui.feature.super_admin.manage_admin.DetailManageAdminFragment"
+        android:label="DetailManageAd"
+        tools:layout="@layout/fragment_detail_manage_admin" />
+</navigation>

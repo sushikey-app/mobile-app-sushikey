@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.feature.admin.manage_category.AddOrUpdateCategory">
+
+    <ImageView
+        android:id="@+id/buttonBack"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="46dp"
+        android:contentDescription="@string/button_back"
+        android:src="@drawable/icon_button_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textHeadline"
+        style="@style/CustomTextStyle.Headline"
+        android:text="@string/add_category"
+        app:layout_constraintStart_toEndOf="@id/buttonBack"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--Id Category-->
+    <TextView
+        android:id="@+id/textIdCategory"
+        style="@style/CustomTextStyle.Body.PopReg"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/id_category"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textHeadline" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlIdCategory"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="5dp"
+        android:hint="@string/example_id_category"
+        android:textColorHint="@color/grey"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textIdCategory">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtIdCategory"
+            style="@style/CustomEditTextStyle"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--Name Category-->
+    <TextView
+        android:id="@+id/textNameCategory"
+        style="@style/CustomTextStyle.Body.PopReg"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/title_nav_admin_category"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edlIdCategory" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlNameCategory"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="5dp"
+        android:hint="@string/example_category"
+        android:textColorHint="@color/grey"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textNameCategory">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtNameCategory"
+            style="@style/CustomEditTextStyle"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSave"
+        style="@style/CustomButtonStyle"
+        android:layout_width="0dp"
+        android:layout_margin="20dp"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/add_category"
+        app:layout_constraintEnd_toEndOf="@id/edlNameCategory"
+        app:layout_constraintStart_toStartOf="@id/edlNameCategory"
+        app:layout_constraintTop_toBottomOf="@id/edlNameCategory" />
+</androidx.constraintlayout.widget.ConstraintLayout>

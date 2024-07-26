@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/nav_admin_dashboard">
+
+    <fragment
+        android:id="@+id/nav_admin_dashboard"
+        android:name="com.am.projectinternalresto.ui.feature.admin.dashboard.DashboardAdminFragment"
+        android:label="@string/title_nav_admin_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+    <fragment
+        android:id="@+id/nav_admin_menu"
+        android:name="com.am.projectinternalresto.ui.feature.admin.manage_menu.ManageMenuFragment"
+        android:label="@string/title_nav_admin_menu"
+        tools:layout="@layout/fragment_manage_menu">
+        <action
+            android:id="@+id/action_nav_admin_menu_to_addOrUpdateMenuFragment"
+            app:destination="@id/addOrUpdateMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_admin_staff"
+        android:name="com.am.projectinternalresto.ui.feature.admin.manage_staff.ManageStaffFragment"
+        android:label="@string/title_nav_admin_staff"
+        tools:layout="@layout/fragment_manage_employees">
+        <action
+            android:id="@+id/action_nav_admin_staff_to_addOrUpdateStaff"
+            app:destination="@id/addOrUpdateStaff" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_admin_report"
+        android:name="com.am.projectinternalresto.ui.feature.admin.report.AdminReportFragment"
+        android:label="@string/title_nav_admin_report"
+        tools:layout="@layout/fragment_report" />
+
+    <fragment
+        android:id="@+id/addOrUpdateMenuFragment"
+        android:name="com.am.projectinternalresto.ui.feature.admin.manage_menu.AddOrUpdateMenuFragment"
+        android:label="fragment_add_or_update_menu"
+        tools:layout="@layout/fragment_add_or_update_menu" />
+
+    <fragment
+        android:id="@+id/addOrUpdateStaff"
+        android:name="com.am.projectinternalresto.ui.feature.admin.manage_staff.AddOrUpdateStaffFragment"
+        android:label="AddOrUpdateStaff"
+        tools:layout="@layout/fragment_add_or_update_staff" />
+    <fragment
+        android:id="@+id/nav_admin_category"
+        android:name="com.am.projectinternalresto.ui.feature.admin.manage_category.ManageCategoryFragment"
+        android:label="@string/title_nav_admin_category"
+        tools:layout="@layout/fragment_manage_category">
+        <action
+            android:id="@+id/action_nav_admin_category_to_addOrUpdateCategory"
+            app:destination="@id/addOrUpdateCategory" />
+    </fragment>
+    <fragment
+        android:id="@+id/addOrUpdateCategory"
+        android:name="com.am.projectinternalresto.ui.feature.admin.manage_category.AddOrUpdateCategory"
+        android:label="fragment_add_or_update_category"
+        tools:layout="@layout/fragment_add_or_update_category" />
+</navigation>

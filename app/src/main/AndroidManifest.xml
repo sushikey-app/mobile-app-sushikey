@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".service.di.MyApplication"
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,20 +16,28 @@
         android:theme="@style/Theme.ProjectInternalResto"
         tools:targetApi="31">
         <activity
-            android:name=".ui.auth.LoginActivity"
-            android:screenOrientation="landscape"
-            android:exported="true" >
+            android:name=".ui.feature.super_admin.main.MainSuperAdminActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ui.feature.staff.main.MainStaffActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".ui.feature.auth.LoginActivity"
+            android:exported="true"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.feature.admin.main.MainAdminActivity"
             android:exported="true"
-            android:screenOrientation="landscape">
-
-        </activity>
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

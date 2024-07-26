@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:orientation="vertical">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/number"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="0.3"
+            android:gravity="center"
+            tools:text="@tools:sample/us_zipcodes" />
+
+        <TextView
+            android:id="@+id/textNameResto"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="5dp"
+            tools:text="@tools:sample/first_names" />
+
+        <TextView
+            android:id="@+id/textLocation"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/pop_reg"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="5dp"
+            tools:text="@tools:sample/cities" />
+
+        <TextView
+            android:id="@+id/textNumberPhone"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="5dp"
+            tools:text="@tools:sample/us_phones" />
+
+        <include
+            android:id="@+id/action"
+            layout="@layout/custom_action_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.7" />
+    </TableRow>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+</LinearLayout>

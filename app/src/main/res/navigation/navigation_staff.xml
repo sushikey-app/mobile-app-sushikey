@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_staff"
+    app:startDestination="@id/nav_staff_menu">
+
+    <fragment
+        android:id="@+id/nav_staff_menu"
+        android:name="com.am.projectinternalresto.ui.feature.staff.menu.OrderMenuFragment"
+        android:label="@string/title_nav_staff_menu"
+        tools:layout="@layout/fragment_order_menu" />
+    <fragment
+        android:id="@+id/nav_staff_order"
+        android:name="com.am.projectinternalresto.ui.feature.staff.order.OrderFragment"
+        android:label="@string/title_nav_staff_order"
+        tools:layout="@layout/fragment_order" />
+    <fragment
+        android:id="@+id/nav_staff_order_history"
+        android:name="com.am.projectinternalresto.ui.feature.staff.order_history.OrderHistoryFragment"
+        android:label="@string/title_nav_staff_order_history"
+        tools:layout="@layout/fragment_order_history" />
+</navigation>

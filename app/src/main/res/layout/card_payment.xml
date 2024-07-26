@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="220dp"
+    android:layout_height="300dp"
+    app:cardBackgroundColor="@color/salted_egg"
+    app:cardCornerRadius="20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textInformationOrder"
+            style="@style/CustomTextStyle.Body.MonMedium"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/payment"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--Table Header-->
+        <TableLayout
+            android:id="@+id/tableHeader"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textInformationOrder">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:layout_width="65dp"
+                    android:layout_height="50dp"
+                    android:fontFamily="@font/pop_reg"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="5dp"
+                    android:text="@string/item"
+                    android:textColor="@color/deep_grey"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/pop_reg"
+                    android:gravity="center"
+                    android:text="@string/Qty"
+                    android:textColor="@color/deep_grey"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
+                    android:fontFamily="@font/pop_reg"
+                    android:gravity="center_vertical"
+                    android:text="@string/total_order"
+                    android:textColor="@color/deep_grey"
+                    android:textSize="12sp" />
+            </TableRow>
+        </TableLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewItemPayment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@id/textTotal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tableHeader"
+            tools:itemCount="2"
+            tools:listitem="@layout/item_content_payment" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="10dp"
+            app:dividerColor="@color/grey"
+            app:layout_constraintBottom_toTopOf="@id/textTotal" />
+
+        <TextView
+            android:id="@+id/textTotal"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/total_payment"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_marginEnd="15dp"
+            android:text="@string/example_price_pl"
+            android:textSize="12sp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@id/textTotal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toEndOf="@id/textTotal"
+            app:layout_constraintTop_toTopOf="@id/textTotal" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

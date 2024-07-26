@@ -1,5 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/home_fill" android:state_checked="true" />
-    <item android:drawable="@drawable/home" android:state_checked="false" />
-</selector>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="26dp"
+    android:height="26dp"
+    android:viewportWidth="26"
+    android:viewportHeight="26">
+  <path
+      android:pathData="M24.73,13.005L13.371,0.984C13.289,0.897 13.192,0.828 13.085,0.781C12.978,0.734 12.863,0.71 12.748,0.71C12.632,0.71 12.517,0.734 12.41,0.781C12.303,0.828 12.206,0.897 12.124,0.984L0.766,13.005C0.435,13.356 0.247,13.832 0.247,14.328C0.247,15.359 1.039,16.197 2.012,16.197H3.209V24.775C3.209,25.292 3.603,25.71 4.091,25.71H10.983V19.168H14.071V25.71H21.404C21.892,25.71 22.286,25.292 22.286,24.775V16.197H23.483C23.952,16.197 24.402,16.002 24.732,15.648C25.419,14.918 25.419,13.735 24.73,13.005Z"
+      android:fillColor="#ffffff"/>
+</vector>

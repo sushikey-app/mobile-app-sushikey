@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="5dp"
+    app:strokeColor="@color/grey"
+    app:strokeWidth="1dp"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="30dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textManage"
+            style="@style/CustomTextStyle.Body.PopBold"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="21dp"
+            android:text="@string/manage_report"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/buttonPrint"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="20dp"
+            android:contentDescription="@string/icon_description"
+            android:src="@drawable/print"
+            app:layout_constraintBottom_toBottomOf="@id/textManage"
+            app:layout_constraintEnd_toStartOf="@id/buttonFilter"
+            app:layout_constraintTop_toTopOf="@id/textManage" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonFilter"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="@font/pop_bold"
+            android:text="@string/filter"
+            android:textColor="@color/pink"
+            android:textSize="18sp"
+            app:icon="@drawable/icon_filter"
+            app:iconSize="24dp"
+            app:iconTint="@color/pink"
+            app:layout_constraintBottom_toBottomOf="@id/buttonPrint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/buttonPrint"
+            app:strokeColor="@color/pink"
+            app:strokeWidth="2dp" />
+
+
+        <!--Table Header-->
+        <TableLayout
+            android:id="@+id/tableHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/custom_bg_table"
+            app:layout_constraintTop_toBottomOf="@id/textManage">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="0.3"
+                    android:gravity="center"
+                    android:text="@string/no"
+                    android:textSize="16sp" />
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="5dp"
+                    android:text="@string/order_date"
+                    android:textSize="16sp" />
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="5dp"
+                    android:text="@string/order_number"
+                    android:textSize="16sp" />
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.8"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="5dp"
+                    android:text="@string/location"
+                    android:textSize="16sp" />
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="5dp"
+                    android:text="@string/total_order"
+                    android:textSize="16sp" />
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="center"
+                    android:text="@string/detail_order"
+                    android:textSize="14sp" />
+            </TableRow>
+        </TableLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewContentTableLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tableHeader"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_content_report" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

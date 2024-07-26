@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="30dp"
+    app:cardElevation="5dp"
+    app:strokeColor="@color/grey"
+    app:strokeWidth="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textManage"
+            style="@style/CustomTextStyle.Body.PopBold"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="21dp"
+            android:text="@string/manage_category"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonAdd"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/pink"
+            android:fontFamily="@font/pop_semi_bold"
+            android:text="@string/add"
+            android:textSize="15sp"
+            app:icon="@drawable/icon_add"
+            app:iconSize="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--Table Header-->
+        <TableLayout
+            android:id="@+id/tableHeader"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/custom_bg_table"
+            app:layout_constraintTop_toBottomOf="@id/textManage">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="10dp"
+                    android:text="@string/id_category"
+                    android:textSize="14sp" />
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="10dp"
+                    android:text="@string/name_categori"
+                    android:textSize="14sp" />
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:text="@string/action"
+                    android:textSize="14sp" />
+            </TableRow>
+        </TableLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewCategory"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tableHeader"
+            tools:itemCount="2"
+            tools:listitem="@layout/item_content_manage_category" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
