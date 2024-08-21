@@ -12,27 +12,26 @@ import com.am.projectinternalresto.R
 import com.am.projectinternalresto.data.dummy.DummyData
 import com.am.projectinternalresto.databinding.FragmentDashboardBinding
 import com.am.projectinternalresto.ui.adapter.dahboard.MenuFavoriteAdapter
+import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
 import com.am.projectinternalresto.ui.widget.dialog_fragment.FilterSalesDialogFragment
-import com.am.projectinternalresto.utils.CustomStyleRoundedBarChart
+import com.am.projectinternalresto.ui.widget.chart.CustomStyleRoundedBarChart
 import com.am.projectinternalresto.utils.MyValueFormatter
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.tabs.TabLayout
+import org.koin.android.ext.android.inject
 
 class DashboardSuperAdminFragment : Fragment() {
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
-
+    private val authViewModel : AuthViewModel by inject()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        setupCardMenuFavorite()
-        setupTabLayout()
-        setupChartSales()
         setupView()
         setupNavigation()
         return binding.root
@@ -45,6 +44,9 @@ class DashboardSuperAdminFragment : Fragment() {
     }
 
     private fun setupView() {
+        setupCardMenuFavorite()
+        setupTabLayout()
+        setupChartSales()
         binding.cardIncomeDays.apply {
             textTitleContent.text = getString(R.string.text_income_today)
             textValueContent.text = "Rp. 200.000"

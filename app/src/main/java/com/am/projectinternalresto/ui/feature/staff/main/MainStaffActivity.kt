@@ -8,7 +8,6 @@ import androidx.navigation.ui.NavigationUI
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.databinding.ActivityMainStaffBinding
 import com.am.projectinternalresto.ui.widget.alert.AlertDialog
-import com.am.projectinternalresto.utils.UiHandler
 
 class MainStaffActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainStaffBinding
@@ -32,7 +31,6 @@ class MainStaffActivity : AppCompatActivity() {
                 }
                 else -> NavigationUI.onNavDestinationSelected(item, navController)
             }
-
         }
     }
 }

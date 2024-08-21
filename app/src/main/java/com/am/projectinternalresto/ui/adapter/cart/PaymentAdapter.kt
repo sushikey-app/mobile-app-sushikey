@@ -13,7 +13,7 @@ class PaymentAdapter :
     class ViewHolder(private val binding: ItemContentPaymentBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dataPayment: DummyModel.DummyModelCart) {
-            binding.textItem.text = dataPayment.name
+            binding.textItemCart.text = dataPayment.name
             binding.textQty.text = dataPayment.qty.toString()
             binding.textTotal.text = dataPayment.total
 

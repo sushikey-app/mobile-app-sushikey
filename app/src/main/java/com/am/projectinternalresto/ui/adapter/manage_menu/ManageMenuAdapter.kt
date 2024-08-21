@@ -5,27 +5,37 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.am.projectinternalresto.data.model.DummyModel
+import com.am.projectinternalresto.data.response.admin.menu.DataItemMenu
 import com.am.projectinternalresto.databinding.ItemContentManageMenuBinding
+import com.am.projectinternalresto.utils.Formatter
 
-class ManageMenuAdapter :
-    ListAdapter<DummyModel.DummyModelMenu, ManageMenuAdapter.ViewHolder>(DIFF_CALLBACK) {
-    var callbackOnClickEdit: (() -> Unit)? = null
-    var callBackOnClickDelete: (() -> Unit)? = null
+class ManageMenuAdapter(
+    private var onEditClick: ((data: DataItemMenu) -> Unit)? = null,
+    private var onDeleteClick: ((idMenu: String) -> Unit)? = null
+) :
+    ListAdapter<DataItemMenu, ManageMenuAdapter.ViewHolder>(DIFF_CALLBACK) {
+
+    fun callbackOnEditClickListener(listener: (data: DataItemMenu) -> Unit) {
+        onEditClick = listener
+    }
+
+    fun callbackOnDeleteClickListener(listener: (idMenu: String) -> Unit) {
+        onDeleteClick = listener
+    }
 
     inner class ViewHolder(private val binding: ItemContentManageMenuBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(dataMenu: DummyModel.DummyModelMenu) {
-            binding.textNoMenu.text = dataMenu.numberMenu.toString()
-            binding.textCategory.text = dataMenu.category
-            binding.textNameProduct.text = dataMenu.nameProduct
+        fun bind(dataMenu: DataItemMenu) {
+            binding.textNoMenu.text = dataMenu.noMenu.toString()
+            binding.textCategory.text = dataMenu.category?.nameCategory.toString()
+            binding.textNameProduct.text = dataMenu.nameMenu.toString()
             binding.textQuota.text = dataMenu.quota.toString()
-            binding.textPrice.text = dataMenu.price
+            binding.textPrice.text = Formatter.formatCurrency(dataMenu.price ?: 0)
             binding.action.buttonEdit.setOnClickListener {
-                callbackOnClickEdit?.invoke()
+                onEditClick?.invoke(dataMenu)
             }
             binding.action.buttonDelete.setOnClickListener {
-                callBackOnClickDelete?.invoke()
+                onDeleteClick?.invoke(dataMenu.idMenu.toString())
             }
         }
     }
@@ -46,15 +56,15 @@ class ManageMenuAdapter :
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DummyModel.DummyModelMenu>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DataItemMenu>() {
             override fun areItemsTheSame(
-                oldItem: DummyModel.DummyModelMenu, newItem: DummyModel.DummyModelMenu
+                oldItem: DataItemMenu, newItem: DataItemMenu
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: DummyModel.DummyModelMenu, newItem: DummyModel.DummyModelMenu
+                oldItem: DataItemMenu, newItem: DataItemMenu
             ): Boolean {
                 return oldItem == newItem
             }

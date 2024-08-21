@@ -8,7 +8,6 @@ import androidx.navigation.ui.NavigationUI
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.databinding.ActivityMainSuperAdminBinding
 import com.am.projectinternalresto.ui.widget.alert.AlertDialog
-import com.am.projectinternalresto.utils.UiHandler
 
 class MainSuperAdminActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainSuperAdminBinding

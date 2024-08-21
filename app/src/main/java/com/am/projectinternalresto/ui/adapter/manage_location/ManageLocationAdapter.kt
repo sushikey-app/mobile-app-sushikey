@@ -5,27 +5,35 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.am.projectinternalresto.data.model.DummyModel
+import com.am.projectinternalresto.data.response.super_admin.location.DataItemLocation
 import com.am.projectinternalresto.databinding.ItemContentManageLocationBinding
 
 
-class ManageLocationAdapter :
-    ListAdapter<DummyModel.DummyModelManageLocation, ManageLocationAdapter.ViewHolder>(DIFF_CALLBACK) {
-    var onClickButtonEdit: (() -> Unit)? = null
-    var onClickButtonDelete: (() -> Unit)? = null
+class ManageLocationAdapter(
+    private var onEditClick: ((data: DataItemLocation) -> Unit)? = null,
+    private var onDeleteClick: ((id: String) -> Unit)? = null
+) :
+    ListAdapter<DataItemLocation, ManageLocationAdapter.ViewHolder>(DIFF_CALLBACK) {
+    fun callbackOnEditClickListener(listener: (data: DataItemLocation) -> Unit) {
+        onEditClick = listener
+    }
+
+    fun callbackOnDeleteClickListener(listener: (id: String) -> Unit) {
+        onDeleteClick = listener
+    }
 
     inner class ViewHolder(private val binding: ItemContentManageLocationBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(dataManageLocation: DummyModel.DummyModelManageLocation) {
-            binding.number.text = dataManageLocation.no.toString()
-            binding.textNameResto.text = dataManageLocation.restoName
-            binding.textLocation.text = dataManageLocation.restoLocation
-            binding.textNumberPhone.text = dataManageLocation.numberTelephone
+        fun bind(dataManageLocation: DataItemLocation, position: Int) {
+            binding.number.text = position.plus(1).toString()
+            binding.textNameResto.text = dataManageLocation.outletName
+            binding.textLocation.text = dataManageLocation.locationOutlet
+            binding.textNumberPhone.text = dataManageLocation.phoneNumber
             binding.action.buttonEdit.setOnClickListener {
-                onClickButtonEdit?.invoke()
+                onEditClick?.invoke(dataManageLocation)
             }
             binding.action.buttonDelete.setOnClickListener {
-                onClickButtonDelete?.invoke()
+                onDeleteClick?.invoke(dataManageLocation.id)
             }
         }
     }
@@ -42,21 +50,21 @@ class ManageLocationAdapter :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dataManageLocation = getItem(position)
-        holder.bind(dataManageLocation)
+        holder.bind(dataManageLocation, position)
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DummyModel.DummyModelManageLocation>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DataItemLocation>() {
             override fun areItemsTheSame(
-                oldItem: DummyModel.DummyModelManageLocation,
-                newItem: DummyModel.DummyModelManageLocation
+                oldItem: DataItemLocation,
+                newItem: DataItemLocation
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: DummyModel.DummyModelManageLocation,
-                newItem: DummyModel.DummyModelManageLocation
+                oldItem: DataItemLocation,
+                newItem: DataItemLocation
             ): Boolean {
                 return oldItem == newItem
             }

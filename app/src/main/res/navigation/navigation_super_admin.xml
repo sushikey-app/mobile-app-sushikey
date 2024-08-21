@@ -25,32 +25,25 @@
         android:label="@string/title_nav_super_admin_manage_admin"
         tools:layout="@layout/fragment_manage_employees">
         <action
-            android:id="@+id/action_nav_super_admin_manage_admin_to_addOrUpdateAdmin"
-            app:destination="@id/addOrUpdateAdmin" />
-        <action
-            android:id="@+id/action_nav_super_admin_manage_admin_to_detail_manage_admin"
-            app:destination="@id/detailManageAdmin" />
+            android:id="@+id/action_nav_super_admin_manage_admin_to_addAdminOrSuperAdminFragment"
+            app:destination="@id/addOrUpdateAdminFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/nav_super_admin_report"
         android:name="com.am.projectinternalresto.ui.feature.super_admin.report.SuperAdminReportFragment"
         android:label="@string/title_nav_super_admin_report"
         tools:layout="@layout/fragment_report" />
+
     <fragment
-        android:id="@+id/addOrUpdateAdmin"
-        android:name="com.am.projectinternalresto.ui.feature.super_admin.manage_admin.AddOrUpdateAdmin"
-        android:label="AddOrUpdateAdmin"
+        android:id="@+id/addOrUpdateAdminFragment"
+        android:name="com.am.projectinternalresto.ui.feature.super_admin.manage_admin.AddOrUpdateAdminFragment"
+        android:label="AddOrUpdateAdminFragment"
         tools:layout="@layout/fragment_add_or_update_admin" />
 
     <fragment
         android:id="@+id/addOrUpdateLocationFragment"
         android:name="com.am.projectinternalresto.ui.feature.super_admin.manage_location.AddOrUpdateLocationFragment"
-        android:label="AddOrUpdateLocation"
+        android:label="AddOrUpdateLocationFragment"
         tools:layout="@layout/fragment_add_or_update_location" />
-
-    <fragment
-        android:id="@+id/detailManageAdmin"
-        android:name="com.am.projectinternalresto.ui.feature.super_admin.manage_admin.DetailManageAdminFragment"
-        android:label="DetailManageAd"
-        tools:layout="@layout/fragment_detail_manage_admin" />
 </navigation>

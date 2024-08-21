@@ -4,38 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.feature.admin.manage_category.AddOrUpdateCategory">
+    tools:context=".ui.feature.admin.manage_category.AddOrUpdateCategoryMenuFragment">
 
-    <ImageView
-        android:id="@+id/buttonBack"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="46dp"
-        android:contentDescription="@string/button_back"
-        android:src="@drawable/icon_button_back"
+    <include
+        android:id="@+id/actionHeadline"
+        layout="@layout/custom_action_button_back_and_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textHeadline"
-        style="@style/CustomTextStyle.Headline"
-        android:text="@string/add_category"
-        app:layout_constraintStart_toEndOf="@id/buttonBack"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!--Id Category-->
     <TextView
-        android:id="@+id/textIdCategory"
-        style="@style/CustomTextStyle.Body.PopReg"
+        android:id="@+id/textCodeCategory"
+        style="@style/CustomTextStyle.Body.PopSemiBold"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="16dp"
         android:text="@string/id_category"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textHeadline" />
+        app:layout_constraintTop_toBottomOf="@id/actionHeadline" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/edlIdCategory"
+        android:id="@+id/edlCodeCategory"
         android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
@@ -43,10 +31,10 @@
         android:hint="@string/example_id_category"
         android:textColorHint="@color/grey"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textIdCategory">
+        app:layout_constraintTop_toBottomOf="@id/textCodeCategory">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtIdCategory"
+            android:id="@+id/edtCodeCategory"
             style="@style/CustomEditTextStyle"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -54,12 +42,12 @@
     <!--Name Category-->
     <TextView
         android:id="@+id/textNameCategory"
-        style="@style/CustomTextStyle.Body.PopReg"
+        style="@style/CustomTextStyle.Body.PopSemiBold"
         android:layout_marginStart="36dp"
         android:layout_marginTop="16dp"
         android:text="@string/title_nav_admin_category"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edlIdCategory" />
+        app:layout_constraintTop_toBottomOf="@id/edlCodeCategory" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edlNameCategory"
@@ -90,4 +78,29 @@
         app:layout_constraintEnd_toEndOf="@id/edlNameCategory"
         app:layout_constraintStart_toStartOf="@id/edlNameCategory"
         app:layout_constraintTop_toBottomOf="@id/edlNameCategory" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/pink"
+        android:indeterminateTintMode="src_in"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/buttonSave"
+        app:layout_constraintEnd_toEndOf="@id/edlNameCategory"
+        app:layout_constraintStart_toStartOf="@id/edlNameCategory"
+        app:layout_constraintTop_toTopOf="@id/actionHeadline" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textLoading"
+        style="@style/CustomTextStyle.Body.PopReg.smallSp"
+        android:layout_marginStart="3dp"
+        android:text="@string/text_loading"
+        android:textColor="@color/pink"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/progressBar"
+        app:layout_constraintStart_toStartOf="@id/progressBar"
+        app:layout_constraintTop_toBottomOf="@id/progressBar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -52,12 +52,13 @@
         android:label="@string/title_nav_admin_category"
         tools:layout="@layout/fragment_manage_category">
         <action
-            android:id="@+id/action_nav_admin_category_to_addOrUpdateCategory"
-            app:destination="@id/addOrUpdateCategory" />
+            android:id="@+id/action_nav_admin_category_to_addCategoryMenuFragment"
+            app:destination="@id/addOrUpdateCategoryMenuFragment" />
+
     </fragment>
     <fragment
-        android:id="@+id/addOrUpdateCategory"
-        android:name="com.am.projectinternalresto.ui.feature.admin.manage_category.AddOrUpdateCategory"
-        android:label="fragment_add_or_update_category"
+        android:id="@+id/addOrUpdateCategoryMenuFragment"
+        android:name="com.am.projectinternalresto.ui.feature.admin.manage_category.AddOrUpdateCategoryMenuFragment"
+        android:label="addOrUpdateCategoryMenu"
         tools:layout="@layout/fragment_add_or_update_category" />
 </navigation>

@@ -74,7 +74,6 @@
     <string name="quota_menu">Kuota Menu</string>
     <string name="image_product_menu">image product menu</string>
     <string name="add_staff">Tambah Pegawai</string>
-    <string name="location_staff">Masukan Lokasi Kerja</string>
     <string name="email">Email</string>
     <string name="role">Role</string>
     <string name="icon_profit">icon profit</string>
@@ -146,8 +145,8 @@
     <string name="sushikey">Sushikey</string>
     <string name="order">Order#</string>
     <string name="offline_order">Offline</string>
-    <string name="input_your_username">Masukan username Anda!</string>
-    <string name="input_your_password">Masukan Password Anda!</string>
+    <string name="input_your_username">Masukan username Anda</string>
+    <string name="input_your_password">Masukan Password Anda</string>
     <string name="text_income_today">Pendapatan hari ini</string>
     <string name="text_income_this_month">Pendapatan bulan ini</string>
     <string name="sales">Penjualan</string>
@@ -163,4 +162,28 @@
     <string name="choose_optional_month">Pilih Bulan (Optional)</string>
     <string name="input_your_optional_month">Masukan Bulan yang diinginkan!</string>
     <string name="name_outlet">Nama Outlet</string>
+    <string name="text_loading">loading...</string>
+    <string name="input_your_name">Masukan nama anda</string>
+    <string name="input_your_phone_number">Masukan nomor telephone anda</string>
+    <string name="location_admin">Lokasi kerja</string>
+    <string name="input_your_location_work">Masukan lokasi kerja</string>
+    <string name="edit_data">Ubah Data</string>
+    <string name="save_data">Simpan Data</string>
+    <string name="input_your_outlet_name">Masukan nama outlet</string>
+    <string name="input_your_phone_number_outlet">Masukan nomor telephone outlet</string>
+    <string name="input_your_number_menu">Masukan nomor menu</string>
+    <string name="text_cancel">Batal</string>
+    <string name="text_take_photo_from_camera">Ambil gambar dari kamera</string>
+    <string name="text_take_photo_from_gallery">Ambil gambar dari galeri</string>
+    <string name="icon_camera">Icon camera</string>
+    <string name="input_your_name_menu">Masukan nama menu yang baru</string>
+    <string name="add_admin">Tambah Admin</string>
+    <string name="input_your_composition">Masukan komposisi dari menu</string>
+    <string name="input_your_category">Masukan kategori menu</string>
+    <string name="input_your_quota_menu">Masukan kuota menu</string>
+    <string name="input_your_price">"Masukan harga "</string>
+    <string name="input_your_topping">Masukan topping dari menu</string>
+    <string name="add_your_photo_menu">Tambahkan foto menu</string>
+    <string name="photo_menu">Gambar Menu</string>
+    <string name="add_data">Tambah data</string>
 </resources>

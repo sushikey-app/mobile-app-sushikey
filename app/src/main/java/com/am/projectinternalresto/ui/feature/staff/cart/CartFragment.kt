@@ -10,7 +10,7 @@ import com.am.projectinternalresto.data.dummy.DummyData
 import com.am.projectinternalresto.databinding.FragmentCartBinding
 import com.am.projectinternalresto.ui.adapter.cart.CartAdapter
 import com.am.projectinternalresto.ui.adapter.cart.PaymentAdapter
-import com.am.projectinternalresto.utils.UiHandler
+import com.am.projectinternalresto.utils.NotificationHandle
 
 class CartFragment : Fragment() {
     private var _binding: FragmentCartBinding? = null
@@ -29,13 +29,13 @@ class CartFragment : Fragment() {
         val adapter = CartAdapter().apply {
             submitList(DummyData.dataDummyCart)
             callbackOnClickDelete = {
-                UiHandler.toastSuccessMessage(requireContext(), "Berhasil Hapus Data")
+                NotificationHandle.showSuccessSnackBar(requireView(), "Berhasil Hapus Data")
             }
             callbackOnClickPlus = {
-                UiHandler.toastSuccessMessage(requireContext(), "Berhasil Menambah qty")
+                NotificationHandle.showSuccessSnackBar(requireView(), "Berhasil Menambah qty")
             }
             callbackOnclickMinus = {
-                UiHandler.toastSuccessMessage(requireContext(), "Berhasil Mengurangi qty")
+                NotificationHandle.showSuccessSnackBar(requireView(), "Berhasil Mengurangi qty")
             }
         }
 
@@ -53,6 +53,4 @@ class CartFragment : Fragment() {
             it.layoutManager = LinearLayoutManager(requireContext())
         }
     }
-
-
 }

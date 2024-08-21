@@ -24,7 +24,6 @@
             android:textSize="14sp"
             tools:text="@tools:sample/first_names" />
 
-
         <TextView
             android:id="@+id/textRole"
             style="@style/CustomTextStyle.Body.PopMedium"

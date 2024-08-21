@@ -147,11 +147,31 @@
             </TableRow>
         </TableLayout>
 
+        <LinearLayout
+            android:id="@+id/shimmerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/tableHeader">
+
+            <include layout="@layout/item_content_manage_menu_place_holder" />
+
+            <include layout="@layout/item_content_manage_menu_place_holder" />
+
+            <include layout="@layout/item_content_manage_menu_place_holder" />
+
+            <include layout="@layout/item_content_manage_menu_place_holder" />
+
+            <include layout="@layout/item_content_manage_menu_place_holder" />
+        </LinearLayout>
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewContentTableLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:itemCount="3"
+            tools:itemCount="0"
             app:layout_constraintTop_toBottomOf="@id/tableHeader"
             tools:listitem="@layout/item_content_manage_menu" />
 

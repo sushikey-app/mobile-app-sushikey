@@ -5,34 +5,34 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.am.projectinternalresto.data.model.DummyModel
+import com.am.projectinternalresto.data.response.super_admin.manage_admin.DataItemManageAdminAndSuperAdmin
 import com.am.projectinternalresto.databinding.ItemContentManageStaffBinding
 
 class ManageAdminAdapter(
-    private var onEditClick: (() -> Unit)? = null,
-    private var onDeleteClick: (() -> Unit)? = null
+    private var onEditClick: ((data: DataItemManageAdminAndSuperAdmin) -> Unit)? = null,
+    private var onDeleteClick: ((idUser: String) -> Unit)? = null
 ) :
-    ListAdapter<DummyModel.DummyModelManageAdmin, ManageAdminAdapter.ViewHolder>(DIFF_CALLBACK) {
+    ListAdapter<DataItemManageAdminAndSuperAdmin, ManageAdminAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    fun callbackOnEditClickListener(listener: () -> Unit) {
+    fun callbackOnEditClickListener(listener: (data: DataItemManageAdminAndSuperAdmin) -> Unit) {
         onEditClick = listener
     }
 
-    fun callbackOnDeleteClickListener(listener: () -> Unit) {
+    fun callbackOnDeleteClickListener(listener: (idUser: String) -> Unit) {
         onDeleteClick = listener
     }
 
     inner class ViewHolder(private val binding: ItemContentManageStaffBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(dataManageAdmin: DummyModel.DummyModelManageAdmin) {
+        fun bind(dataManageAdmin: DataItemManageAdminAndSuperAdmin) {
             binding.textName.text = dataManageAdmin.name
-            binding.textRole.text = dataManageAdmin.division
+            binding.textRole.text = dataManageAdmin.role
             binding.textNumberPhone.text = dataManageAdmin.phoneNumber
-            binding.textLocation.text = dataManageAdmin.location
+            binding.textLocation.text = dataManageAdmin.location.outletName
 
             binding.action.apply {
-                buttonEdit.setOnClickListener { onEditClick?.invoke() }
-                buttonDelete.setOnClickListener { onDeleteClick?.invoke() }
+                buttonEdit.setOnClickListener { onEditClick?.invoke(dataManageAdmin) }
+                buttonDelete.setOnClickListener { onDeleteClick?.invoke(dataManageAdmin.id.toString()) }
             }
         }
     }
@@ -51,15 +51,15 @@ class ManageAdminAdapter(
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DummyModel.DummyModelManageAdmin>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DataItemManageAdminAndSuperAdmin>() {
             override fun areItemsTheSame(
-                oldItem: DummyModel.DummyModelManageAdmin, newItem: DummyModel.DummyModelManageAdmin
+                oldItem: DataItemManageAdminAndSuperAdmin, newItem: DataItemManageAdminAndSuperAdmin
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: DummyModel.DummyModelManageAdmin, newItem: DummyModel.DummyModelManageAdmin
+                oldItem: DataItemManageAdminAndSuperAdmin, newItem: DataItemManageAdminAndSuperAdmin
             ): Boolean {
                 return oldItem == newItem
             }

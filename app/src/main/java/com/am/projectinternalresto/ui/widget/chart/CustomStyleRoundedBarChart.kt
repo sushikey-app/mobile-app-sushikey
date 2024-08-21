@@ -1,4 +1,4 @@
-package com.am.projectinternalresto.utils
+package com.am.projectinternalresto.ui.widget.chart
 
 import android.graphics.Canvas
 import android.graphics.RectF
