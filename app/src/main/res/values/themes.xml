@@ -1,103 +1,203 @@
 <resources>
 
     <style name="Base.Theme.ProjectInternalResto" parent="Theme.Material3.DayNight.NoActionBar">
-
     </style>
-
     <style name="Theme.ProjectInternalResto" parent="Base.Theme.ProjectInternalResto" />
 
-    <style name="TextContent">
+    <style name="CustomTextStyle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
     </style>
 
-    <style name="TextContent.HeadlineMon">
+    <style name="CustomTextStyle.HeadlineMon">
         <item name="fontFamily">@font/mon_bold</item>
         <item name="android:textAppearance">@style/TextAppearance.Material3.HeadlineMedium</item>
     </style>
 
-    <style name="TextContent.Headline">
+    <style name="CustomTextStyle.Headline">
         <item name="fontFamily">@font/pop_bold</item>
         <item name="android:textAppearance">@style/TextAppearance.Material3.HeadlineMedium</item>
         <item name="android:textSize">40sp</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:layout_marginStart">30sp</item>
-        <item name="android:layout_marginTop">34dp</item>
+        <item name="android:layout_marginTop">30dp</item>
     </style>
 
-    <style name="TextContent.Body">
+    <style name="CustomTextStyle.Body">
         <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
     </style>
 
     <!--Text font Montserrat Medium-->
-    <style name="TextContent.Body.MonMedium">
+    <style name="CustomTextStyle.Body.MonMedium">
         <item name="android:textColor">@color/black</item>
         <item name="fontFamily">@font/mon_reg</item>
     </style>
 
     <!--Text font Montserrat Bold-->
-    <style name="TextContent.Body.MonBold">
+    <style name="CustomTextStyle.Body.MonBold">
         <item name="android:textColor">@color/black</item>
         <item name="fontFamily">@font/mon_bold</item>
     </style>
 
     <!--Text font Poppins Reg-->
-    <style name="TextContent.Body.PopReg">
+    <style name="CustomTextStyle.Body.PopReg">
         <item name="fontFamily">@font/pop_reg</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="CustomTextStyle.Body.PopReg.smallSp">
+        <item name="android:textSize">10sp</item>
+    </style>
+
     <!--Text font Poppins Medium-->
-    <style name="TextContent.Body.PopMedium">
+    <style name="CustomTextStyle.Body.PopMedium">
         <item name="fontFamily">@font/pop_medium</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
     <!--Text font Poppins Semi Bold-->
-    <style name="TextContent.Body.PopSemiBold">
+    <style name="CustomTextStyle.Body.PopSemiBold">
         <item name="android:textColor">@color/black</item>
         <item name="fontFamily">@font/pop_semi_bold</item>
     </style>
 
     <!--Text font Poppins Bold-->
-    <style name="TextContent.Body.PopBold">
+    <style name="CustomTextStyle.Body.PopBold">
         <item name="android:textColor">@color/black</item>
         <item name="fontFamily">@font/pop_bold</item>
     </style>
 
-
-    <!--Edit Text Style-->
-    <style name="EditTextContent">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">70dp</item>
-        <item name="fontFamily">@font/pop_medium</item>
-        <item name="android:background">@drawable/custom_bg_edit_txt</item>
-        <item name="android:padding">15dp</item>
+    <!--Text font Poppins Light-->
+    <style name="CustomTextStyle.Body.PopLight">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/pop_light</item>
     </style>
 
-    <style name="EditTextContent.Search">
+    <!--Edit Text Style-->
+    <style name="CustomEditTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontFamily">@font/pop_medium</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColorHint">@color/grey</item>
+        <item name="android:background">@drawable/custom_bg_edit_txt</item>
+        <item name="android:padding">20dp</item>
+    </style>
+
+    <style name="CustomEditTextStyle.Search">
+        <item name="android:padding">10dp</item>
         <item name="android:drawableEnd">@drawable/icon_rectangle_search</item>
     </style>
 
     <!--Button Style-->
-    <style name="ButtonContent">
+    <style name="CustomButtonStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_height">70dp</item>
         <item name="backgroundTint">@color/pink</item>
+        <item name="cornerRadius">18dp</item>
         <item name="android:elevation">10dp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">@font/pop_semi_bold</item>
+    </style>
+
+<!--    <style name="MaterialButtonContent">-->
+<!--        <item name="android:layout_width">wrap_content</item>-->
+<!--        <item name="android:layout_height">60dp</item>-->
+<!--        <item name="android:backgroundTint">@color/pink</item>-->
+<!--        <item name="fontFamily">@font/pop_bold</item>-->
+<!--        <item name="android:elevation">10dp</item>-->
+<!--        <item name="android:textSize">20sp</item>-->
+<!--    </style>-->
+
+    <!--text for tab layout-->
+    <style name="TextAppearanceTabLayout" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">16sp</item>
         <item name="fontFamily">@font/pop_semi_bold</item>
     </style>
 
     <!--TabLayout Style-->
-    <style name="TabLayoutContent">
+    <style name="CustomTabLayoutStyle">
         <item name="tabBackground">@drawable/custom_tab_selector</item>
         <item name="tabGravity">fill</item>
+        <item name="tabTextAppearance">@style/TextAppearanceTabLayout</item>
         <item name="tabMode">scrollable</item>
+        <item name="tabMinWidth">30dp</item>
+        <item name="android:textAppearance">@font/pop_semi_bold</item>
         <item name="tabIndicatorAnimationMode">elastic</item>
         <item name="tabSelectedTextColor">@color/white</item>
         <item name="tabIndicator">@color/transparent</item>
     </style>
 
+    <style name="CustomRadioButtonStyle">
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/custom_tab_selector</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!--alert style-->
+    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorSurface">@color/white</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/TitleTextStyle</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/BodyTextStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+    </style>
+
+    <style name="TitleTextStyle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/pop_semi_bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="BodyTextStyle" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/pop_medium</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/pink</item>
+        <item name="buttonBarButtonStyle">@style/Widget.Material3.Button.OutlinedButton</item>
+        <item name="strokeColor">@color/pink</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/white</item>
+        <item name="buttonBarButtonStyle">@style/Widget.MaterialComponents.Button.OutlinedButton
+        </item>
+        <item name="backgroundTint">@color/pink</item>
+    </style>
+
+    <!--card style-->
+    <style name="CustomCardViewWithTextStyle" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="strokeWidth">1.5dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">570dp</item>
+        <item name="strokeColor">@color/pink</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">5dp</item>
+        <item name="android:layout_marginStart">30dp</item>
+    </style>
+
+    <style name="CustomNavigationRailViewStyle" parent="Widget.MaterialComponents.NavigationRailView">
+        <item name="android:animateLayoutChanges">true</item>
+        <item name="android:background">@color/pink</item>
+        <item name="android:elevation">10dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="itemBackground">@drawable/bg_navigation_item_selected</item>
+        <item name="itemIconSize">30dp</item>
+        <item name="itemIconTint">@color/icon_color_navigation_item_selected</item>
+        <item name="itemMinHeight">20dp</item>
+        <item name="itemPaddingBottom">10dp</item>
+        <item name="itemTextAppearanceActiveBoldEnabled">true</item>
+        <item name="itemTextColor">@color/icon_color_navigation_item_selected</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="menuGravity">center</item>
+    </style>
 </resources>

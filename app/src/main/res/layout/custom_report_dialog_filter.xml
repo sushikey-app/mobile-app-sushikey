@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="550dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_corner_card_radius_30">
+
+    <ImageView
+        android:id="@+id/iconClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="25dp"
+        android:contentDescription="@string/icon_close"
+        android:src="@drawable/icon_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/CustomTextStyle.Body.MonBold"
+        android:layout_marginTop="66dp"
+        android:text="@string/add_filter"
+        android:textColor="@color/pink"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textLocation"
+        style="@style/CustomTextStyle.Body.PopReg"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="130dp"
+        android:text="@string/title_nav_super_admin_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlLocation"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="50dp"
+        android:hint="@string/example_location"
+        android:textColorHint="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textLocation">
+
+        <AutoCompleteTextView
+            android:id="@+id/dropdownLocation"
+            style="@style/CustomEditTextStyle"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            tools:ignore="LabelFor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textInitialLimitDate"
+        style="@style/CustomTextStyle.Body.PopReg"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/initial_limit_date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edlLocation" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlInitialLimitDate"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="50dp"
+        android:hint="@string/example_initial_limit_date"
+        android:textColorHint="@color/grey"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textInitialLimitDate">
+
+        <AutoCompleteTextView
+            android:id="@+id/dropdownInitialLimitDate"
+            style="@style/CustomEditTextStyle"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            tools:ignore="LabelFor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textDeadline"
+        style="@style/CustomTextStyle.Body.PopReg"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/deadline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edlInitialLimitDate" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlDeadline"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="50dp"
+        android:hint="@string/example_initial_limit_date"
+        android:textColorHint="@color/grey"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textDeadline">
+
+        <AutoCompleteTextView
+            android:id="@+id/dropdownDeadline"
+            style="@style/CustomEditTextStyle"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            tools:ignore="LabelFor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSave"
+        style="@style/CustomButtonStyle"
+        android:layout_width="0dp"
+        android:layout_margin="20dp"
+        android:layout_marginVertical="20dp"
+        android:text="@string/save"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/edlDeadline"
+        app:layout_constraintStart_toStartOf="@id/edlDeadline"
+        app:layout_constraintTop_toBottomOf="@id/edlDeadline"
+        app:layout_constraintVertical_bias="0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

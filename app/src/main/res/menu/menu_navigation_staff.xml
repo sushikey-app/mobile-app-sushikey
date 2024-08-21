@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_staff_menu"
+        android:enabled="true"
+        android:icon="@drawable/icon_menu"
+        android:title="@string/title_nav_staff_menu" />
+
+    <item
+        android:id="@+id/nav_staff_order"
+        android:enabled="true"
+        android:icon="@drawable/icon_order"
+        android:title="@string/title_nav_staff_order" />
+    <item
+        android:id="@+id/nav_staff_order_history"
+        android:enabled="true"
+        android:icon="@drawable/icon_order_history"
+        android:title="@string/title_nav_staff_order_history" />
+    <item
+        android:id="@+id/nav_staff_logout"
+        android:enabled="true"
+        android:icon="@drawable/icon_logout"
+        android:title="@string/title_nav_staff_logout" />
+</menu>

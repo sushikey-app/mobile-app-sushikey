@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.feature.super_admin.manage_location.AddOrUpdateLocationFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/actionHeadline"
+            layout="@layout/custom_action_button_back_and_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/textName"
+            style="@style/CustomTextStyle.Body.PopSemiBold"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/txtName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/actionHeadline" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="@string/input_your_name"
+            android:autofillHints="name"
+            app:layout_constraintStart_toStartOf="@id/textName"
+            android:textColorHint="@color/grey"
+            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintTop_toBottomOf="@id/textName">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtName"
+                style="@style/CustomEditTextStyle"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--number telephone-->
+        <TextView
+            android:id="@+id/textUserName"
+            style="@style/CustomTextStyle.Body.PopSemiBold"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/txt_username"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlName" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlUserName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="@string/input_your_username"
+            android:autofillHints="username"
+            app:layout_constraintStart_toStartOf="@id/textUserName"
+            android:textColorHint="@color/grey"
+            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintTop_toBottomOf="@id/textUserName">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtUsername"
+                style="@style/CustomEditTextStyle"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--number telephone-->
+        <TextView
+            android:id="@+id/textPhoneNumber"
+            style="@style/CustomTextStyle.Body.PopSemiBold"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/number_telephone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlUserName" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlPhoneNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/input_your_phone_number"
+            android:layout_marginTop="5dp"
+            android:autofillHints="phone"
+            app:layout_constraintStart_toStartOf="@id/textPhoneNumber"
+            android:textColorHint="@color/grey"
+            app:layout_constraintTop_toBottomOf="@id/textPhoneNumber"
+            app:layout_constraintWidth_percent="0.6">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPhoneNumber"
+                style="@style/CustomEditTextStyle"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--password-->
+        <TextView
+            android:id="@+id/textPassword"
+            style="@style/CustomTextStyle.Body.PopSemiBold"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/txt_password"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlPhoneNumber" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlPassword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="@id/textPassword"
+            android:autofillHints="password"
+            android:hint="@string/enter_password"
+            android:textColorHint="@color/grey"
+            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintTop_toBottomOf="@id/textPassword"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPassword"
+                style="@style/CustomEditTextStyle"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/textRole"
+            style="@style/CustomTextStyle.Body.PopSemiBold"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/role"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlPassword" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlRole"
+            android:layout_width="0dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            app:layout_constraintWidth_percent="0.6"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:hint="@string/example_role_admin"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textRole">
+
+            <AutoCompleteTextView
+                android:id="@+id/dropDownRole"
+                style="@style/CustomEditTextStyle"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:inputType="none"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/textLocation"
+            style="@style/CustomTextStyle.Body.PopSemiBold"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/location_admin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edlRole" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlLocation"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:hint="@string/input_your_location_work"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintWidth_percent="0.6"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textLocation">
+
+            <AutoCompleteTextView
+                android:id="@+id/dropdownLocation"
+                style="@style/CustomEditTextStyle"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:inputType="none"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSave"
+            style="@style/CustomButtonStyle"
+            android:layout_width="0dp"
+            android:layout_margin="20dp"
+            android:text="@string/add_staff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/edlRole"
+            app:layout_constraintStart_toStartOf="@id/edlRole"
+            app:layout_constraintTop_toBottomOf="@id/edlLocation"
+            app:layout_constraintVertical_bias="0" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/edlRole"
+            app:layout_constraintEnd_toEndOf="@id/edlRole"
+            app:layout_constraintStart_toStartOf="@id/edlRole"
+            app:layout_constraintTop_toTopOf="@id/actionHeadline" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textLoading"
+            style="@style/CustomTextStyle.Body.PopReg.smallSp"
+            android:layout_marginStart="3dp"
+            android:text="@string/text_loading"
+            android:textColor="@color/pink"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/progressBar"
+            app:layout_constraintStart_toStartOf="@id/progressBar"
+            app:layout_constraintTop_toBottomOf="@id/progressBar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

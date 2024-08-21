@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="5dp"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/textNoMenu"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/number_one"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textCategory"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="10dp"
+            android:text="@string/example_category"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textNameProduct"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_weight="0.6"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="10dp"
+            android:text="@string/example_name_menu"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textQuota"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_weight="0.4"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="10dp"
+            android:text="@string/example_qty"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textPrice"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="10dp"
+            android:text="@string/example_price"
+            android:textSize="14sp" />
+
+        <include
+            layout="@layout/custom_action_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/action" />
+    </TableRow>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+</LinearLayout>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.feature.super_admin.manage_location.AddOrUpdateLocationFragment">
+
+    <include
+        android:id="@+id/actionHeadline"
+        layout="@layout/custom_action_button_back_and_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--Name Resto-->
+    <TextView
+        android:id="@+id/textNameResto"
+        style="@style/CustomTextStyle.Body.PopSemiBold"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/name_resto"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/actionHeadline" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlNameResto"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:autofillHints="name"
+        android:hint="@string/input_your_outlet_name"
+        app:layout_constraintStart_toStartOf="@id/textNameResto"
+        android:textColorHint="@color/grey"
+        app:layout_constraintWidth_percent="0.6"
+        app:layout_constraintTop_toBottomOf="@id/textNameResto">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtNameResto"
+            style="@style/CustomEditTextStyle"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--Location-->
+    <TextView
+        android:id="@+id/textLocation"
+        style="@style/CustomTextStyle.Body.PopSemiBold"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/title_nav_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edlNameResto" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlLocation"
+        android:layout_width="0dp"
+        app:layout_constraintStart_toStartOf="@id/textLocation"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:hint="@string/location"
+        android:textColorHint="@color/grey"
+        app:layout_constraintWidth_percent="0.6"
+        app:layout_constraintTop_toBottomOf="@id/textLocation">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtLocation"
+            style="@style/CustomEditTextStyle"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--phone number-->
+    <TextView
+        android:id="@+id/textPhoneNumber"
+        style="@style/CustomTextStyle.Body.PopSemiBold"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/number_telephone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edlLocation" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlPhoneNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/input_your_phone_number_outlet"
+        android:layout_marginTop="5dp"
+        android:autofillHints="phone"
+        app:layout_constraintStart_toStartOf="@id/textPhoneNumber"
+        android:textColorHint="@color/grey"
+        app:layout_constraintTop_toBottomOf="@id/textPhoneNumber"
+        app:layout_constraintWidth_percent="0.6">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtPhoneNumber"
+            style="@style/CustomEditTextStyle"
+            android:inputType="phone" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonAddLocation"
+        style="@style/CustomButtonStyle"
+        android:layout_width="0dp"
+        android:layout_margin="20dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/add_location"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/edlPhoneNumber"
+        app:layout_constraintStart_toStartOf="@id/edlPhoneNumber"
+        app:layout_constraintTop_toBottomOf="@id/edlPhoneNumber"
+        app:layout_constraintVertical_bias="0" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/edlPhoneNumber"
+        app:layout_constraintEnd_toEndOf="@id/edlPhoneNumber"
+        app:layout_constraintStart_toStartOf="@id/edlPhoneNumber"
+        app:layout_constraintTop_toTopOf="@id/actionHeadline" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textLoading"
+        style="@style/CustomTextStyle.Body.PopReg.smallSp"
+        android:layout_marginStart="3dp"
+        android:text="@string/text_loading"
+        android:textColor="@color/pink"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/progressBar"
+        app:layout_constraintStart_toStartOf="@id/progressBar"
+        app:layout_constraintTop_toBottomOf="@id/progressBar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

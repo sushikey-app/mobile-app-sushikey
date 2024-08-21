@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="5dp"
+    app:strokeColor="@color/grey"
+    app:strokeWidth="1dp"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="30dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textManage"
+            style="@style/CustomTextStyle.Body.PopBold"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="21dp"
+            android:text="@string/manage_location"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonAdd"
+            style="@style/CustomButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/add"
+            android:textSize="19sp"
+            app:icon="@drawable/icon_add"
+            app:iconSize="24dp"
+            app:layout_constraintBottom_toBottomOf="@id/textManage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textManage" />
+
+        <!--Table Header-->
+        <TableLayout
+            android:id="@+id/tableHeader"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/custom_bg_table"
+            app:layout_constraintTop_toBottomOf="@id/textManage">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/number"
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="0.3"
+                    android:gravity="center"
+                    android:text="@string/no"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textNameResto"
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="5dp"
+                    android:text="@string/name_outlet"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textLocation"
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="5dp"
+                    android:text="@string/location_outlet"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textNumberPhone"
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="5dp"
+                    android:text="@string/number_telephone"
+                    android:textSize="16sp" />
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.8"
+                    android:gravity="center"
+                    android:paddingHorizontal="5dp"
+                    android:text="@string/action"
+                    android:textSize="16sp" />
+            </TableRow>
+        </TableLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewContentTableLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/tableHeader"
+            app:layout_constraintStart_toStartOf="@id/tableHeader"
+            app:layout_constraintTop_toBottomOf="@id/tableHeader"
+            tools:itemCount="2"
+            tools:listitem="@layout/item_content_manage_location" />
+
+        <LinearLayout
+            android:id="@+id/shimmerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/tableHeader">
+
+            <include layout="@layout/item_content_manage_location_place_holder" />
+            <include layout="@layout/item_content_manage_location_place_holder" />
+            <include layout="@layout/item_content_manage_location_place_holder" />
+            <include layout="@layout/item_content_manage_location_place_holder" />
+            <include layout="@layout/item_content_manage_location_place_holder" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
