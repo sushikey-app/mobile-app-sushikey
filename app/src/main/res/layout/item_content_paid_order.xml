@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#00424242"
+    android:layout_margin="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp">
+
+        <TextView
+            android:id="@+id/textId"
+            style="@style/CustomTextStyle.Body.PopSemiBold"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/pink"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/example_id_category" />
+
+        <TextView
+            android:id="@+id/textStatus"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/example_id_category" />
+
+        <TextView
+            android:id="@+id/textName"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:maxLines="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/textId"
+            app:layout_constraintTop_toBottomOf="@id/textId"
+            tools:text="@string/example_name_staff" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/textName">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonToDetailOrder"
+                style="@style/CustomButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:textSize="14sp"
+                app:backgroundTint="@color/orange"
+                android:text="@string/detail_orders" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonChangeStatus"
+                style="@style/CustomButtonStyle"
+                android:layout_width="0dp"
+                android:textSize="14sp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:text="@string/order_done" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

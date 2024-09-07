@@ -3,17 +3,9 @@ package com.am.projectinternalresto.utils
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.textfield.TextInputLayout
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 
 fun Activity.goToActivity(
     targetActivity: Class<out Activity>,
@@ -27,16 +19,39 @@ fun Activity.goToActivity(
     startActivity(intent)
     if (withFinish) finish()
 }
-//
-//fun Date.toISO8601String(): String {
-//    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-//    return dateFormat.format(this)
-//}
 
-fun String.toPlainTextRequestBody(): RequestBody =
-    this.toRequestBody("text/plain".toMediaTypeOrNull())
+fun EditText.setPriceWatcherUtils(
+    onPriceChanged: (Int) -> Unit
+): TextWatcher {
+    val textWatcher = object : TextWatcher {
+        private var currentText = ""
 
-fun File.toMultipartBody(partName: String): MultipartBody.Part =
-    MultipartBody.Part.createFormData(
-        partName, name, asRequestBody("image/jpeg".toMediaTypeOrNull())
-    )
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+        override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            if (text.toString() != currentText) {
+                removeTextChangedListener(this)
+
+                val cleanString = text.toString().replace("[Rp,.]".toRegex(), "").trim()
+                if (cleanString.isNotEmpty()) {
+                    val price = cleanString.toInt()
+                    val formattedPrice = Formatter.formatCurrency(price)
+
+                    currentText = formattedPrice
+                    setText(formattedPrice)
+                    setSelection(formattedPrice.length)
+                    onPriceChanged(price)
+                } else {
+                    onPriceChanged(0)
+                }
+
+                addTextChangedListener(this)
+            }
+        }
+
+        override fun afterTextChanged(p0: Editable?) {}
+    }
+
+    addTextChangedListener(textWatcher)
+    return textWatcher
+}

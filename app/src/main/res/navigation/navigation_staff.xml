@@ -7,12 +7,16 @@
 
     <fragment
         android:id="@+id/nav_staff_menu"
-        android:name="com.am.projectinternalresto.ui.feature.staff.menu.OrderMenuFragment"
+        android:name="com.am.projectinternalresto.ui.feature.staff.order_menu.OrderMenuFragment"
         android:label="@string/title_nav_staff_menu"
-        tools:layout="@layout/fragment_order_menu" />
+        tools:layout="@layout/fragment_order_menu">
+        <action
+            android:id="@+id/action_nav_staff_menu_to_confirmOrderAndPaymentMethodFragment"
+            app:destination="@id/confirmOrderAndPaymentMethodFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_staff_order"
-        android:name="com.am.projectinternalresto.ui.feature.staff.order.OrderFragment"
+        android:name="com.am.projectinternalresto.ui.feature.staff.list_order.OrderFragment"
         android:label="@string/title_nav_staff_order"
         tools:layout="@layout/fragment_order" />
     <fragment
@@ -20,4 +24,9 @@
         android:name="com.am.projectinternalresto.ui.feature.staff.order_history.OrderHistoryFragment"
         android:label="@string/title_nav_staff_order_history"
         tools:layout="@layout/fragment_order_history" />
+    <fragment
+        android:id="@+id/confirmOrderAndPaymentMethodFragment"
+        android:name="com.am.projectinternalresto.ui.feature.staff.payment.ConfirmOrderAndPaymentMethodFragment"
+        android:label="fragment_confirm_order_and_payment_method"
+        tools:layout="@layout/fragment_confirm_order_and_payment_method"/>
 </navigation>

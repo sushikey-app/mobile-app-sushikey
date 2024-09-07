@@ -33,6 +33,12 @@ object Navigation {
                     R.id.action_nav_admin_category_to_addCategoryMenuFragment,
                     args
                 )
+
+                /*Navigation from staff*/
+                Destination.ORDER_MENU_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD -> it.navigate(
+                    R.id.action_nav_staff_menu_to_confirmOrderAndPaymentMethodFragment,
+                    args
+                )
             }
         }
     }
@@ -44,5 +50,7 @@ enum class Destination {
 
     MANAGE_MENU_TO_ADD_OR_UPDATE_MENU,
     MANAGE_CATEGORY_TO_ADD_OR_UPDATE_CATEGORY,
-    MANAGE_STAFF_TO_ADD_OR_UPDATE_STAFF
+    MANAGE_STAFF_TO_ADD_OR_UPDATE_STAFF,
+
+    ORDER_MENU_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD
 }

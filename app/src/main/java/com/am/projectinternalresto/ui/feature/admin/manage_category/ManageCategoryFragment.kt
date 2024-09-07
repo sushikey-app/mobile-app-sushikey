@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.am.projectinternalresto.R
 import com.am.projectinternalresto.databinding.FragmentManageCategoryBinding
 import com.am.projectinternalresto.service.source.Resource
 import com.am.projectinternalresto.service.source.Status
@@ -50,13 +51,14 @@ class ManageCategoryFragment : Fragment() {
 
     private fun setupGetDataFromApi() {
         viewModel.getCategoryMenu(token).observe(viewLifecycleOwner) { result ->
-            handleApiStatus(
-                result,
-                result.data?.message.toString(),
-                result.message.toString()
-            ) {
+            handleApiStatus(result, result.message.toString()) {
                 adapter.submitList(result.data?.data)
-
+                if (result.data == null) {
+                    binding.cardManageCategory.textDataIsNull.apply {
+                        text = getString(R.string.data_category_is_empty)
+                        visibility = View.VISIBLE
+                    }
+                }
             }
         }
     }
@@ -65,7 +67,6 @@ class ManageCategoryFragment : Fragment() {
         viewModel.deleteCategoryMenu(token, idCategory).observe(viewLifecycleOwner) { result ->
             handleApiStatus(
                 result = result,
-                result.data?.message.toString(),
                 result.message.toString()
             ) {
                 adapter.submitList(null)
@@ -76,30 +77,28 @@ class ManageCategoryFragment : Fragment() {
 
     private fun <T> handleApiStatus(
         result: Resource<T>,
-        successMessage: String,
         errorMessage: String,
         onSuccess: () -> Unit
     ) {
         when (result.status) {
             Status.LOADING -> {
                 adapter.submitList(emptyList())
-                ProgressHandle.setupVisibilityShimmerLoading(
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                     binding.cardManageCategory.shimmerLayout,
                     true
                 )
             }
 
             Status.SUCCESS -> {
-                ProgressHandle.setupVisibilityShimmerLoading(
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                     binding.cardManageCategory.shimmerLayout,
                     false
                 )
                 onSuccess.invoke()
-                NotificationHandle.showSuccessSnackBar(requireView(), successMessage)
             }
 
             Status.ERROR -> {
-                ProgressHandle.setupVisibilityShimmerLoading(
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                     binding.cardManageCategory.shimmerLayout,
                     false
                 )

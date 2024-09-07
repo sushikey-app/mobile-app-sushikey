@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.am.projectinternalresto.data.response.admin.category.DataItemCategory
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 data class MenuResponse(
 
@@ -42,5 +43,23 @@ data class DataItemMenu(
     val price: Int? = null,
 
     @field:SerializedName("id")
-    val idMenu: String? = null
+    val idMenu: String? = null,
+
+    @field:SerializedName("topping")
+    val topping: @RawValue List<ToppingItem>? = null
 ) : Parcelable
+
+
+data class ToppingItem(
+
+    @field:SerializedName("nama")
+    val nama: String? = null,
+
+    @field:SerializedName("id")
+    val id: String? = null,
+
+    @field:SerializedName("harga")
+    val harga: Int? = null,
+
+    var isSelected: Boolean = false
+)

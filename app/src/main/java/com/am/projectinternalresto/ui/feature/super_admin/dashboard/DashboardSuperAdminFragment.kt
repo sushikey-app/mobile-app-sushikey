@@ -1,6 +1,5 @@
 package com.am.projectinternalresto.ui.feature.super_admin.dashboard
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,29 +9,34 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.data.dummy.DummyData
+import com.am.projectinternalresto.data.response.super_admin.dashboard.DataItemSales
 import com.am.projectinternalresto.databinding.FragmentDashboardBinding
+import com.am.projectinternalresto.service.source.Status
 import com.am.projectinternalresto.ui.adapter.dahboard.MenuFavoriteAdapter
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
+import com.am.projectinternalresto.ui.feature.staff.order_menu.ManageOrderMenuViewModel
+import com.am.projectinternalresto.ui.widget.chart.Chart.setupSalesChart
 import com.am.projectinternalresto.ui.widget.dialog_fragment.FilterSalesDialogFragment
-import com.am.projectinternalresto.ui.widget.chart.CustomStyleRoundedBarChart
-import com.am.projectinternalresto.utils.MyValueFormatter
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
+import com.am.projectinternalresto.utils.Formatter.formatCurrency
+import com.am.projectinternalresto.utils.NotificationHandle
+import com.am.projectinternalresto.utils.ProgressHandle
 import com.google.android.material.tabs.TabLayout
 import org.koin.android.ext.android.inject
 
 class DashboardSuperAdminFragment : Fragment() {
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
-    private val authViewModel : AuthViewModel by inject()
+    private val authViewModel: AuthViewModel by inject()
+    private val viewModel: ManageOrderMenuViewModel by inject()
+    private val token: String by lazy { authViewModel.getTokenUser().toString() }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        setupView()
+        setupCardMenuFavorite()
+        setupGetData()
+        setupTabLayout()
         setupNavigation()
         return binding.root
     }
@@ -43,83 +47,58 @@ class DashboardSuperAdminFragment : Fragment() {
         }
     }
 
-    private fun setupView() {
-        setupCardMenuFavorite()
-        setupTabLayout()
-        setupChartSales()
+    private fun setupGetData() {
+        viewModel.getSalesData(token).observe(viewLifecycleOwner) { result ->
+            when (result.status) {
+                Status.LOADING -> {
+                    setupShimmerVisibility(true)
+                }
+
+                Status.SUCCESS -> {
+                    setupShimmerVisibility(false)
+                    setupDashboardViewWithData(result.data?.data)
+                    setupSalesChart(
+                        binding.cardChartSales.chartSales,
+                        result.data?.data?.yearlyRevenue
+                    )
+                }
+
+                Status.ERROR -> {
+                    setupShimmerVisibility(false)
+                    NotificationHandle.showErrorSnackBar(requireView(), result.message.toString())
+                }
+            }
+        }
+    }
+
+    private fun setupDashboardViewWithData(data: DataItemSales?) {
         binding.cardIncomeDays.apply {
             textTitleContent.text = getString(R.string.text_income_today)
-            textValueContent.text = "Rp. 200.000"
+            textValueContent.text = formatCurrency(data?.todayRevenue ?: 0)
             iconContent.setImageResource(R.drawable.icon_income_today)
         }
         binding.cardIncomeMonth.apply {
             textTitleContent.text = getString(R.string.text_income_this_month)
-            textValueContent.text = "Rp. 200.000"
+            textValueContent.text = formatCurrency(data?.currentMonthRevenue ?: 0)
             iconContent.setImageResource(R.drawable.icon_income_this_month)
         }
         binding.cardTotalSalesMonth.apply {
             textTitleContent.text = getString(R.string.text_total_order_today)
-            textValueContent.text = "50"
+            textValueContent.text = data?.todayTotalSales.toString()
             iconContent.setImageResource(R.drawable.icon_total_order)
         }
         binding.cardTotalSalesOfflineOrder.apply {
             textTitleContent.text = getString(R.string.text_order_offline)
-            textValueContent.text = "30"
+            textValueContent.text = data?.offlineOrders.toString()
             iconContent.setImageResource(R.drawable.icon_order_offline)
         }
         binding.cardTotalSalesOnlineOrder.apply {
             textTitleContent.text = getString(R.string.text_order_online)
-            textValueContent.text = "20"
+            textValueContent.text = data?.onlineOrders.toString()
             iconContent.setImageResource(R.drawable.icon_order_online)
         }
     }
 
-    private fun setupChartSales() {
-        val barChart = binding.cardChartSales.chartSales
-        val entries = ArrayList<BarEntry>()
-        entries.add(BarEntry(0f, 5f))
-        entries.add(BarEntry(1f, 6f))
-        entries.add(BarEntry(2f, 7f))
-        entries.add(BarEntry(3f, 8f))
-        entries.add(BarEntry(4f, 6f))
-        entries.add(BarEntry(5f, 5f))
-        entries.add(BarEntry(6f, 7f))
-        entries.add(BarEntry(7f, 6f))
-        entries.add(BarEntry(8f, 5f))
-        entries.add(BarEntry(9f, 7f))
-        entries.add(BarEntry(10f, 6f))
-        entries.add(BarEntry(11f, 5f))
-
-        val dataSet = BarDataSet(entries, "Penjualan 2024")
-        dataSet.color = Color.parseColor("#FF7F7F")
-        dataSet.valueTextColor = Color.BLACK
-        dataSet.valueTextSize = 10f
-
-        val data = BarData(dataSet)
-        barChart.data = data
-        barChart.description.isEnabled = false
-
-        // Set custom renderer
-        barChart.renderer =
-            CustomStyleRoundedBarChart(barChart, barChart.animator, barChart.viewPortHandler)
-
-        // Customisasi tambahan
-        barChart.setDrawGridBackground(false)
-        barChart.axisLeft.setDrawGridLines(false)
-        barChart.axisRight.setDrawGridLines(false)
-        barChart.xAxis.setDrawGridLines(false)
-
-        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-        barChart.axisRight.isEnabled = false
-
-        // Set value formatter untuk sumbu X
-        barChart.xAxis.valueFormatter = MyValueFormatter()
-        barChart.xAxis.labelCount = 12
-        barChart.xAxis.granularity = 1f
-
-        barChart.animateY(1000)
-        barChart.invalidate()
-    }
 
     private fun setupCardMenuFavorite() {
         val adapter = MenuFavoriteAdapter()
@@ -129,7 +108,6 @@ class DashboardSuperAdminFragment : Fragment() {
             recyclerViewFavoriteMenu.adapter = adapter
         }
     }
-
 
     private fun setupTabLayout() {
         val tabLayout = binding.cardMenuFavorite.tabLayout
@@ -154,4 +132,23 @@ class DashboardSuperAdminFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
     }
+
+    private fun setupShimmerVisibility(isVisible: Boolean) {
+        val cards = listOf(
+            binding.cardIncomeMonth,
+            binding.cardIncomeDays,
+            binding.cardTotalSalesMonth,
+            binding.cardTotalSalesOfflineOrder,
+            binding.cardTotalSalesOnlineOrder
+        )
+
+        cards.forEach { card ->
+            card.apply {
+                ProgressHandle.setupVisibilityShimmerLoadingLayout(shimmerLayoutFirst, isVisible)
+                ProgressHandle.setupVisibilityShimmerLoadingLayout(shimmerLayoutSecond, isVisible)
+                ProgressHandle.setupVisibilityShimmerLoadingLayout(shimmerThird, isVisible)
+            }
+        }
+    }
+
 }

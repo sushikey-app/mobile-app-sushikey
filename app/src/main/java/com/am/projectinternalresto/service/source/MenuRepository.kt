@@ -1,10 +1,10 @@
 package com.am.projectinternalresto.service.source
 
 import androidx.lifecycle.liveData
-import com.am.projectinternalresto.data.params.CategoryBody
-import com.am.projectinternalresto.data.params.MenuBody
-import com.am.projectinternalresto.data.params.toMultipartBody
-import com.am.projectinternalresto.data.params.toMultipartImagePart
+import com.am.projectinternalresto.data.body_params.CategoryRequest
+import com.am.projectinternalresto.data.body_params.MenuBody
+import com.am.projectinternalresto.data.body_params.toMultipartBody
+import com.am.projectinternalresto.data.body_params.toMultipartImagePart
 import com.am.projectinternalresto.service.api.ApiService
 import com.am.projectinternalresto.utils.Key
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +29,7 @@ class MenuRepository(private val apiService: ApiService) {
         }
     }
 
-    fun addCategoryMenu(token: String, payload: CategoryBody) =
+    fun addCategoryMenu(token: String, payload: CategoryRequest) =
         liveData(Dispatchers.IO) {
             emit(Resource.loading(null))
             try {
@@ -50,7 +50,7 @@ class MenuRepository(private val apiService: ApiService) {
     fun updateCategoryMenu(
         token: String,
         idCategory: String,
-        payload: CategoryBody,
+        payload: CategoryRequest,
     ) =
         liveData(Dispatchers.IO) {
             emit(Resource.loading(null))
@@ -131,6 +131,23 @@ class MenuRepository(private val apiService: ApiService) {
         val imagePayload = menuBody.toMultipartImagePart()
         try {
             val response = apiService.updateMenu("Bearer $token", idMenu, bodyPayload, imagePayload)
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(Key.ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
+
+    fun deleteMenu(token: String, idMenu: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.deleteMenu("Bearer $token", idMenu)
             if (response.isSuccessful) {
                 emit(Resource.success(response.body()))
             } else {

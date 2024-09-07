@@ -7,7 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.databinding.ActivityMainSuperAdminBinding
-import com.am.projectinternalresto.ui.widget.alert.AlertDialog
+import com.am.projectinternalresto.ui.widget.dialog.showAlertLogout
 
 class MainSuperAdminActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainSuperAdminBinding
@@ -27,14 +27,11 @@ class MainSuperAdminActivity : AppCompatActivity() {
         binding.navigationRailsSuperAdmin.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_super_admin_logout -> {
-                    AlertDialog.showAlertLogout(this@MainSuperAdminActivity)
+                    showAlertLogout(this@MainSuperAdminActivity)
                     true
                 }
-
                 else -> NavigationUI.onNavDestinationSelected(item, navController)
             }
         }
     }
-
-
 }

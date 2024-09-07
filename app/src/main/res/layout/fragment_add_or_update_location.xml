@@ -112,6 +112,8 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminateTint="@color/pink"
+        android:indeterminateTintMode="src_in"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/edlPhoneNumber"
         app:layout_constraintEnd_toEndOf="@id/edlPhoneNumber"

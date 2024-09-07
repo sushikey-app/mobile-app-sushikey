@@ -39,5 +39,5 @@ data class DataItemManageAdminAndSuperAdmin(
     val username: String? = null,
 
     @field:SerializedName("lokasi")
-    val location: DataItemLocation
+    val location: DataItemLocation? = null
 ) : Parcelable

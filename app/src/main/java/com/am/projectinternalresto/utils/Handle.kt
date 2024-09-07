@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.am.projectinternalresto.R
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -33,6 +34,7 @@ object UiHandle {
         val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
 }
 
 object ProgressHandle {
@@ -43,7 +45,11 @@ object ProgressHandle {
         textLoading.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
-    fun setupVisibilityShimmerLoading(layout: LinearLayout, isVisible: Boolean) {
+    fun setupVisibilityShimmerLoadingInLinearLayout(layout: LinearLayout, isVisible: Boolean) {
+        layout.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
+
+    fun setupVisibilityShimmerLoadingLayout(layout: ShimmerFrameLayout, isVisible: Boolean) {
         layout.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 }

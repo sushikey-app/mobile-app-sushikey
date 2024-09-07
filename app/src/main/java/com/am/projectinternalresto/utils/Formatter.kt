@@ -25,6 +25,10 @@ object Formatter {
         return "Rp. ${decimal.format(amount)}"
     }
 
+    fun formatQuantity(qty: Int): String {
+        return "Qty : $qty"
+    }
+
     fun getImageUri(context: Context): Uri {
         var uri: Uri? = null
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -72,6 +76,7 @@ object Formatter {
         val filesDir = context.externalCacheDir
         return File.createTempFile(timeStamp, ".jpg", filesDir)
     }
+
 }
 
 class MyValueFormatter : ValueFormatter() {

@@ -28,7 +28,7 @@ class ManageAdminAdapter(
             binding.textName.text = dataManageAdmin.name
             binding.textRole.text = dataManageAdmin.role
             binding.textNumberPhone.text = dataManageAdmin.phoneNumber
-            binding.textLocation.text = dataManageAdmin.location.outletName
+            binding.textLocation.text = dataManageAdmin.location?.outletName?.ifBlank { "Global" }
 
             binding.action.apply {
                 buttonEdit.setOnClickListener { onEditClick?.invoke(dataManageAdmin) }

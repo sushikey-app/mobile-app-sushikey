@@ -7,7 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.databinding.ActivityMainStaffBinding
-import com.am.projectinternalresto.ui.widget.alert.AlertDialog
+import com.am.projectinternalresto.ui.widget.dialog.showAlertLogout
 
 class MainStaffActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainStaffBinding
@@ -26,7 +26,7 @@ class MainStaffActivity : AppCompatActivity() {
         binding.navigationRailsStaff.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_staff_logout -> {
-                    AlertDialog.showAlertLogout(this@MainStaffActivity)
+                    showAlertLogout(this@MainStaffActivity)
                     true
                 }
                 else -> NavigationUI.onNavDestinationSelected(item, navController)

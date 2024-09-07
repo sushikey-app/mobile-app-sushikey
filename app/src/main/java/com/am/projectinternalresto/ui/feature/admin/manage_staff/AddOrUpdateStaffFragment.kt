@@ -1,14 +1,13 @@
 package com.am.projectinternalresto.ui.feature.admin.manage_staff
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.am.projectinternalresto.R
-import com.am.projectinternalresto.data.params.StaffBody
+import com.am.projectinternalresto.data.body_params.StaffRequest
 import com.am.projectinternalresto.data.response.admin.manage_staff.AddOrUpdateStaffResponse
 import com.am.projectinternalresto.data.response.admin.manage_staff.DataItemStaff
 import com.am.projectinternalresto.databinding.FragmentAddOrUpdateStaffBinding
@@ -39,12 +38,6 @@ class AddOrUpdateStaffFragment : Fragment() {
     }
 
     private fun setupDisplayWidget() {
-        binding.actionHeadline.textHeadline.text = buildString {
-            append(getString(R.string.edit_data))
-            append(" ")
-            append("Pegawai")
-        }
-        binding.buttonAddOrUpdateStaff.text = getString(R.string.save_data)
         UiHandle.setupDisableHintForField(
             binding.edlName,
             binding.edlName,
@@ -53,10 +46,22 @@ class AddOrUpdateStaffFragment : Fragment() {
             binding.edlPassword
         )
         if (user != null) {
+            binding.actionHeadline.textHeadline.text = buildString {
+                append(getString(R.string.edit_data))
+                append(" ")
+                append("Pegawai")
+            }
             binding.edtName.setText(user?.name)
             binding.edtUsername.setText(user?.username)
             binding.edtNumberTelephone.setText(user?.phoneNumber)
+        } else {
+            binding.actionHeadline.textHeadline.text = buildString {
+                append(R.string.add_data)
+                append(" ")
+                append("Pegawai")
+            }
         }
+        binding.buttonAddOrUpdateStaff.text = getString(R.string.save_data)
     }
 
     private fun setupNavigation() {
@@ -64,11 +69,10 @@ class AddOrUpdateStaffFragment : Fragment() {
             findNavController().popBackStack()
         }
         binding.buttonAddOrUpdateStaff.setOnClickListener {
+            UiHandle.setupHideKeyboard(it)
             if (user != null) {
-                Log.e("Check", "Is Update")
                 setupPutDataStaffToApi()
             } else {
-                Log.e("Check", "Is Insert")
                 setupPostDataStaffToApi()
             }
         }
@@ -106,13 +110,16 @@ class AddOrUpdateStaffFragment : Fragment() {
             }
 
             Status.ERROR -> {
+                ProgressHandle.setupVisibilityProgressBar(
+                    binding.progressBar, binding.textLoading, false
+                )
                 NotificationHandle.showErrorSnackBar(requireView(), result.message.toString())
             }
         }
     }
 
-    private fun dataStaff(): StaffBody {
-        return StaffBody(
+    private fun dataStaff(): StaffRequest {
+        return StaffRequest(
             name = binding.edtName.text.toString(),
             username = binding.edtUsername.text.toString(),
             phoneNumber = binding.edtNumberTelephone.text.toString(),

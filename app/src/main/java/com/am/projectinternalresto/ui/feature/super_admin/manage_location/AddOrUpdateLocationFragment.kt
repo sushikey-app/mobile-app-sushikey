@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.am.projectinternalresto.R
-import com.am.projectinternalresto.data.params.LocationBody
+import com.am.projectinternalresto.data.body_params.LocationRequest
 import com.am.projectinternalresto.data.response.super_admin.location.AddOrUpdateLocationResponse
 import com.am.projectinternalresto.data.response.super_admin.location.DataItemLocation
 import com.am.projectinternalresto.databinding.FragmentAddOrUpdateLocationBinding
@@ -123,8 +123,8 @@ class AddOrUpdateLocationFragment : Fragment() {
         }
     }
 
-    private fun dataResultLocation(): LocationBody {
-        return LocationBody(
+    private fun dataResultLocation(): LocationRequest {
+        return LocationRequest(
             nameOutlet = binding.edtNameResto.text.toString(),
             locationOutlet = binding.edtLocation.text.toString(),
             phoneNumber = binding.edtPhoneNumber.text.toString()

@@ -1,27 +1,33 @@
 package com.am.projectinternalresto.ui.adapter.menu
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.am.projectinternalresto.data.model.DummyModel
+import com.am.projectinternalresto.data.response.admin.menu.DataItemMenu
 import com.am.projectinternalresto.databinding.ItemContentMenuBinding
+import com.am.projectinternalresto.utils.Formatter
 import com.bumptech.glide.Glide
 
-class MenuAdapter : ListAdapter<DummyModel.DummyModelMenu, MenuAdapter.ViewHolder>(DIFF_CALLBACK) {
-    var callbackAddToCart: (() -> Unit)? = null
+class MenuAdapter(private var onClickAddToCart: ((data: DataItemMenu) -> Unit)? = null) :
+    ListAdapter<DataItemMenu, MenuAdapter.ViewHolder>(DIFF_CALLBACK) {
+    fun callbackOnClickListener(listener: (data: DataItemMenu) -> Unit) {
+        onClickAddToCart = listener
+    }
 
     inner class ViewHolder(private val binding: ItemContentMenuBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(dataMenu: DummyModel.DummyModelMenu) {
-            Glide.with(binding.root.context).load(dataMenu.image).into(binding.imageMenu)
-            binding.textCategory.text = dataMenu.category
-            binding.textName.text = dataMenu.nameProduct
-            binding.textValueQuota.text = dataMenu.quota.toString()
-            binding.textValuePrice.text = dataMenu.price
-            binding.buttonAddToCart.setOnClickListener {
-                callbackAddToCart?.invoke()
+        @SuppressLint("SetTextI18n")
+        fun bind(dataMenu: DataItemMenu) {
+            Glide.with(binding.root.context).load(dataMenu.imageMenu).into(binding.imageMenu)
+            binding.textCategory.text = dataMenu.category?.nameCategory
+            binding.textName.text = dataMenu.nameMenu
+            binding.textQuota.text = Formatter.formatQuantity(dataMenu.quota ?: 0)
+            binding.textPrice.text = Formatter.formatCurrency(dataMenu.price ?: 0)
+            binding.root.setOnClickListener {
+                onClickAddToCart?.invoke(dataMenu)
             }
         }
     }
@@ -42,15 +48,15 @@ class MenuAdapter : ListAdapter<DummyModel.DummyModelMenu, MenuAdapter.ViewHolde
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DummyModel.DummyModelMenu>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DataItemMenu>() {
             override fun areItemsTheSame(
-                oldItem: DummyModel.DummyModelMenu, newItem: DummyModel.DummyModelMenu
+                oldItem: DataItemMenu, newItem: DataItemMenu
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: DummyModel.DummyModelMenu, newItem: DummyModel.DummyModelMenu
+                oldItem: DataItemMenu, newItem: DataItemMenu
             ): Boolean {
                 return oldItem == newItem
             }

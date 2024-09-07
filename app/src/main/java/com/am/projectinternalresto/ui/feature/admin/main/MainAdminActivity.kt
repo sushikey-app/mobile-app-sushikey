@@ -7,7 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.databinding.ActivityMainAdminBinding
-import com.am.projectinternalresto.ui.widget.alert.AlertDialog
+import com.am.projectinternalresto.ui.widget.dialog.showAlertLogout
 
 class MainAdminActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainAdminBinding
@@ -27,7 +27,7 @@ class MainAdminActivity : AppCompatActivity() {
         binding.navigationRailsAdmin.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_admin_logout -> {
-                    AlertDialog.showAlertLogout(this@MainAdminActivity)
+                    showAlertLogout(this@MainAdminActivity)
                     true
                 }
 

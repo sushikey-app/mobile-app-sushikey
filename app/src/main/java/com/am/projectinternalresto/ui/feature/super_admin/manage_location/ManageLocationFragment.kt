@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.am.projectinternalresto.data.response.super_admin.location.LocationResponse
 import com.am.projectinternalresto.databinding.FragmentManageLocationBinding
+import com.am.projectinternalresto.service.source.Resource
 import com.am.projectinternalresto.service.source.Status
 import com.am.projectinternalresto.ui.adapter.manage_location.ManageLocationAdapter
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
@@ -25,13 +25,15 @@ class ManageLocationFragment : Fragment() {
     private val viewModel: LocationViewModel by inject()
     private val authViewModel: AuthViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
+    private lateinit var adapter: ManageLocationAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentManageLocationBinding.inflate(inflater, container, false)
+        setupManageLocationAdapter()
         setupNavigation()
-        setupGetDataFromAPI()
+        setupGetDataFromApi()
         return binding.root
     }
 
@@ -44,80 +46,71 @@ class ManageLocationFragment : Fragment() {
         }
     }
 
-    private fun setupGetDataFromAPI() {
+    private fun setupGetDataFromApi() {
         // function to get data location outlet
-        viewModel.getLocation(token).observe(viewLifecycleOwner) { resource ->
-            when (resource.status) {
-                Status.LOADING -> {
-                    ProgressHandle.setupVisibilityShimmerLoading(
-                        binding.cardManageLocation.shimmerLayout,
-                        true
-                    )
-                }
-
-                Status.SUCCESS -> {
-                    ProgressHandle.setupVisibilityShimmerLoading(
-                        binding.cardManageLocation.shimmerLayout,
-                        false
-                    )
-                    setupAdapter(resource.data)
-                }
-
-                Status.ERROR -> {
-                    ProgressHandle.setupVisibilityShimmerLoading(
-                        binding.cardManageLocation.shimmerLayout,
-                        false
-                    )
-                }
+        viewModel.getLocation(token).observe(viewLifecycleOwner) { result ->
+            handleApiStatus(result, result.message.toString()) {
+                adapter.submitList(result.data?.data)
             }
         }
     }
 
     private fun setupPostDeleteData(idLocation: String) {
-        viewModel.deleteLocation(token, idLocation).observe(viewLifecycleOwner) { resource ->
-            when (resource.status) {
-                Status.LOADING -> {}
-
-                Status.SUCCESS -> {
-                    setupGetDataFromAPI()
-                    NotificationHandle.showSuccessSnackBar(
-                        requireView(),
-                        resource.data?.message.toString()
-                    )
-                }
-
-                Status.ERROR -> {
-                    NotificationHandle.showErrorSnackBar(requireView(), resource.message.toString())
-                    binding.cardManageLocation.recyclerViewContentTableLocation.visibility =
-                        View.VISIBLE
-                }
+        viewModel.deleteLocation(token, idLocation).observe(viewLifecycleOwner) { result ->
+            handleApiStatus(result, result.message.toString()) {
+                adapter.submitList(null)
+                setupGetDataFromApi()
             }
         }
     }
 
-    private fun setupAdapter(data: LocationResponse?) {
-        val adapter = ManageLocationAdapter().apply {
-            submitList(data?.data)
+    private fun setupManageLocationAdapter() {
+        adapter = ManageLocationAdapter().apply {
             callbackOnEditClickListener { dataLocation ->
                 Navigation.navigateFragment(
                     Destination.MANAGE_LOCATION_TO_ADD_OR_UPDATE_LOCATION,
                     findNavController(),
-                    Bundle().apply {
-                        putParcelable(
-                            Key.BUNDLE_DATA_LOCATION,
-                            dataLocation
-                        )
-                    }
+                    Bundle().apply { putParcelable(Key.BUNDLE_DATA_LOCATION, dataLocation) }
                 )
             }
-            callbackOnDeleteClickListener { idLocation ->
-                setupPostDeleteData(idLocation)
-            }
+            callbackOnDeleteClickListener { idLocation -> setupPostDeleteData(idLocation) }
         }
 
         binding.cardManageLocation.recyclerViewContentTableLocation.let {
             it.layoutManager = LinearLayoutManager(requireContext())
             it.adapter = adapter
+        }
+    }
+
+    private fun <T> handleApiStatus(
+        result: Resource<T>,
+        errorMessage: String,
+        onSuccess: () -> Unit
+    ) {
+        when (result.status) {
+            Status.LOADING -> {
+                adapter.submitList(emptyList())
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                    binding.cardManageLocation.shimmerLayout,
+                    true
+                )
+            }
+
+            Status.SUCCESS -> {
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                    binding.cardManageLocation.shimmerLayout,
+                    false
+                )
+                onSuccess.invoke()
+            }
+
+            Status.ERROR -> {
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                    binding.cardManageLocation.shimmerLayout,
+                    false
+                )
+                NotificationHandle.showErrorSnackBar(requireView(), errorMessage)
+            }
         }
     }
 }

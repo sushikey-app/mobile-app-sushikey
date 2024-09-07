@@ -50,34 +50,6 @@
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--Number Menu-->
-        <TextView
-            android:id="@+id/textNoMenu"
-            style="@style/CustomTextStyle.Body.PopSemiBold"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/no_menu"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edlCategory" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edlNoMenu"
-            android:layout_width="0dp"
-            android:hint="@string/input_your_number_menu"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="5dp"
-            app:layout_constraintWidth_percent="0.6"
-            android:textColorHint="@color/grey"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textNoMenu">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtNoMenu"
-                style="@style/CustomEditTextStyle"
-                android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
-
         <!--Name Menu-->
         <TextView
             android:id="@+id/textNameMenu"
@@ -86,7 +58,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/name_menu"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edlNoMenu" />
+            app:layout_constraintTop_toBottomOf="@id/edlCategory" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edlNameMenu"
@@ -95,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="5dp"
-            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintEnd_toEndOf="@id/edlCategory"
             android:textColorHint="@color/grey"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textNameMenu">
@@ -123,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="5dp"
-            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintEnd_toEndOf="@id/edlCategory"
             android:textColorHint="@color/grey"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textComposition">
@@ -152,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="5dp"
-            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintEnd_toEndOf="@id/edlCategory"
             android:textColorHint="@color/grey"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textQuotaMenu">
@@ -180,7 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="5dp"
-            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintEnd_toEndOf="@id/edlCategory"
             android:textColorHint="@color/grey"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textPriceMenu">
@@ -191,43 +163,38 @@
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--Topping Menu-->
         <TextView
-            android:id="@+id/textTopping"
+            android:id="@+id/textAddTopping"
             style="@style/CustomTextStyle.Body.PopSemiBold"
-            android:layout_marginStart="30dp"
+            android:text="@string/add_topping"
             android:layout_marginTop="16dp"
-            android:text="@string/topping"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/textPriceMenu"
             app:layout_constraintTop_toBottomOf="@id/EdlPriceMenu" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/EdlTopping"
+        <LinearLayout
+            android:id="@+id/layoutToppingContainer"
             android:layout_width="0dp"
-            android:hint="@string/input_your_topping"
             android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="5dp"
-            app:layout_constraintWidth_percent="0.6"
-            android:textColorHint="@color/grey"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textTopping">
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/textPhoto"
+            app:layout_constraintEnd_toEndOf="@id/EdlPriceMenu"
+            app:layout_constraintStart_toStartOf="@id/textAddTopping"
+            app:layout_constraintTop_toBottomOf="@id/EdlPriceMenu">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtTopping"
-                style="@style/CustomEditTextStyle"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
+            <!-- Topping items will be added here dynamically -->
+
+        </LinearLayout>
 
         <!--Price Menu-->
         <TextView
             android:id="@+id/textPhoto"
             style="@style/CustomTextStyle.Body.PopSemiBold"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="25dp"
             android:text="@string/photo_menu"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/EdlTopping" />
+            app:layout_constraintTop_toBottomOf="@id/layoutToppingContainer" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardImageMenu"
@@ -264,7 +231,7 @@
             android:text="@string/add_menu"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0"
-            app:layout_constraintEnd_toEndOf="@id/EdlTopping"
+            app:layout_constraintEnd_toEndOf="@id/EdlPriceMenu"
             app:layout_constraintStart_toStartOf="@id/textPhoto"
             app:layout_constraintTop_toBottomOf="@id/cardImageMenu" />
 
@@ -272,8 +239,10 @@
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:indeterminateTint="@color/pink"
+            android:indeterminateTintMode="src_in"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@id/edlComposition"
+            app:layout_constraintBottom_toBottomOf="@id/cardImageMenu"
             app:layout_constraintEnd_toEndOf="@id/edlCategory"
             app:layout_constraintStart_toStartOf="@id/edlCategory"
             app:layout_constraintTop_toTopOf="@id/actionHeadline" />

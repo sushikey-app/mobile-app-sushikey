@@ -1,4 +1,4 @@
-package com.am.projectinternalresto.data.params
+package com.am.projectinternalresto.data.body_params
 
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -9,24 +9,34 @@ import java.io.File
 
 data class MenuBody(
     val idCategory: String,
-    val noMenu: String,
     val nameMenu: String,
     val composition: String,
     val quota: Int,
     val price: Int,
-    val image: File? = null
+    val image: File? = null,
+    val itemToppings: List<ItemTopping>? = null
 )
+
+data class ItemTopping(
+    val nama: String,
+    val price: Int
+)
+
 
 fun MenuBody.toMultipartBody(): Map<String, RequestBody> {
     val map = mutableMapOf<String, RequestBody>()
 
     map["kategori_id"] = idCategory.toRequestBody("text/plain".toMediaTypeOrNull())
-    map["nomor_menu"] = noMenu.toRequestBody("text/plain".toMediaTypeOrNull())
     map["nama"] = nameMenu.toRequestBody("text/plain".toMediaTypeOrNull())
     map["komposisi"] = composition.toRequestBody("text/plain".toMediaTypeOrNull())
     map["kuota"] = quota.toString().toRequestBody("text/plain".toMediaTypeOrNull())
     map["harga"] = price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
+    itemToppings?.forEachIndexed { index, topping ->
+        map["topping[$index][nama]"] = topping.nama.toRequestBody("text/plain".toMediaTypeOrNull())
+        map["topping[$index][harga]"] =
+            topping.price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+    }
     return map
 }
 

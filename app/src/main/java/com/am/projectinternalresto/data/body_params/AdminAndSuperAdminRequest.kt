@@ -1,8 +1,8 @@
-package com.am.projectinternalresto.data.params
+package com.am.projectinternalresto.data.body_params
 
 import com.google.gson.annotations.SerializedName
 
-data class AdminAndSuperAdminBody(
+data class AdminAndSuperAdminRequest(
     @field:SerializedName("lokasi_id") val locationId: String,
     @field:SerializedName("name") val name: String,
     @field:SerializedName("username") val username: String,

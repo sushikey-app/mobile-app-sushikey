@@ -1,10 +1,12 @@
 package com.am.projectinternalresto.service.api
 
-import com.am.projectinternalresto.data.params.AdminAndSuperAdminBody
-import com.am.projectinternalresto.data.params.CategoryBody
-import com.am.projectinternalresto.data.params.LocationBody
-import com.am.projectinternalresto.data.params.LoginBody
-import com.am.projectinternalresto.data.params.StaffBody
+import com.am.projectinternalresto.data.body_params.AdminAndSuperAdminRequest
+import com.am.projectinternalresto.data.body_params.CategoryRequest
+import com.am.projectinternalresto.data.body_params.LocationRequest
+import com.am.projectinternalresto.data.body_params.LoginRequest
+import com.am.projectinternalresto.data.body_params.OrderRequest
+import com.am.projectinternalresto.data.body_params.SaveOrderRequest
+import com.am.projectinternalresto.data.body_params.StaffRequest
 import com.am.projectinternalresto.data.response.GeneralResponse
 import com.am.projectinternalresto.data.response.admin.category.AddOrUpdateCategoryResponse
 import com.am.projectinternalresto.data.response.admin.category.CategoryResponse
@@ -13,6 +15,9 @@ import com.am.projectinternalresto.data.response.admin.manage_staff.StaffRespons
 import com.am.projectinternalresto.data.response.admin.menu.AddOrUpdateMenuResponse
 import com.am.projectinternalresto.data.response.admin.menu.MenuResponse
 import com.am.projectinternalresto.data.response.auth.LoginResponse
+import com.am.projectinternalresto.data.response.staff.order.ListOrderResponse
+import com.am.projectinternalresto.data.response.staff.order.OrderResponse
+import com.am.projectinternalresto.data.response.super_admin.dashboard.SalesDataResponse
 import com.am.projectinternalresto.data.response.super_admin.location.AddOrUpdateLocationResponse
 import com.am.projectinternalresto.data.response.super_admin.location.LocationResponse
 import com.am.projectinternalresto.data.response.super_admin.manage_admin.AddOrUpdateAdminSuperAdminResponse
@@ -30,16 +35,21 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.PartMap
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
     /*user auth*/
     //login
     @POST("login")
     suspend fun login(
-        @Body loginBody: LoginBody
+        @Body loginRequest: LoginRequest
     ): Response<LoginResponse>
 
     /*Super Admin*/
+    // dashboard
+    @GET("dashboard-super-admin")
+    suspend fun getDataSales(@Header("Authorization") bearer: String): Response<SalesDataResponse>
+
     // location
     @GET("lokasi")
     suspend fun getLocation(
@@ -49,14 +59,14 @@ interface ApiService {
     @POST("lokasi")
     suspend fun addLocation(
         @Header("Authorization") bearer: String,
-        @Body locationBody: LocationBody
+        @Body locationRequest: LocationRequest
     ): Response<AddOrUpdateLocationResponse>
 
     @PUT("lokasi/{id}")
     suspend fun updateLocation(
         @Header("Authorization") bearer: String,
         @Path("id") idLocation: String,
-        @Body locationBody: LocationBody
+        @Body locationRequest: LocationRequest
     ): Response<AddOrUpdateLocationResponse>
 
     @DELETE("lokasi/{id}")
@@ -74,14 +84,14 @@ interface ApiService {
     @POST("pegawai-super-admin")
     suspend fun addAdminOrSuperAdmin(
         @Header("Authorization") bearer: String,
-        @Body addAdminAndSuperAdmin: AdminAndSuperAdminBody
+        @Body addAdminAndSuperAdmin: AdminAndSuperAdminRequest
     ): Response<AddOrUpdateAdminSuperAdminResponse>
 
     @PUT("pegawai-super-admin/{id}")
     suspend fun updateAdminOrSuperAdmin(
         @Header("Authorization") bearer: String,
         @Path("id") id: String,
-        @Body updateAdminOrSuperAdmin: AdminAndSuperAdminBody
+        @Body updateAdminOrSuperAdmin: AdminAndSuperAdminRequest
     ): Response<AddOrUpdateAdminSuperAdminResponse>
 
     @DELETE("pegawai-super-admin/{id}")
@@ -102,14 +112,14 @@ interface ApiService {
     @POST("kategori")
     suspend fun addCategoryMenu(
         @Header("Authorization") bearer: String,
-        @Body categoryBody: CategoryBody
+        @Body categoryBody: CategoryRequest
     ): Response<AddOrUpdateCategoryResponse>
 
     @PUT("kategori/{id}")
     suspend fun updateCategoryMenu(
         @Header("Authorization") bearer: String,
         @Path("id") idCategory: String,
-        @Body categoryBody: CategoryBody
+        @Body categoryRequest: CategoryRequest
     ): Response<AddOrUpdateCategoryResponse>
 
     @DELETE("kategori/{id}")
@@ -124,7 +134,6 @@ interface ApiService {
         @Header("Authorization") bearer: String
     ): Response<MenuResponse>
 
-    // try add menu using body
     @Multipart
     @POST("menu")
     suspend fun addMenu(
@@ -142,20 +151,27 @@ interface ApiService {
         @Part image: MultipartBody.Part?
     ): Response<AddOrUpdateMenuResponse>
 
+    @DELETE("menu/{id}")
+    suspend fun deleteMenu(
+        @Header("Authorization") bearer: String,
+        @Path("id") idMenu: String,
+    ): Response<GeneralResponse>
+
+
     @GET("pegawai-admin")
     suspend fun getAllDataStaff(@Header("Authorization") bearer: String): Response<StaffResponse>
 
     @POST("pegawai-admin")
     suspend fun addStaff(
         @Header("Authorization") bearer: String,
-        @Body staffBody: StaffBody
+        @Body staffRequest: StaffRequest
     ): Response<AddOrUpdateStaffResponse>
 
     @PUT("pegawai-admin/{id}")
     suspend fun updateStaff(
         @Header("Authorization") bearer: String,
         @Path("id") idStaff: String,
-        @Body staffBody: StaffBody
+        @Body staffRequest: StaffRequest
     ): Response<AddOrUpdateStaffResponse>
 
     @DELETE("pegawai-admin/{id}")
@@ -163,4 +179,27 @@ interface ApiService {
         @Header("Authorization") bearer: String,
         @Path("id") idStaff: String,
     ): Response<GeneralResponse>
+
+
+    // staff
+    @GET("pesan")
+    suspend fun getDataMenuOrder(@Header("Authorization") bearer: String): Response<MenuResponse>
+
+    @POST("simpan-pesanan")
+    suspend fun saveDataOrder(
+        @Header("Authorization") bearer: String,
+        @Body orderRequest: SaveOrderRequest
+    ): Response<OrderResponse>
+
+    @POST("pesan")
+    suspend fun addOrder(
+        @Header("Authorization") bearer: String,
+        @Body body: OrderRequest
+    ): Response<OrderResponse>
+
+    @GET("pesanan")
+    suspend fun getListOrder(
+        @Header("Authorization") bearer: String,
+        @Query("status") paidStatus: String
+    ): Response<ListOrderResponse>
 }

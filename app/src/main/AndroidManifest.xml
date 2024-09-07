@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
     <application
         android:name=".service.di.MyApplication"
         android:usesCleartextTraffic="true"
@@ -26,6 +25,7 @@
         <activity
             android:name=".ui.feature.staff.main.MainStaffActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="landscape" />
 
         <activity

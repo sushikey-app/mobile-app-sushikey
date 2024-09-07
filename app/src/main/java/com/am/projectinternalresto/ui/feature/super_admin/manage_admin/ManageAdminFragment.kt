@@ -39,20 +39,20 @@ class ManageAdminFragment : Fragment() {
         viewModel.getAllDataAdminAndSuperAdmin(token).observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.LOADING -> {
-                    ProgressHandle.setupVisibilityShimmerLoading(
+                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                         binding.cardManageAdmin.shimmerLayout, true
                     )
                 }
 
                 Status.SUCCESS -> {
-                    ProgressHandle.setupVisibilityShimmerLoading(
+                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                         binding.cardManageAdmin.shimmerLayout, false
                     )
                     setupAdapterManageAdminAndSuperAdmin(resource.data)
                 }
 
                 Status.ERROR -> {
-                    ProgressHandle.setupVisibilityShimmerLoading(
+                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                         binding.cardManageAdmin.shimmerLayout, false
                     )
                     NotificationHandle.showErrorSnackBar(requireView(), resource.message.toString())

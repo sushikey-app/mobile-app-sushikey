@@ -1,5 +1,11 @@
 package com.am.projectinternalresto.data.model
 
+import android.os.Parcelable
+import com.am.projectinternalresto.data.response.admin.menu.DataItemMenu
+import com.am.projectinternalresto.data.response.admin.menu.ToppingItem
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
+
 sealed class DummyModel {
     data class DummyModelMenuFavorite(
         val nameMenu: String,
@@ -7,25 +13,6 @@ sealed class DummyModel {
         val totalSales: String
     )
 
-    data class DummyModelManageLocation(
-        val no: Int,
-        val restoName: String,
-        val restoLocation: String,
-        val numberTelephone: String
-    )
-
-    data class DummyModelSelectLocation(
-        val dataLocation: DummyModelManageLocation,
-        var isChecked: Boolean
-    )
-
-    data class DummyModelManageAdmin(
-        val name: String,
-        val username: String,
-        val division: String,
-        val location: String,
-        val phoneNumber: String
-    )
 
     data class DummyModelReport(
         val no: Int,
@@ -33,20 +20,6 @@ sealed class DummyModel {
         val numberOrder: String,
         val location : String,
         val total: String
-    )
-
-    data class DummyModelCategory(
-        val id: String,
-        val name: String,
-    )
-
-    data class DummyModelMenu(
-        val numberMenu: Int,
-        val category: String,
-        val nameProduct: String,
-        val quota: Int,
-        val price: String,
-        val image: Int
     )
 
     data class DummyModelCart(
@@ -58,4 +31,18 @@ sealed class DummyModel {
         val qty: Int,
         val total: String,
     )
+
+    data class CartItem(
+        val menuItem: DataItemMenu,
+        var qty: Int,
+        val selectedToppings: List<ToppingItem> = emptyList(),
+        val note: String = ""
+    )
+
+    @Parcelize
+    data class OrderSummary(
+        val listCartItems: @RawValue List<CartItem>,
+        val typeOrder: String,
+        val totalPurchase: Int
+    ) : Parcelable
 }

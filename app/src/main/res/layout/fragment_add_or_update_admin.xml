@@ -210,6 +210,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
+            android:indeterminateTint="@color/pink"
+            android:indeterminateTintMode="src_in"
             app:layout_constraintBottom_toBottomOf="@id/edlRole"
             app:layout_constraintEnd_toEndOf="@id/edlRole"
             app:layout_constraintStart_toStartOf="@id/edlRole"

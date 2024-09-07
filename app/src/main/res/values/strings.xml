@@ -12,8 +12,6 @@
     <string name="title_nav_staff">Pegawai</string>
     <string name="title_nav_report">Laporan</string>
     <string name="title_nav_logout">Keluar</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="analytics">Analytics</string>
     <string name="example_total">Rp. 200.000</string>
@@ -40,7 +38,7 @@
     <string name="manage_location">Kelola Lokasi</string>
     <string name="no_menu">Nomor Menu</string>
     <string name="name_menu">Nama Menu</string>
-    <string name="qty">Kuota</string>
+    <string name="qty">Qty</string>
     <string name="composition">Komposisi</string>
     <string name="price">Harga</string>
     <string name="image">Gambar</string>
@@ -69,7 +67,6 @@
     <string name="add_menu">Tambah Menu</string>
     <string name="example_no_menu">Contoh : 01</string>
     <string name="example_name_menu">Tuna Sushi Ayam Muda</string>
-    <string name="example_name_menu2">Padang</string>
     <string name="example_name_menu3">Burger Chanathip ashaishdiahsdi</string>
     <string name="quota_menu">Kuota Menu</string>
     <string name="image_product_menu">image product menu</string>
@@ -138,7 +135,7 @@
     <string name="payment">Pembayaran</string>
     <string name="item">Item</string>
     <string name="Qty">Qty</string>
-    <string name="total_payment">Total \nPembayaran</string>
+    <string name="total_payment">Total Pembayaran</string>
     <string name="icon_cart">iconsave</string>
     <string name="name_staff">Nama</string>
     <string name="location">Lokasi</string>
@@ -186,4 +183,29 @@
     <string name="add_your_photo_menu">Tambahkan foto menu</string>
     <string name="photo_menu">Gambar Menu</string>
     <string name="add_data">Tambah data</string>
+    <string name="orders">Orders #</string>
+    <string name="text_online">Online</string>
+    <string name="text_offline">Offline</string>
+    <string name="topping_name">Nama topping</string>
+    <string name="input_topping_name">Masukan Nama Topping</string>
+    <string name="topping_price">Harga topping</string>
+    <string name="input_topping_price">Masukan Harga Topping</string>
+    <string name="add_more_topping">Tambah Topping Lain</string>
+    <string name="data_category_is_empty">Data Kategori Masih Kosong!!</string>
+    <string name="text_topping_is_empty">Menu ini tidak memiliki topping</string>
+    <string name="confirm_order">Konfirmasi Pesanan</string>
+    <string name="text_sub_total">Sub Total</string>
+    <string name="ppn">PPN</string>
+    <string name="payment_method">Metode Pembayaran</string>
+    <string name="input_your_user_total_payment">"Masukan total pembayaran "</string>
+    <string name="confitm_exit_app">apakah anda yakin keluar?</string>
+    <string name="yes">Ya</string>
+    <string name="name_buyer">Nama Pembeli</string>
+    <string name="input_your_name_buyer">Masukan nama pembeli</string>
+    <string name="continue_payment">Lanjutkan pembayaran</string>
+    <string name="information_order_in_progress">Informasi Pesanan Yang Diproses</string>
+    <string name="edit_order">Edit Pesanan</string>
+    <string name="detail_orders">Detail Pesanan</string>
+    <string name="order_done">Pesanan Selesai</string>
+    <string name="information_unpaid_order">Informasi Pesanan Belum Bayar</string>
 </resources>

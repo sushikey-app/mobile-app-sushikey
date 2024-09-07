@@ -1,8 +1,7 @@
 package com.am.projectinternalresto.service.source
 
-import android.location.Location
 import androidx.lifecycle.liveData
-import com.am.projectinternalresto.data.params.LocationBody
+import com.am.projectinternalresto.data.body_params.LocationRequest
 import com.am.projectinternalresto.service.api.ApiService
 import com.am.projectinternalresto.utils.Key
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +26,7 @@ class LocationRepository(private val apiService: ApiService) {
     }
 
     fun addLocation(
-        token: String, payload : LocationBody
+        token: String, payload : LocationRequest
     ) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
@@ -49,7 +48,7 @@ class LocationRepository(private val apiService: ApiService) {
     fun updateLocation(
         token: String,
         idLocation: String,
-       payload: LocationBody
+       payload: LocationRequest
     ) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {

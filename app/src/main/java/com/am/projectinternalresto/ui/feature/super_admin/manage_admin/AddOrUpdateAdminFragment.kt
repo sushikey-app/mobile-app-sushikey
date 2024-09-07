@@ -1,6 +1,7 @@
 package com.am.projectinternalresto.ui.feature.super_admin.manage_admin
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.am.projectinternalresto.R
-import com.am.projectinternalresto.data.params.AdminAndSuperAdminBody
+import com.am.projectinternalresto.data.body_params.AdminAndSuperAdminRequest
 import com.am.projectinternalresto.data.response.super_admin.location.DataItemLocation
 import com.am.projectinternalresto.data.response.super_admin.manage_admin.AddOrUpdateAdminSuperAdminResponse
 import com.am.projectinternalresto.data.response.super_admin.manage_admin.DataItemManageAdminAndSuperAdmin
@@ -34,7 +35,7 @@ class AddOrUpdateAdminFragment : Fragment() {
     private val locationViewModel: LocationViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
     private var selectedRole: String? = null
-    private var selectIdLocation: String? = null
+    private var selectIdLocation: String = ""
     private lateinit var adapterDropdownSelectAdminWork: SelectWorkLocationAdapter
     private val dataAdmin: DataItemManageAdminAndSuperAdmin? by lazy {
         arguments?.getParcelable(
@@ -123,24 +124,22 @@ class AddOrUpdateAdminFragment : Fragment() {
         view.onItemClickListener = AdapterView.OnItemClickListener { adapterView, _, i, _ ->
             selectedRole = adapterView.getItemAtPosition(i) as? String
 
-            // TODO :: waiting for the fire to be ready to make changes to this feature.
-            //  where the super admin will have coverage of all outlets and the admin is just one outlet.
-            //   if (selectedRole.equals(KEY_LOGIN_ROLE.KEY_ADMIN)) {
-            //      binding.textLocation.visibility = View.VISIBLE
-            //                binding.edlLocation.visibility = View.VISIBLE
-            //            } else {
-            //                binding.textLocation.visibility = View.GONE
-            //                binding.edlLocation.visibility = View.GONE
-            //            }
+
+            if (selectedRole.equals(KEY_LOGIN_ROLE.KEY_ADMIN)) {
+                binding.textLocation.visibility = View.VISIBLE
+                binding.edlLocation.visibility = View.VISIBLE
+            } else {
+                binding.textLocation.visibility = View.GONE
+                binding.edlLocation.visibility = View.GONE
+            }
         }
-        // TODO :: continue
-        //        if (selectedRole.equals(KEY_LOGIN_ROLE.KEY_ADMIN)) {
-        //            binding.textLocation.visibility = View.VISIBLE
-        //            binding.edlLocation.visibility = View.VISIBLE
-        //        } else {
-        //            binding.textLocation.visibility = View.GONE
-        //            binding.edlLocation.visibility = View.GONE
-        //        }
+        if (selectedRole.equals(KEY_LOGIN_ROLE.KEY_ADMIN)) {
+            binding.textLocation.visibility = View.VISIBLE
+            binding.edlLocation.visibility = View.VISIBLE
+        } else {
+            binding.textLocation.visibility = View.GONE
+            binding.edlLocation.visibility = View.GONE
+        }
     }
 
     private fun setupNavigation() {
@@ -156,6 +155,7 @@ class AddOrUpdateAdminFragment : Fragment() {
     }
 
     private fun setupPostDataAdminToApi() {
+        Log.e("check", "data ${dataResultAdminOrSuperAdmin()}")
         viewModel.addAdminOrSuperAdmin(token, dataResultAdminOrSuperAdmin())
             .observe(viewLifecycleOwner) { result ->
                 handleStatusApi(result)
@@ -183,7 +183,7 @@ class AddOrUpdateAdminFragment : Fragment() {
                     binding.progressBar, binding.textLoading, false,
                 )
                 findNavController().popBackStack()
-                NotificationHandle.showSuccessSnackBar(requireView(), result.data.toString())
+                NotificationHandle.showSuccessSnackBar(requireView(), result.data?.message.toString())
             }
 
             Status.ERROR -> {
@@ -195,9 +195,9 @@ class AddOrUpdateAdminFragment : Fragment() {
         }
     }
 
-    private fun dataResultAdminOrSuperAdmin(): AdminAndSuperAdminBody {
-        return AdminAndSuperAdminBody(
-            locationId = selectIdLocation ?: dataAdmin?.locationId.toString(),
+    private fun dataResultAdminOrSuperAdmin(): AdminAndSuperAdminRequest {
+        return AdminAndSuperAdminRequest(
+            locationId = selectIdLocation.toString() ?: dataAdmin?.locationId.toString(),
             name = binding.edtName.text.toString(),
             username = binding.edtUsername.text.toString(),
             phoneNumber = binding.edtPhoneNumber.text.toString(),

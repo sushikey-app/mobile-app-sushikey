@@ -50,20 +50,20 @@ class ManageStaffFragment : Fragment() {
         viewModel.getAllDataStaff(token).observe(viewLifecycleOwner) { result ->
             when (result.status) {
                 Status.LOADING -> {
-                    ProgressHandle.setupVisibilityShimmerLoading(
+                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                         binding.cardManageAdmin.shimmerLayout, true
                     )
                 }
 
                 Status.SUCCESS -> {
-                    ProgressHandle.setupVisibilityShimmerLoading(
+                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                         binding.cardManageAdmin.shimmerLayout, false
                     )
                     setupAdapterStaff(result.data)
                 }
 
                 Status.ERROR -> {
-                    ProgressHandle.setupVisibilityShimmerLoading(
+                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                         binding.cardManageAdmin.shimmerLayout, false
                     )
                     NotificationHandle.showErrorSnackBar(requireView(), result.message.toString())
