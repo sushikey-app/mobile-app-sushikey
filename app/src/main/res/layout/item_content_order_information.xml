@@ -50,7 +50,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:gravity="center"
-                    android:text="@string/example_qty"
+                    tools:text="@string/example_qty"
                     android:textSize="11sp" />
 
                 <ImageView
@@ -72,7 +72,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.5"
                 android:gravity="center"
-                android:text="@string/example_total"
+                tools:text="@string/example_total"
                 android:textSize="11sp" />
         </TableRow>
         </TableLayout>

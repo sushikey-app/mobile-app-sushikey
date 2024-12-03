@@ -7,7 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.databinding.ActivityMainStaffBinding
-import com.am.projectinternalresto.ui.widget.dialog.showAlertLogout
+import com.am.projectinternalresto.ui.widget.alert.showAlertLogout
 
 class MainStaffActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainStaffBinding

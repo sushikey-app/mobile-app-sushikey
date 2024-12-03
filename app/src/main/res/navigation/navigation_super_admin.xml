@@ -33,7 +33,11 @@
         android:id="@+id/nav_super_admin_report"
         android:name="com.am.projectinternalresto.ui.feature.super_admin.report.SuperAdminReportFragment"
         android:label="@string/title_nav_super_admin_report"
-        tools:layout="@layout/fragment_report" />
+        tools:layout="@layout/fragment_report" >
+        <action
+            android:id="@+id/action_nav_super_admin_report_to_cancelOrderFragment"
+            app:destination="@id/cancelOrderFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/addOrUpdateAdminFragment"
@@ -46,4 +50,10 @@
         android:name="com.am.projectinternalresto.ui.feature.super_admin.manage_location.AddOrUpdateLocationFragment"
         android:label="AddOrUpdateLocationFragment"
         tools:layout="@layout/fragment_add_or_update_location" />
+
+    <fragment
+        android:id="@+id/cancelOrderFragment"
+        android:name="com.am.projectinternalresto.ui.feature.super_admin.cancel_order.CancelOrderFragment"
+        tools:layout="@layout/fragment_cancel_order"
+        android:label="CancelOrderFragment" />
 </navigation>

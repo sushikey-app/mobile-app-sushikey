@@ -9,6 +9,9 @@ class ManageCategoryViewModel(private val repository: MenuRepository) : ViewMode
     fun addCategoryMenu(token: String, categoryRequest: CategoryRequest) =
         repository.addCategoryMenu(token, categoryRequest)
 
+    fun searchCategoryMenu(token: String, keyword: String) =
+        repository.searchCategoryMenu(token, keyword)
+
     fun updateCategoryMenu(
         token: String,
         idCategory: String,

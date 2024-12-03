@@ -1,5 +1,6 @@
 package com.am.projectinternalresto.service.source
 
+import android.util.Log
 import androidx.lifecycle.liveData
 import com.am.projectinternalresto.data.body_params.CategoryRequest
 import com.am.projectinternalresto.data.body_params.MenuBody
@@ -12,10 +13,61 @@ import org.json.JSONObject
 
 class MenuRepository(private val apiService: ApiService) {
 
+    fun getMenuFavoriteSuperAdmin(token: String, locationId: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.getMenuFavoriteSuperAdmin("Bearer $token", locationId)
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(Key.ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
+
+    fun getMenuFavoriteAdmin(token: String, categoryId: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.getMenuFavoriteAdmin("Bearer $token", categoryId)
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(Key.ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
+
     fun getCategoryMenu(token: String) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
             val response = apiService.getCategoryMenu("Bearer $token")
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(Key.ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
+
+    fun searchCategoryMenu(token: String, keyword: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.searchCategoryMenu("Bearer $token", keyword)
             if (response.isSuccessful) {
                 emit(Resource.success(response.body()))
             } else {
@@ -113,6 +165,7 @@ class MenuRepository(private val apiService: ApiService) {
         try {
             val response = apiService.addMenu("Bearer $token", bodyPayload, imagePayload)
             if (response.isSuccessful) {
+                Log.e("Check_menu_repo", "data : ${response.body()}")
                 emit(Resource.success(response.body()))
             } else {
                 response.errorBody()?.let {
@@ -132,6 +185,7 @@ class MenuRepository(private val apiService: ApiService) {
         try {
             val response = apiService.updateMenu("Bearer $token", idMenu, bodyPayload, imagePayload)
             if (response.isSuccessful) {
+                Log.e("Check_menu_repo", "data : $response")
                 emit(Resource.success(response.body()))
             } else {
                 response.errorBody()?.let {
@@ -160,4 +214,22 @@ class MenuRepository(private val apiService: ApiService) {
             emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
         }
     }
+
+    fun searchMenu(token: String, keyword: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.searchMenu("Bearer $token", keyword)
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(Key.ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
+
 }

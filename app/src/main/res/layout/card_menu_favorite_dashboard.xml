@@ -16,19 +16,19 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="30dp"
             android:text="@string/menu_favorite"
-            android:textSize="20sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
-            style="@style/CustomTabLayoutStyle"
+            style="@style/CustomTabLayoutStyle.small"
             android:layout_marginHorizontal="30dp"
             android:layout_width="0dp"
             android:backgroundTint="@color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textMenuFavorite"
-            app:tabMinWidth="70dp"
+            app:tabMinWidth="50dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@id/textMenuFavorite"
             app:layout_constraintTop_toTopOf="@id/textMenuFavorite" />
@@ -57,7 +57,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="10dp"
                     android:text="@string/no"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     style="@style/CustomTextStyle.Body.PopSemiBold"
@@ -67,27 +67,17 @@
                     android:gravity="center_vertical"
                     android:paddingHorizontal="8dp"
                     android:text="@string/name_menu"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     style="@style/CustomTextStyle.Body.PopSemiBold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="8dp"
-                    android:text="@string/location_outlet"
-                    android:textSize="14sp" />
-
-                <TextView
-                    style="@style/CustomTextStyle.Body.PopSemiBold"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:paddingHorizontal="8dp"
                     android:text="@string/total_sales"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </TableRow>
         </TableLayout>
 

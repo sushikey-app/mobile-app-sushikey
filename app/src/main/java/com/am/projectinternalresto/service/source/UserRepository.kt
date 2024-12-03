@@ -46,6 +46,23 @@ class UserRepository(private val apiService: ApiService) {
         }
     }
 
+    fun searchAdminAndSuperAdmin(token: String, keyword: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.searchAdminAndSuperAdmin("Bearer $token", keyword)
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(Key.ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
+
     fun addAdminOrSuperAdmin(
         token: String,
         payload: AdminAndSuperAdminRequest
@@ -109,6 +126,23 @@ class UserRepository(private val apiService: ApiService) {
         emit(Resource.loading(null))
         try {
             val response = apiService.getAllDataStaff("Bearer $token")
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(Key.ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
+
+     fun searchStaff(token: String, keyword: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.searchStaff("Bearer $token", keyword)
             if (response.isSuccessful) {
                 emit(Resource.success(response.body()))
             } else {

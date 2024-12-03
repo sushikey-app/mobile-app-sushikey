@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="590dp"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/white">
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

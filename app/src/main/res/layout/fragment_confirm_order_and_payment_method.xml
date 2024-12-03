@@ -34,7 +34,8 @@
         android:text="@string/payment"
         android:textColor="@color/pink"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@id/textHeadlineConfirmOrder"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toEndOf="@id/cardConfirmOrder" />
 
     <include

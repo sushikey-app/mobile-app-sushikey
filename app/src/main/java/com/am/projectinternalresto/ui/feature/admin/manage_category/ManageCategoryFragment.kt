@@ -18,6 +18,7 @@ import com.am.projectinternalresto.utils.Key
 import com.am.projectinternalresto.utils.Navigation
 import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
+import com.am.projectinternalresto.utils.UiHandle
 import org.koin.android.ext.android.inject
 
 class ManageCategoryFragment : Fragment() {
@@ -34,19 +35,31 @@ class ManageCategoryFragment : Fragment() {
     ): View {
         _binding = FragmentManageCategoryBinding.inflate(inflater, container, false)
         setupManageCategoryAdapter()
+        setupView()
         setupNavigation()
-        setupGetDataFromApi()
         return binding.root
+    }
+
+    private fun setupView() {
+        binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataFromApi() }
+        setupGetDataFromApi()
+        UiHandle.setupClearTextForField(binding.search.edtSearch)
+        UiHandle.setupDisplayDataFromSearchOrGet(
+            editText = binding.search.edtSearch,
+            onSearchDisplayData = { keyword -> setupSearchCategoryByName(keyword) },
+            onDisplayDataDefault = { setupGetDataFromApi() }
+        )
     }
 
     private fun setupNavigation() {
         /*add new category*/
         binding.cardManageCategory.buttonAdd.setOnClickListener {
             Navigation.navigateFragment(
-                Destination.MANAGE_CATEGORY_TO_ADD_OR_UPDATE_CATEGORY,
-                findNavController()
+                Destination.MANAGE_CATEGORY_TO_ADD_OR_UPDATE_CATEGORY, findNavController()
             )
         }
+
+        binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataFromApi() }
     }
 
     private fun setupGetDataFromApi() {
@@ -56,6 +69,20 @@ class ManageCategoryFragment : Fragment() {
                 if (result.data == null) {
                     binding.cardManageCategory.textDataIsNull.apply {
                         text = getString(R.string.data_category_is_empty)
+                        visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupSearchCategoryByName(keyword: String) {
+        viewModel.searchCategoryMenu(token, keyword).observe(viewLifecycleOwner) { result ->
+            handleApiStatus(result, result.message.toString()) {
+                adapter.submitList(result.data?.data)
+                if (result.data == null) {
+                    binding.cardManageCategory.textDataIsNull.apply {
+                        text = getString(R.string.data_category_is_null_or_empty)
                         visibility = View.VISIBLE
                     }
                 }
@@ -94,6 +121,7 @@ class ManageCategoryFragment : Fragment() {
                     binding.cardManageCategory.shimmerLayout,
                     false
                 )
+                binding.swipeRefreshLayout.isRefreshing = false
                 onSuccess.invoke()
             }
 
@@ -102,6 +130,7 @@ class ManageCategoryFragment : Fragment() {
                     binding.cardManageCategory.shimmerLayout,
                     false
                 )
+                binding.swipeRefreshLayout.isRefreshing = false
                 NotificationHandle.showErrorSnackBar(requireView(), errorMessage)
             }
         }

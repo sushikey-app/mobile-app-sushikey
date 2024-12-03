@@ -13,8 +13,15 @@ import com.bumptech.glide.Glide
 
 class MenuAdapter(private var onClickAddToCart: ((data: DataItemMenu) -> Unit)? = null) :
     ListAdapter<DataItemMenu, MenuAdapter.ViewHolder>(DIFF_CALLBACK) {
+    private var stockMap: Map<String, Int> = emptyMap()
+
     fun callbackOnClickListener(listener: (data: DataItemMenu) -> Unit) {
         onClickAddToCart = listener
+    }
+
+    fun updateStock(newStockMap: Map<String, Int>) {
+        stockMap = newStockMap
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(private val binding: ItemContentMenuBinding) :
@@ -24,10 +31,14 @@ class MenuAdapter(private var onClickAddToCart: ((data: DataItemMenu) -> Unit)? 
             Glide.with(binding.root.context).load(dataMenu.imageMenu).into(binding.imageMenu)
             binding.textCategory.text = dataMenu.category?.nameCategory
             binding.textName.text = dataMenu.nameMenu
-            binding.textQuota.text = Formatter.formatQuantity(dataMenu.quota ?: 0)
+            val stock = stockMap[dataMenu.idMenu] ?: 0
+            binding.textQuota.text = Formatter.formatQuantity(stock ?: 0)
             binding.textPrice.text = Formatter.formatCurrency(dataMenu.price ?: 0)
+
             binding.root.setOnClickListener {
-                onClickAddToCart?.invoke(dataMenu)
+                if (stock > 0) {
+                    onClickAddToCart?.invoke(dataMenu)
+                }
             }
         }
     }

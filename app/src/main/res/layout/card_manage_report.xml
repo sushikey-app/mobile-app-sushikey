@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     app:cardBackgroundColor="@color/white"
-    app:cardElevation="5dp"
-    app:strokeColor="@color/grey"
-    app:strokeWidth="1dp"
+    app:cardElevation="10dp"
     android:layout_height="match_parent"
     app:cardCornerRadius="30dp">
 
@@ -20,14 +18,14 @@
             android:layout_marginStart="14dp"
             android:layout_marginTop="21dp"
             android:text="@string/manage_report"
-            android:textSize="24sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/buttonPrint"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginEnd="20dp"
             android:contentDescription="@string/icon_description"
             android:src="@drawable/print"
@@ -35,108 +33,148 @@
             app:layout_constraintEnd_toStartOf="@id/buttonFilter"
             app:layout_constraintTop_toTopOf="@id/textManage" />
 
+        <ImageView
+            android:id="@+id/buttonDelete"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="20dp"
+            android:contentDescription="@string/icon_description"
+            android:src="@drawable/icon_delete"
+            app:layout_constraintBottom_toBottomOf="@id/textManage"
+            app:layout_constraintEnd_toStartOf="@id/buttonPrint"
+            app:layout_constraintTop_toTopOf="@id/textManage" />
+
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonFilter"
             style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="19dp"
             android:layout_marginEnd="20dp"
-            android:fontFamily="@font/pop_bold"
+            android:fontFamily="@font/pop_semi_bold"
             android:text="@string/filter"
             android:textColor="@color/pink"
-            android:textSize="18sp"
+            android:textSize="16sp"
+            app:cornerRadius="20dp"
             app:icon="@drawable/icon_filter"
-            app:iconSize="24dp"
+            app:iconSize="16dp"
             app:iconTint="@color/pink"
-            app:layout_constraintBottom_toBottomOf="@id/buttonPrint"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/buttonPrint"
+            app:layout_constraintBottom_toBottomOf="@id/textManage"
+            app:layout_constraintTop_toTopOf="parent"
             app:strokeColor="@color/pink"
             app:strokeWidth="2dp" />
 
 
-        <!--Table Header-->
-        <TableLayout
-            android:id="@+id/tableHeader"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/custom_bg_table"
+            android:layout_marginHorizontal="10dp"
             app:layout_constraintTop_toBottomOf="@id/textManage">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:ignore="UselessParent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-                <TextView
-                    style="@style/CustomTextStyle.Body.PopSemiBold"
-                    android:layout_width="0dp"
+                <!--Table Header-->
+                <LinearLayout
+                    android:id="@+id/tableHeader"
+                    android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_weight="0.3"
-                    android:gravity="center"
-                    android:text="@string/no"
-                    android:textSize="16sp" />
+                    android:background="@drawable/custom_bg_table"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    style="@style/CustomTextStyle.Body.PopSemiBold"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="5dp"
-                    android:text="@string/order_date"
-                    android:textSize="16sp" />
+                    <TextView
+                        style="@style/CustomTextStyle.Body.PopSemiBold"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.6"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="5dp"
+                        android:text="@string/order_date"
+                        android:textSize="12sp" />
 
-                <TextView
-                    style="@style/CustomTextStyle.Body.PopSemiBold"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="5dp"
-                    android:text="@string/order_number"
-                    android:textSize="16sp" />
+                    <TextView
+                        style="@style/CustomTextStyle.Body.PopSemiBold"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.7"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="5dp"
+                        android:text="@string/order_number"
+                        android:textSize="12sp" />
 
-                <TextView
-                    style="@style/CustomTextStyle.Body.PopSemiBold"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.8"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="5dp"
-                    android:text="@string/location"
-                    android:textSize="16sp" />
+                    <TextView
+                        style="@style/CustomTextStyle.Body.PopSemiBold"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="0.5"
+                        android:gravity="center"
+                        android:text="@string/status"
+                        android:textSize="12sp" />
 
-                <TextView
-                    style="@style/CustomTextStyle.Body.PopSemiBold"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="5dp"
-                    android:text="@string/total_order"
-                    android:textSize="16sp" />
+                    <TextView
+                        style="@style/CustomTextStyle.Body.PopSemiBold"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.6"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="5dp"
+                        android:text="@string/location"
+                        android:textSize="12sp" />
 
-                <TextView
-                    style="@style/CustomTextStyle.Body.PopSemiBold"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:gravity="center"
-                    android:text="@string/detail_order"
-                    android:textSize="14sp" />
-            </TableRow>
-        </TableLayout>
+                    <TextView
+                        style="@style/CustomTextStyle.Body.PopSemiBold"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.6"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="5dp"
+                        android:text="@string/total_order"
+                        android:textSize="12sp" />
 
+                    <TextView
+                        style="@style/CustomTextStyle.Body.PopSemiBold"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="0.6"
+                        android:gravity="center"
+                        android:text="@string/detail_order"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewContentTableLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tableHeader"
-            tools:itemCount="5"
-            tools:listitem="@layout/item_content_report" />
+                <LinearLayout
+                    android:id="@+id/shimmerLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/tableHeader">
 
+                    <include layout="@layout/item_content_report_place_holder" />
+
+                    <include layout="@layout/item_content_report_place_holder" />
+
+                    <include layout="@layout/item_content_report_place_holder" />
+
+                    <include layout="@layout/item_content_report_place_holder" />
+
+                    <include layout="@layout/item_content_report_place_holder" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewContentTableLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/tableHeader"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/item_content_report" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

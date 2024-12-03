@@ -8,13 +8,13 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 data class MenuBody(
-    val idCategory: String,
-    val nameMenu: String,
-    val composition: String,
-    val quota: Int,
-    val price: Int,
-    val image: File? = null,
-    val itemToppings: List<ItemTopping>? = null
+    var idCategory: String,
+    var nameMenu: String,
+    var composition: String,
+    var quota: Int,
+    var price: Int,
+    var image: File? = null,
+    var itemToppings: List<ItemTopping>? = null
 )
 
 data class ItemTopping(

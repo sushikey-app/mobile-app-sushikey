@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/monthText"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    style="@style/CustomTextStyle.Body.PopMedium"
+    android:padding="8dp"
+    android:textSize="16sp"
+    android:textColor="@android:color/black"
+    android:background="@drawable/bg_month_unselected"
+    android:layout_margin="8dp" />

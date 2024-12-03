@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_margin="10dp"
+        android:text="@string/information_order"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textIdOrder"
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_margin="10dp"
+        android:text="@string/information_order"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/headerLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textIdOrder">
+
+        <TextView
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_weight="1.2"
+            android:text="@string/item"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/textOrders" />
+
+        <TextView
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_weight="0.4"
+            android:gravity="center"
+            android:text="@string/qty"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/textOrders" />
+
+        <TextView
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text="@string/total_order"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/textOrders" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewHistoryOrder"
+        android:layout_width="match_parent"
+        tools:listitem="@layout/item_content_order_information"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        tools:itemCount="2"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout" />
+</androidx.constraintlayout.widget.ConstraintLayout>

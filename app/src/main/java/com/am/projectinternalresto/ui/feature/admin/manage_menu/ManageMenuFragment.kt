@@ -15,7 +15,9 @@ import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
 import com.am.projectinternalresto.utils.Destination
 import com.am.projectinternalresto.utils.Key
 import com.am.projectinternalresto.utils.Navigation
+import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
+import com.am.projectinternalresto.utils.UiHandle
 import org.koin.android.ext.android.inject
 
 class ManageMenuFragment : Fragment() {
@@ -30,14 +32,33 @@ class ManageMenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentManageMenuBinding.inflate(inflater, container, false)
-        setupGetDataFromApi()
+        setupView()
         setupManageMenuAdapter()
         setupNavigation()
         return binding.root
     }
 
+    private fun setupView() {
+        binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataFromApi() }
+        UiHandle.setupClearTextForField(binding.search.edtSearch)
+        UiHandle.setupDisplayDataFromSearchOrGet(
+            editText = binding.search.edtSearch,
+            onSearchDisplayData = { keyword -> setupSearchMenu(keyword) },
+            onDisplayDataDefault = { setupGetDataFromApi() }
+        )
+    }
+
+
     private fun setupGetDataFromApi() {
         viewModel.getMenu(token).observe(viewLifecycleOwner) { result ->
+            handleApiStatus(result, result.message.toString()) {
+                adapter.submitList(result.data?.data)
+            }
+        }
+    }
+
+    private fun setupSearchMenu(keyword: String) {
+        viewModel.searchMenu(token, keyword).observe(viewLifecycleOwner) { result ->
             handleApiStatus(result, result.message.toString()) {
                 adapter.submitList(result.data?.data)
             }
@@ -98,6 +119,7 @@ class ManageMenuFragment : Fragment() {
                     binding.cardManageMenu.shimmerLayout,
                     false
                 )
+                binding.swipeRefreshLayout.isRefreshing = false
                 onSuccess.invoke()
             }
 
@@ -106,6 +128,8 @@ class ManageMenuFragment : Fragment() {
                     binding.cardManageMenu.shimmerLayout,
                     false
                 )
+                binding.swipeRefreshLayout.isRefreshing = false
+                NotificationHandle.showErrorSnackBar(requireView(), errorMessage)
             }
         }
     }

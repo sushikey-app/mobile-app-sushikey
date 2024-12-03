@@ -41,5 +41,5 @@ data class DataItemListOrder(
     val typeOrder: String? = null,
 
     @field:SerializedName("status_pesanan")
-    val statusOrder: String? = null
+    val statusOrder: String? = null,
 )

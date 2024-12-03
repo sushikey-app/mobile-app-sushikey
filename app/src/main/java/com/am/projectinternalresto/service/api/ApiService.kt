@@ -5,6 +5,7 @@ import com.am.projectinternalresto.data.body_params.CategoryRequest
 import com.am.projectinternalresto.data.body_params.LocationRequest
 import com.am.projectinternalresto.data.body_params.LoginRequest
 import com.am.projectinternalresto.data.body_params.OrderRequest
+import com.am.projectinternalresto.data.body_params.PaymentRequest
 import com.am.projectinternalresto.data.body_params.SaveOrderRequest
 import com.am.projectinternalresto.data.body_params.StaffRequest
 import com.am.projectinternalresto.data.response.GeneralResponse
@@ -15,18 +16,28 @@ import com.am.projectinternalresto.data.response.admin.manage_staff.StaffRespons
 import com.am.projectinternalresto.data.response.admin.menu.AddOrUpdateMenuResponse
 import com.am.projectinternalresto.data.response.admin.menu.MenuResponse
 import com.am.projectinternalresto.data.response.auth.LoginResponse
+import com.am.projectinternalresto.data.response.staff.order.CancelResponse
 import com.am.projectinternalresto.data.response.staff.order.ListOrderResponse
 import com.am.projectinternalresto.data.response.staff.order.OrderResponse
+import com.am.projectinternalresto.data.response.staff.order.PayResponse
+import com.am.projectinternalresto.data.response.staff.riwayat_order.HistoryOrderResponse
+import com.am.projectinternalresto.data.response.super_admin.cancel_order.ListCancelResponse
+import com.am.projectinternalresto.data.response.super_admin.dashboard.MenuFavoriteResponse
 import com.am.projectinternalresto.data.response.super_admin.dashboard.SalesDataResponse
 import com.am.projectinternalresto.data.response.super_admin.location.AddOrUpdateLocationResponse
 import com.am.projectinternalresto.data.response.super_admin.location.LocationResponse
 import com.am.projectinternalresto.data.response.super_admin.manage_admin.AddOrUpdateAdminSuperAdminResponse
 import com.am.projectinternalresto.data.response.super_admin.manage_admin.ManageAdminAndSuperAdminResponse
+import com.am.projectinternalresto.data.response.super_admin.report.DetailReportOrderResponse
+import com.am.projectinternalresto.data.response.super_admin.report.ListReportResponse
+import com.am.projectinternalresto.data.response.super_admin.report.ReportResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -48,12 +59,28 @@ interface ApiService {
     /*Super Admin*/
     // dashboard
     @GET("dashboard-super-admin")
-    suspend fun getDataSales(@Header("Authorization") bearer: String): Response<SalesDataResponse>
+    suspend fun getDataSales(
+        @Header("Authorization") bearer: String
+    ): Response<SalesDataResponse>
+
+
+    // filter dashboard
+    @GET("filter-menu-favorit-super-admin")
+    suspend fun getMenuFavoriteSuperAdmin(
+        @Header("Authorization") bearer: String,
+        @Query("lokasi_id") locationId: String
+    ): Response<MenuFavoriteResponse>
 
     // location
     @GET("lokasi")
     suspend fun getLocation(
         @Header("Authorization") bearer: String
+    ): Response<LocationResponse>
+
+    @GET("lokasi")
+    suspend fun searchLocation(
+        @Header("Authorization") bearer: String,
+        @Query("keyword") keyword: String
     ): Response<LocationResponse>
 
     @POST("lokasi")
@@ -81,6 +108,12 @@ interface ApiService {
         @Header("Authorization") bearer: String
     ): Response<ManageAdminAndSuperAdminResponse>
 
+    @GET("pegawai-super-admin")
+    suspend fun searchAdminAndSuperAdmin(
+        @Header("Authorization") bearer: String,
+        @Query("keyword") keyword: String
+    ): Response<ManageAdminAndSuperAdminResponse>
+
     @POST("pegawai-super-admin")
     suspend fun addAdminOrSuperAdmin(
         @Header("Authorization") bearer: String,
@@ -100,13 +133,81 @@ interface ApiService {
         @Path("id") id: String,
     ): Response<GeneralResponse>
 
-    // TODO :: create function search
+    @GET("super-admin/laporan")
+    suspend fun getListDataReportSuperAdmin(
+        @Header("Authorization") bearer: String,
+    ): Response<ListReportResponse>
+
+    @GET("super-admin/laporan/{id}")
+    suspend fun getDetailReportSuperAdmin(
+        @Header("Authorization") bearer: String,
+        @Path("id") id: String,
+    ): Response<DetailReportOrderResponse>
+
+    @GET("super-admin/laporan/filter-print-data")
+    suspend fun getDataReportSuperAdmin(
+        @Header("Authorization") bearer: String,
+        @Query("lokasi_id") locationId: String,
+        @Query("tanggal_awal") initialLimit: String,
+        @Query("tanggal_akhir") deadline: String,
+    ): Response<ReportResponse>
+
+
+    @DELETE("super-admin/laporan/filter-delete-data")
+    suspend fun deleteReport(
+        @Header("Authorization") bearer: String,
+        @Query("lokasi_id") locationId: String,
+        @Query("filter_bulan") month: Int,
+        @Query("filter_tahun") years: Int,
+    ): Response<GeneralResponse>
+
+    @GET("admin/laporan")
+    suspend fun getListDataReportAdmin(
+        @Header("Authorization") bearer: String,
+    ): Response<ListReportResponse>
+
+    @GET("admin/laporan/{id}")
+    suspend fun getDetailReportAdmin(
+        @Header("Authorization") bearer: String,
+        @Path("id") id: String,
+    ): Response<DetailReportOrderResponse>
+
+    @GET("admin/laporan/filter-print-data")
+    suspend fun getDataReportAdmin(
+        @Header("Authorization") bearer: String,
+        @Query("lokasi_id") locationId: String,
+        @Query("tanggal_awal") initialLimit: String,
+        @Query("tanggal_akhir") deadline: String,
+    ): Response<ReportResponse>
+
+    @GET("super-admin/laporan/filter-by-lokasi/{id}")
+    suspend fun filterReportByLocation(
+        @Header("Authorization") bearer: String,
+        @Path("id") locationId: String,
+    ): Response<ListReportResponse>
 
     // Admin
+    @GET("filter-menu-favorit-admin")
+    suspend fun getMenuFavoriteAdmin(
+        @Header("Authorization") bearer: String,
+        @Query("kategori_id") categoryId: String
+    ): Response<MenuFavoriteResponse>
+
+    @GET("dashboard-admin")
+    suspend fun getDataSalesAdmin(
+        @Header("Authorization") bearer: String
+    ): Response<SalesDataResponse>
+
     // category
     @GET("kategori")
     suspend fun getCategoryMenu(
         @Header("Authorization") bearer: String,
+    ): Response<CategoryResponse>
+
+    @GET("kategori")
+    suspend fun searchCategoryMenu(
+        @Header("Authorization") bearer: String,
+        @Query("keyword") keyword: String
     ): Response<CategoryResponse>
 
     @POST("kategori")
@@ -143,7 +244,7 @@ interface ApiService {
     ): Response<AddOrUpdateMenuResponse>
 
     @Multipart
-    @PUT("menu/{id}")
+    @POST("menu/{id}")
     suspend fun updateMenu(
         @Header("Authorization") bearer: String,
         @Path("id") idMenu: String,
@@ -157,9 +258,20 @@ interface ApiService {
         @Path("id") idMenu: String,
     ): Response<GeneralResponse>
 
+    @GET("menu")
+    suspend fun searchMenu(
+        @Header("Authorization") bearer: String,
+        @Query("keyword") keyword: String
+    ): Response<MenuResponse>
 
     @GET("pegawai-admin")
     suspend fun getAllDataStaff(@Header("Authorization") bearer: String): Response<StaffResponse>
+
+    @GET("pegawai-admin")
+    suspend fun searchStaff(
+        @Header("Authorization") bearer: String,
+        @Query("keyword") keyword: String
+    ): Response<StaffResponse>
 
     @POST("pegawai-admin")
     suspend fun addStaff(
@@ -183,7 +295,8 @@ interface ApiService {
 
     // staff
     @GET("pesan")
-    suspend fun getDataMenuOrder(@Header("Authorization") bearer: String): Response<MenuResponse>
+    suspend fun getDataOrder(@Header("Authorization") bearer: String): Response<MenuResponse>
+
 
     @POST("simpan-pesanan")
     suspend fun saveDataOrder(
@@ -191,15 +304,65 @@ interface ApiService {
         @Body orderRequest: SaveOrderRequest
     ): Response<OrderResponse>
 
+    // function untuk bayar orderan dari lanjutan order pesanan
     @POST("pesan")
-    suspend fun addOrder(
+    suspend fun payFromOrderContinuation(
         @Header("Authorization") bearer: String,
         @Body body: OrderRequest
-    ): Response<OrderResponse>
+    ): Response<PayResponse>
 
     @GET("pesanan")
     suspend fun getListOrder(
         @Header("Authorization") bearer: String,
         @Query("status") paidStatus: String
     ): Response<ListOrderResponse>
+
+    @PUT("pesanan/{id}")
+    suspend fun changeStatusOrder(
+        @Header("Authorization") bearer: String,
+        @Path("id") idOrder: String,
+    ): Response<OrderResponse>
+
+    @PUT("bayar/{id}")
+    suspend fun paymentOrder(
+        @Header("Authorization") bearer: String,
+        @Path("id") idOrder: String,
+        @Body body: PaymentRequest
+    ): Response<PayResponse>
+
+    @GET("riwayat-pesanan")
+    suspend fun getHistoryOrder(@Header("Authorization") bearer: String): Response<HistoryOrderResponse>
+
+    @GET("pesanan/{id}")
+    suspend fun getDetailOrder(
+        @Header("Authorization") bearer: String,
+        @Path("id") idOrder: String
+    ): Response<OrderResponse>
+
+    @GET("riwayat-pesanan/{id}")
+    suspend fun getDetailHistoryOrder(
+        @Header("Authorization") bearer: String,
+        @Path("id") idOrder: String
+    ): Response<OrderResponse>
+
+    @GET("pembatalan-pesanan")
+    suspend fun getCancelOrder(
+        @Header("Authorization") bearer: String,
+    ): Response<ListCancelResponse>
+
+    @PUT("pesanan/cancel/{id}")
+    suspend fun cancelOrder(
+        @Header("Authorization") bearer: String,
+        @Path("id") idOrder: String,
+    ): Response<CancelResponse>
+
+    @FormUrlEncoded
+    @PUT("pembatalan-pesanan/{id}")
+    suspend fun confirmCancelOrder(
+        @Header("Authorization") bearer: String,
+        @Path("id") idOrder: String,
+        @Field("status") status: String,
+        @Field("alasan_pembatalan") reason: String,
+    ): Response<CancelResponse>
+
 }

@@ -5,6 +5,7 @@ import com.am.projectinternalresto.data.response.admin.menu.DataItemMenu
 import com.am.projectinternalresto.data.response.admin.menu.ToppingItem
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
+import java.util.UUID
 
 sealed class DummyModel {
     data class DummyModelMenuFavorite(
@@ -33,6 +34,7 @@ sealed class DummyModel {
     )
 
     data class CartItem(
+        val id: String = UUID.randomUUID().toString(),
         val menuItem: DataItemMenu,
         var qty: Int,
         val selectedToppings: List<ToppingItem> = emptyList(),
@@ -41,6 +43,7 @@ sealed class DummyModel {
 
     @Parcelize
     data class OrderSummary(
+        val orderId: String? = null,
         val listCartItems: @RawValue List<CartItem>,
         val typeOrder: String,
         val totalPurchase: Int

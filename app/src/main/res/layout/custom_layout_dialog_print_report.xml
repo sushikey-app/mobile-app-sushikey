@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/buttonCloseDialog"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:contentDescription="@string/icon_close"
+                android:src="@drawable/icon_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textHeadline"
+                style="@style/CustomTextStyle.Body.PopBold"
+                android:text="@string/input_to_be_printed"
+                android:textColor="@color/pink"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/buttonCloseDialog" />
+
+            <TextView
+                android:id="@+id/textLocation"
+                style="@style/CustomTextStyle.Body.PopSemiBold"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/choose_location"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textHeadline" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edlLocationReport"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:hint="@string/choose_your_location"
+                android:textColorHint="@color/grey"
+                app:layout_constraintEnd_toStartOf="@id/buttonCloseDialog"
+                app:layout_constraintStart_toStartOf="@id/textLocation"
+                app:layout_constraintTop_toBottomOf="@id/textLocation">
+
+                <AutoCompleteTextView
+                    android:id="@+id/dropdownLocationReport"
+                    style="@style/CustomEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none"
+                    android:padding="10dp"
+                    android:textSize="12sp"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textChooseMonth"
+                style="@style/CustomTextStyle.Body.PopSemiBold"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/choose_mount"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edlLocationReport" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edlChooseMonthReport"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="@string/choose_your_date"
+                android:textColorHint="@color/grey"
+                app:layout_constraintEnd_toEndOf="@id/edlLocationReport"
+                app:layout_constraintStart_toStartOf="@id/textChooseMonth"
+                app:layout_constraintTop_toBottomOf="@id/textChooseMonth">
+
+                <AutoCompleteTextView
+                    android:id="@+id/dropdownInitialDateReport"
+                    style="@style/CustomEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none"
+                    android:padding="10dp"
+                    android:textSize="12sp"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textChooseYear"
+                style="@style/CustomTextStyle.Body.PopSemiBold"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/choose_year"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edlChooseMonthReport" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edlChooseYear"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="@string/choose_your_years"
+                android:textColorHint="@color/grey"
+                app:layout_constraintEnd_toEndOf="@id/edlLocationReport"
+                app:layout_constraintStart_toStartOf="@id/textChooseYear"
+                app:layout_constraintTop_toBottomOf="@id/textChooseYear">
+
+                <AutoCompleteTextView
+                    android:id="@+id/dropdownChooseYear"
+                    style="@style/CustomEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none"
+                    android:padding="10dp"
+                    android:textSize="12sp"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSaveReport"
+                style="@style/CustomButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_margin="20dp"
+                android:text="@string/save"
+                android:textSize="16sp"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edlChooseYear"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintWidth_percent="0.6" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</com.google.android.material.card.MaterialCardView>

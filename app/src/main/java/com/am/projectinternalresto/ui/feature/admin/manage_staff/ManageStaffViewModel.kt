@@ -11,4 +11,5 @@ class ManageStaffViewModel(private val repository: UserRepository) : ViewModel()
         repository.updateStaff(token, idStaff, dataStaff)
 
     fun deleteStaff(token: String, idStaff: String) = repository.deleteStaff(token, idStaff)
+    fun searchStaff(token: String, keyword: String) = repository.searchStaff(token, keyword)
 }

@@ -22,8 +22,6 @@ data class DataItemLocation(
     @field:SerializedName("id")
     val id: String,
 
-    @field:SerializedName("updated_at")
-    val updatedAt: String? = null,
 
     @field:SerializedName("lokasi")
     val locationOutlet: String? = null,
@@ -31,9 +29,11 @@ data class DataItemLocation(
     @field:SerializedName("nama_resto")
     val outletName: String? = null,
 
-    @field:SerializedName("created_at")
-    val createdAt: String? = null,
-
     @field:SerializedName("nomor_telephone")
     val phoneNumber: String? = null
 ) : Parcelable
+
+data class Location(
+    val id: String,
+    val name: String
+)

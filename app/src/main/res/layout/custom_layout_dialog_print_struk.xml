@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iconDone"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@null"
+                android:src="@drawable/icon_done"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textSuccessPayment"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginTop="10dp"
+                android:text="@string/success_payment"
+                app:layout_constraintEnd_toEndOf="@id/iconDone"
+                app:layout_constraintStart_toStartOf="@id/iconDone"
+                app:layout_constraintTop_toBottomOf="@id/iconDone" />
+
+            <TextView
+                android:id="@+id/textPaymentMethod"
+                style="@style/CustomTextStyle.Body.PopReg"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/payment_method"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textSuccessPayment" />
+
+            <TextView
+                android:id="@+id/textValuePaymentMethod"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginEnd="16dp"
+                android:text="@string/payment_method"
+                app:layout_constraintBottom_toBottomOf="@id/textPaymentMethod"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textPaymentMethod" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/dividerPaymentMethod"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                app:dividerColor="@color/pink"
+                app:layout_constraintTop_toBottomOf="@id/textPaymentMethod" />
+
+            <TextView
+                android:id="@+id/textTotalPrice"
+                style="@style/CustomTextStyle.Body.PopReg"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/total_price"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerPaymentMethod" />
+
+            <TextView
+                android:id="@+id/textValueTotalPrice"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginEnd="16dp"
+                android:text="@string/payment_method"
+                app:layout_constraintBottom_toBottomOf="@id/textTotalPrice"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textTotalPrice" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/dividerTotalPrice"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                app:dividerColor="@color/pink"
+                app:layout_constraintTop_toBottomOf="@id/textTotalPrice" />
+
+            <TextView
+                android:id="@+id/textPay"
+                style="@style/CustomTextStyle.Body.PopReg"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/price_to_be_pay"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerTotalPrice" />
+
+            <TextView
+                android:id="@+id/textValuePay"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginEnd="16dp"
+                android:text="@string/payment_method"
+                app:layout_constraintBottom_toBottomOf="@id/textPay"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textPay" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/dividerPay"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                app:dividerColor="@color/pink"
+                app:layout_constraintTop_toBottomOf="@id/textPay" />
+
+            <TextView
+                android:id="@+id/textPriceReturn"
+                style="@style/CustomTextStyle.Body.PopReg"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/price_return"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerPay" />
+
+            <TextView
+                android:id="@+id/textValuePriceReturn"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginEnd="16dp"
+                android:text="@string/payment_method"
+                app:layout_constraintBottom_toBottomOf="@id/textPriceReturn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textPriceReturn" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/dividerPriceReturn"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                app:dividerColor="@color/pink"
+                app:layout_constraintTop_toBottomOf="@id/textPriceReturn" />
+
+            <TextView
+                android:id="@+id/textDateTransaction"
+                style="@style/CustomTextStyle.Body.PopReg"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/transaction_date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerPriceReturn" />
+
+            <TextView
+                android:id="@+id/textValueDateTransaction"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginEnd="16dp"
+                android:text="@string/payment_method"
+                app:layout_constraintBottom_toBottomOf="@id/textDateTransaction"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textDateTransaction" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textValueDateTransaction"
+                app:layout_constraintVertical_bias="0">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonDone"
+                    style="@style/CustomButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/done"
+                    app:cornerRadius="20dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonPrint"
+                    style="@style/CustomButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/print_struk"
+                    android:textColor="@color/pink"
+                    app:backgroundTint="@color/white"
+                    app:cornerRadius="20dp"
+                    app:icon="@drawable/print"
+                    app:iconGravity="textStart"
+                    app:iconTintMode="multiply"
+                    app:strokeColor="@color/pink"
+                    app:strokeWidth="2.5dp" />
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</com.google.android.material.card.MaterialCardView>

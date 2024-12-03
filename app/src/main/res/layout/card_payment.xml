@@ -66,6 +66,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtNameBuyer"
             style="@style/CustomEditTextStyle"
+            android:padding="10dp"
+            android:textSize="14sp"
             android:layout_height="55dp"
             android:inputType="textPersonName" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -92,6 +94,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtTotalPayment"
             style="@style/CustomEditTextStyle"
+            android:padding="10dp"
+            android:textSize="14sp"
             android:layout_height="55dp"
             android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -139,4 +143,27 @@
             android:text="@string/pay" />
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:indeterminateTint="@color/pink"
+        android:indeterminateTintMode="src_in"
+        app:layout_constraintBottom_toBottomOf="@id/recyclerViewOptionPay"
+        app:layout_constraintEnd_toEndOf="@id/dividerBottom"
+        app:layout_constraintStart_toStartOf="@id/dividerBottom"
+        app:layout_constraintTop_toTopOf="@id/textPaymentMethod" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textLoading"
+        style="@style/CustomTextStyle.Body.PopReg.smallSp"
+        android:layout_marginStart="3dp"
+        android:text="@string/text_loading"
+        android:textColor="@color/pink"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/progressBar"
+        app:layout_constraintStart_toStartOf="@id/progressBar"
+        app:layout_constraintTop_toBottomOf="@id/progressBar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -82,4 +82,21 @@ class LocationRepository(private val apiService: ApiService) {
             emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
         }
     }
+
+    fun searchLocation(token: String, keyword: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.searchLocation("Bearer $token", keyword)
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(Key.ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
 }

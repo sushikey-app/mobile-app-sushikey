@@ -6,6 +6,7 @@ import com.am.projectinternalresto.service.source.UserRepository
 
 class ManageAdminViewModel(private val repository: UserRepository) : ViewModel() {
     fun getAllDataAdminAndSuperAdmin(token: String) = repository.getAllDataAdminSuperAdmin(token)
+    fun searchAdminAndSuperAdmin(token: String, keyword : String) = repository.searchAdminAndSuperAdmin(token, keyword)
     fun addAdminOrSuperAdmin(token: String, payload: AdminAndSuperAdminRequest) =
         repository.addAdminOrSuperAdmin(token, payload)
 

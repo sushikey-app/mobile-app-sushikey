@@ -6,6 +6,7 @@ import com.am.projectinternalresto.service.source.LocationRepository
 
 class LocationViewModel(private val repository: LocationRepository) : ViewModel() {
     fun getLocation(token: String) = repository.getLocation(token)
+    fun searchLocation(token: String, keyword : String) = repository.searchLocation(token, keyword)
     fun addLocation(
         token: String, payload: LocationRequest
     ) = repository.addLocation("Bearer $token", payload)

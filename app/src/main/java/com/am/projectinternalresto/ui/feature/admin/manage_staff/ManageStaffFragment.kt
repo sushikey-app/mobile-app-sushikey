@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.am.projectinternalresto.data.response.admin.manage_staff.StaffResponse
 import com.am.projectinternalresto.databinding.FragmentManageEmployeesBinding
+import com.am.projectinternalresto.service.source.Resource
 import com.am.projectinternalresto.service.source.Status
 import com.am.projectinternalresto.ui.adapter.manage_staff.ManageStaffAdapter
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
@@ -17,6 +17,7 @@ import com.am.projectinternalresto.utils.Key
 import com.am.projectinternalresto.utils.Navigation
 import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
+import com.am.projectinternalresto.utils.UiHandle
 import org.koin.android.ext.android.inject
 
 class ManageStaffFragment : Fragment() {
@@ -25,14 +26,27 @@ class ManageStaffFragment : Fragment() {
     private val viewModel: ManageStaffViewModel by inject()
     private val authViewModel: AuthViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
+    private lateinit var adapter: ManageStaffAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentManageEmployeesBinding.inflate(inflater, container, false)
+        setupView()
         setupNavigation()
-        setupGetDataStaffFromApi()
+        setupAdapterStaff()
         return binding.root
+    }
+
+    private fun setupView() {
+        setupGetDataStaffFromApi()
+        binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataStaffFromApi() }
+        UiHandle.setupClearTextForField(binding.search.edtSearch)
+        UiHandle.setupDisplayDataFromSearchOrGet(
+            editText = binding.search.edtSearch,
+            onSearchDisplayData = { keyword -> setupSearchStaff(keyword) },
+            onDisplayDataDefault = { setupGetDataStaffFromApi() }
+        )
     }
 
     private fun setupNavigation() {
@@ -48,52 +62,31 @@ class ManageStaffFragment : Fragment() {
 
     private fun setupGetDataStaffFromApi() {
         viewModel.getAllDataStaff(token).observe(viewLifecycleOwner) { result ->
-            when (result.status) {
-                Status.LOADING -> {
-                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
-                        binding.cardManageAdmin.shimmerLayout, true
-                    )
-                }
-
-                Status.SUCCESS -> {
-                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
-                        binding.cardManageAdmin.shimmerLayout, false
-                    )
-                    setupAdapterStaff(result.data)
-                }
-
-                Status.ERROR -> {
-                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
-                        binding.cardManageAdmin.shimmerLayout, false
-                    )
-                    NotificationHandle.showErrorSnackBar(requireView(), result.message.toString())
-                }
+            handleApiStatus(result, result.message.toString()) {
+                adapter.submitList(result.data?.data)
             }
         }
     }
 
     private fun setupDeleteDataStaff(idStaff: String) {
         viewModel.deleteStaff(token, idStaff).observe(viewLifecycleOwner) { result ->
-            when (result.status) {
-                Status.LOADING -> {}
-                Status.SUCCESS -> {
-                    setupGetDataStaffFromApi()
-                    NotificationHandle.showSuccessSnackBar(
-                        requireView(),
-                        result.data?.message.toString()
-                    )
-                }
-
-                Status.ERROR -> {
-                    NotificationHandle.showErrorSnackBar(requireView(), result.message.toString())
-                }
+            handleApiStatus(result, result.message.toString()) {
+                adapter.submitList(null)
+                setupGetDataStaffFromApi()
             }
         }
     }
 
-    private fun setupAdapterStaff(data: StaffResponse?) {
-        val adapter = ManageStaffAdapter().apply {
-            submitList(data?.data)
+    private fun setupSearchStaff(keyword: String) {
+        viewModel.searchStaff(token, keyword).observe(viewLifecycleOwner) { result ->
+            handleApiStatus(result, result.message.toString()) {
+                adapter.submitList(result.data?.data)
+            }
+        }
+    }
+
+    private fun setupAdapterStaff() {
+        adapter = ManageStaffAdapter().apply {
             callbackOnEditClickListener { dataStaff ->
                 Navigation.navigateFragment(
                     Destination.MANAGE_STAFF_TO_ADD_OR_UPDATE_STAFF,
@@ -108,6 +101,39 @@ class ManageStaffFragment : Fragment() {
         binding.cardManageAdmin.recyclerView.let {
             it.adapter = adapter
             it.layoutManager = LinearLayoutManager(requireContext())
+        }
+    }
+
+    private fun <T> handleApiStatus(
+        result: Resource<T>,
+        errorMessage: String,
+        onSuccess: () -> Unit
+    ) {
+        when (result.status) {
+            Status.LOADING -> {
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                    binding.cardManageAdmin.shimmerLayout,
+                    true
+                )
+            }
+
+            Status.SUCCESS -> {
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                    binding.cardManageAdmin.shimmerLayout,
+                    false
+                )
+                binding.swipeRefreshLayout.isRefreshing = false
+                onSuccess.invoke()
+            }
+
+            Status.ERROR -> {
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                    binding.cardManageAdmin.shimmerLayout,
+                    false
+                )
+                binding.swipeRefreshLayout.isRefreshing = false
+                NotificationHandle.showErrorSnackBar(requireView(), errorMessage)
+            }
         }
     }
 }

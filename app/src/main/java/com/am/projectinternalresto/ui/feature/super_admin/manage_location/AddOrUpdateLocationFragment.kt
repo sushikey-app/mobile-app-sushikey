@@ -1,6 +1,7 @@
 package com.am.projectinternalresto.ui.feature.super_admin.manage_location
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ class AddOrUpdateLocationFragment : Fragment() {
     private val authViewModel: AuthViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
     private val dataLocation: DataItemLocation? by lazy { arguments?.getParcelable(Key.BUNDLE_DATA_LOCATION) }
+    private var isSaveButtonEnabled = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -38,14 +40,15 @@ class AddOrUpdateLocationFragment : Fragment() {
     }
 
     private fun setupDisplay() {
+        Log.e("Check", "data location : $dataLocation")
         if (dataLocation != null) {
             binding.edtNameResto.setText(dataLocation?.outletName)
             binding.edtLocation.setText(dataLocation?.locationOutlet)
             binding.edtPhoneNumber.setText(dataLocation?.phoneNumber)
             binding.actionHeadline.textHeadline.text = buildString {
-                append(R.string.edit_data)
+                append(getString(R.string.edit_data))
                 append(" ")
-                append(R.string.location)
+                append("Lokasi")
             }
 
         } else {
@@ -62,12 +65,17 @@ class AddOrUpdateLocationFragment : Fragment() {
     private fun setupNavigation() {
         binding.actionHeadline.buttonBack.setOnClickListener { findNavController().popBackStack() }
         binding.buttonAddLocation.setOnClickListener {
-            UiHandle.setupHideKeyboard(it)
-            if (dataLocation != null) {
-                setupPutDataLocationToApi()
-            } else {
-                setupPostDataLocationToApi()
+            if (isSaveButtonEnabled) {
+                isSaveButtonEnabled = false
+                binding.buttonAddLocation.isEnabled = false
+                UiHandle.setupHideKeyboard(it)
+                if (dataLocation != null) {
+                    setupPutDataLocationToApi()
+                } else {
+                    setupPostDataLocationToApi()
+                }
             }
+
         }
     }
 
@@ -119,6 +127,8 @@ class AddOrUpdateLocationFragment : Fragment() {
                     requireView(),
                     result.message.toString()
                 )
+                isSaveButtonEnabled = true
+                binding.buttonAddLocation.isEnabled = true
             }
         }
     }

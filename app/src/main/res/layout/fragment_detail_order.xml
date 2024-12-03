@@ -8,10 +8,10 @@
 
     <ImageView
         android:id="@+id/buttonBack"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="46dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
         android:contentDescription="@string/button_back"
         android:src="@drawable/icon_button_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,44 +21,132 @@
     <TextView
         android:id="@+id/textHeadline"
         style="@style/CustomTextStyle.Headline"
-        android:layout_marginStart="16dp"
-        android:text="@string/detail_order"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/detail_orders"
+        app:layout_constraintBottom_toBottomOf="@id/buttonBack"
         app:layout_constraintStart_toEndOf="@id/buttonBack"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/buttonBack" />
 
-    <include
-        android:id="@+id/cardDetailInformationOrder"
-        layout="@layout/card_order_information"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toStartOf="@id/cardPayment"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textHeadline" />
-
-    <include
-        android:id="@+id/cardPayment"
-        layout="@layout/card_order_information"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textHeadline" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonPay"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
+    <TextView
+        android:id="@+id/textStaffName"
+        style="@style/CustomTextStyle.Body.PopMedium"
         android:layout_marginTop="20dp"
-        android:fontFamily="@font/pop_bold"
-        android:text="@string/pay"
-        android:textSize="25sp"
-        app:backgroundTint="@color/pink"
-        app:cornerRadius="16dp"
-        app:layout_constraintEnd_toEndOf="@id/cardPayment"
-        app:layout_constraintStart_toStartOf="@id/cardPayment"
-        app:layout_constraintTop_toBottomOf="@id/cardPayment" />
+        android:text="@string/staff_name"
+        app:layout_constraintStart_toEndOf="@id/buttonBack"
+        app:layout_constraintTop_toBottomOf="@id/textHeadline" />
+
+    <TextView
+        android:id="@+id/textValueStaffName"
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBottom_toBottomOf="@id/textStaffName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textStaffName"
+        tools:text="@tools:sample/first_names" />
+
+    <TextView
+        android:id="@+id/textBuyerName"
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_marginTop="10dp"
+        android:text="@string/name_buyer"
+        app:layout_constraintStart_toStartOf="@id/textStaffName"
+        app:layout_constraintTop_toBottomOf="@id/textStaffName" />
+
+    <TextView
+        android:id="@+id/textValueBuyerName"
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBottom_toBottomOf="@id/textBuyerName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textBuyerName"
+        tools:text="@tools:sample/first_names" />
+
+    <TextView
+        android:id="@+id/textStatusOrder"
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_marginTop="10dp"
+        android:text="@string/name_buyer"
+        app:layout_constraintStart_toStartOf="@id/textBuyerName"
+        app:layout_constraintTop_toBottomOf="@id/textBuyerName" />
+
+    <TextView
+        android:id="@+id/textValueStatusOrder"
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBottom_toBottomOf="@id/textStatusOrder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textStatusOrder"
+        tools:text="@string/example_status" />
+
+    <TextView
+        android:id="@+id/textDateOrders"
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_marginTop="10dp"
+        android:text="@string/order_date"
+        app:layout_constraintStart_toStartOf="@id/textStatusOrder"
+        app:layout_constraintTop_toBottomOf="@id/textStatusOrder" />
+
+    <TextView
+        android:id="@+id/textValueDateOrders"
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBottom_toBottomOf="@id/textDateOrders"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textDateOrders"
+        tools:text="@tools:sample/date/hhmm" />
+
+    <TextView
+        android:id="@+id/textReason"
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_marginTop="10dp"
+        android:text="@string/reason_cancel_orders"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@id/textStatusOrder"
+        app:layout_constraintTop_toBottomOf="@id/textDateOrders" />
+
+    <TextView
+        android:id="@+id/textValueReason"
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_marginEnd="30dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/textReason"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textReason"
+        tools:text="@tools:sample/date/hhmm" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardOrderItems"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginVertical="20dp"
+        android:elevation="8dp"
+        app:cardBackgroundColor="@color/card_color_transparent"
+        app:layout_constraintBottom_toTopOf="@id/buttonChangeStatus"
+        app:layout_constraintStart_toEndOf="@id/buttonBack"
+        app:layout_constraintTop_toBottomOf="@id/textReason"
+        app:layout_constraintWidth_percent="0.87">
+
+        <include
+            android:id="@+id/layoutOrderItems"
+            layout="@layout/card_confirm_order"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="20dp" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <Button
+        android:id="@+id/buttonChangeStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/pink"
+        android:paddingVertical="20dp"
+        android:text="@string/order_done"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/buttonBack" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

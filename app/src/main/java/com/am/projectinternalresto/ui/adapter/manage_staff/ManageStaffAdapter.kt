@@ -28,7 +28,7 @@ class ManageStaffAdapter(
             binding.textName.text = dataStaff.name
             binding.textRole.text = dataStaff.role
             binding.textNumberPhone.text = dataStaff.phoneNumber
-            binding.textLocation.text = dataStaff.locationId
+            binding.textLocation.text = dataStaff.location?.outletName ?: ""
 
             binding.action.apply {
                 buttonEdit.setOnClickListener { onEditClick?.invoke(dataStaff) }

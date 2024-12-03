@@ -28,7 +28,7 @@ class ManageLocationAdapter(
             binding.number.text = position.plus(1).toString()
             binding.textNameResto.text = dataManageLocation.outletName
             binding.textLocation.text = dataManageLocation.locationOutlet
-            binding.textNumberPhone.text = dataManageLocation.phoneNumber
+            binding.textNumberPhone.text = dataManageLocation.phoneNumber ?: "-"
             binding.action.buttonEdit.setOnClickListener {
                 onEditClick?.invoke(dataManageLocation)
             }

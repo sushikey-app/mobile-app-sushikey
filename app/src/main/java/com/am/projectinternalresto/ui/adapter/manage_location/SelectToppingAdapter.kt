@@ -13,7 +13,11 @@ class SelectToppingAdapter :
     inner class ViewHolder(private val binding: ItemContentSelectCheckboxBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dataSelectTopping: ToppingItem) {
-            binding.checkbox.text = dataSelectTopping.nama
+            binding.checkbox.text = buildString {
+                append(dataSelectTopping.nama)
+                append(" ")
+                append("(+${dataSelectTopping.harga})")
+            }
             binding.checkbox.isChecked = dataSelectTopping.isSelected
             binding.checkbox.setOnCheckedChangeListener { _, isSelected ->
                 dataSelectTopping.isSelected = isSelected

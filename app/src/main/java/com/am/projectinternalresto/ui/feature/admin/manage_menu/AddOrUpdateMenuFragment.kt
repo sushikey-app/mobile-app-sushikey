@@ -16,6 +16,7 @@ import com.am.projectinternalresto.data.body_params.MenuBody
 import com.am.projectinternalresto.data.response.admin.category.DataItemCategory
 import com.am.projectinternalresto.data.response.admin.menu.AddOrUpdateMenuResponse
 import com.am.projectinternalresto.data.response.admin.menu.DataItemMenu
+import com.am.projectinternalresto.data.response.admin.menu.ToppingItem
 import com.am.projectinternalresto.databinding.FragmentAddOrUpdateMenuBinding
 import com.am.projectinternalresto.service.source.Resource
 import com.am.projectinternalresto.service.source.Status
@@ -67,6 +68,9 @@ class AddOrUpdateMenuFragment : Fragment() {
             binding.edtPriceMenu.setText(Formatter.formatCurrency(dataMenu?.price ?: 0))
             Glide.with(requireContext()).load(dataMenu?.imageMenu.toString())
                 .into(binding.imageMenu)
+            dataMenu?.topping?.forEach { topping ->
+                addToppingLayout(topping)
+            }
         } else {
             binding.actionHeadline.textHeadline.text = getString(R.string.add_menu)
         }
@@ -87,8 +91,10 @@ class AddOrUpdateMenuFragment : Fragment() {
 
     }
 
-    private fun addToppingLayout() {
-        binding.textAddTopping.visibility = View.INVISIBLE
+    private fun addToppingLayout(existingTopping: ToppingItem? = null) {
+        if (existingTopping != null) {
+            binding.textAddTopping.visibility = View.INVISIBLE
+        }
         val newToppingView = layoutInflater.inflate(
             R.layout.item_content_topping,
             binding.layoutToppingContainer,
@@ -98,16 +104,27 @@ class AddOrUpdateMenuFragment : Fragment() {
 
         val textAddMoreTopping = newToppingView.findViewById<TextView>(R.id.textAddMoreTopping)
         val edlTextNameTopping = newToppingView.findViewById<TextInputLayout>(R.id.edlToppingName)
+        val edtTextNameTopping = newToppingView.findViewById<TextInputEditText>(R.id.edtToppingName)
         val edlTextPriceTopping = newToppingView.findViewById<TextInputLayout>(R.id.edlToppingPrice)
-        val edtTextPriceTopping: TextInputEditText =
-            newToppingView.findViewById(R.id.edtToppingPrice)
+        val edtTextPriceTopping =
+            newToppingView.findViewById<TextInputEditText>(R.id.edtToppingPrice)
 
         UiHandle.setupDisableHintForField(edlTextNameTopping, edlTextPriceTopping)
         edtTextPriceTopping.setPriceWatcherUtils { }
+
+        existingTopping?.let {
+            edtTextNameTopping.setText(it.nama)
+            edtTextPriceTopping.setText(Formatter.formatCurrency(it.harga ?: 0))
+        }
+
         binding.layoutToppingContainer.addView(newToppingView)
         textAddMoreTopping.setOnClickListener {
             it.visibility = View.GONE
             addToppingLayout()
+        }
+
+        if (existingTopping == null) {
+            binding.textAddTopping.visibility = View.VISIBLE
         }
     }
 
@@ -172,7 +189,12 @@ class AddOrUpdateMenuFragment : Fragment() {
     }
 
     private fun setupPutDataMenuApi() {
-        viewModel.updateMenu(token, dataMenu?.idMenu.toString(), dataResultMenu())
+        Log.e("Check_data_menu", "data : ${dataResultMenu()}")
+        viewModel.updateMenu(
+            token,
+            dataMenu?.idMenu.toString(),
+            dataResultMenu()
+        )
             .observe(viewLifecycleOwner) { result ->
                 handleApiStatus(result)
             }

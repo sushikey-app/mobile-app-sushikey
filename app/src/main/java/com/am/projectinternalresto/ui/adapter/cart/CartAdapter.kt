@@ -12,10 +12,8 @@ import com.bumptech.glide.Glide
 
 @Suppress("UNCHECKED_CAST")
 class CartAdapter(
-    private val onQuantityChanged: (itemId: String, increment: Boolean) -> Unit
-
+    private val onQuantityChanged: (itemId: String, increment: Boolean) -> Unit,
 ) : ListAdapter<DummyModel.CartItem, CartAdapter.ViewHolder>(DIFF_CALLBACK) {
-
     inner class ViewHolder(private val binding: ItemContentOrderInformationBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dataCart: DummyModel.CartItem) {
@@ -34,10 +32,10 @@ class CartAdapter(
             binding.textQty.text = dataCart.qty.toString()
             binding.textPrice.text = formatCurrency(totalItemPrice * dataCart.qty)
             binding.buttonPlus.setOnClickListener {
-                onQuantityChanged(dataCart.menuItem.idMenu.toString(), true)
+                onQuantityChanged(dataCart.id, true)
             }
             binding.buttonMinus.setOnClickListener {
-                onQuantityChanged(dataCart.menuItem.idMenu.toString(), false)
+                onQuantityChanged(dataCart.id, false)
             }
         }
 

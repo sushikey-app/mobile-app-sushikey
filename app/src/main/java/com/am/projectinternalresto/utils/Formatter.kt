@@ -28,6 +28,10 @@ object Formatter {
     fun formatQuantity(qty: Int): String {
         return "Qty : $qty"
     }
+    fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        return dateFormat.format(Date())
+    }
 
     fun getImageUri(context: Context): Uri {
         var uri: Uri? = null

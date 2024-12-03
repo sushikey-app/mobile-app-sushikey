@@ -27,6 +27,7 @@ class AddOrUpdateCategoryMenuFragment : Fragment() {
     private val authViewModel: AuthViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
     private val dataCategory: DataItemCategory? by lazy { arguments?.getParcelable(Key.BUNDLE_DATA_CATEGORY) }
+    private var isSaveButtonEnabled = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,10 +54,15 @@ class AddOrUpdateCategoryMenuFragment : Fragment() {
     private fun setupNavigation() {
         binding.actionHeadline.buttonBack.setOnClickListener { findNavController().popBackStack() }
         binding.buttonSave.setOnClickListener {
-            if (dataCategory != null) {
-                setupPutDataCategoryToApi()
-            } else {
-                setupPostDataCategoryToApi()
+            if (isSaveButtonEnabled) {
+                isSaveButtonEnabled = false
+                binding.buttonSave.isEnabled = false
+                UiHandle.setupHideKeyboard(it)
+                if (dataCategory != null) {
+                    setupPutDataCategoryToApi()
+                } else {
+                    setupPostDataCategoryToApi()
+                }
             }
         }
     }
@@ -102,6 +108,8 @@ class AddOrUpdateCategoryMenuFragment : Fragment() {
                     binding.progressBar, binding.textLoading, false
                 )
                 NotificationHandle.showErrorSnackBar(requireView(), result.message.toString())
+                isSaveButtonEnabled = true
+                binding.buttonSave.isEnabled = true
             }
         }
     }

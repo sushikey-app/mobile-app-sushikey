@@ -1,28 +1,49 @@
 package com.am.projectinternalresto.ui.feature.staff.payment
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.am.projectinternalresto.R
 import com.am.projectinternalresto.data.body_params.OrderItemRequest
 import com.am.projectinternalresto.data.body_params.OrderRequest
+import com.am.projectinternalresto.data.body_params.PaymentRequest
 import com.am.projectinternalresto.data.body_params.ToppingItemRequest
 import com.am.projectinternalresto.data.dummy.DummyData.paymentOption
 import com.am.projectinternalresto.data.model.DummyModel
+import com.am.projectinternalresto.data.response.staff.order.PayResponse
 import com.am.projectinternalresto.databinding.FragmentConfirmOrderAndPaymentMethodBinding
 import com.am.projectinternalresto.service.source.Status
 import com.am.projectinternalresto.ui.adapter.cart.CartAdapter
 import com.am.projectinternalresto.ui.adapter.payment.TotalPaymentOptionAdapter
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
 import com.am.projectinternalresto.ui.feature.staff.order_menu.ManageOrderMenuViewModel
+import com.am.projectinternalresto.ui.widget.dialog_fragment.PaymentSuccessDialog
+import com.am.projectinternalresto.utils.Formatter
 import com.am.projectinternalresto.utils.Formatter.formatCurrency
+import com.am.projectinternalresto.utils.Key
 import com.am.projectinternalresto.utils.Key.BUNDLE_DATA_ORDER_TO_PAYMENT
 import com.am.projectinternalresto.utils.NotificationHandle
+import com.am.projectinternalresto.utils.ProgressHandle
+import com.am.projectinternalresto.utils.UiHandle
 import com.am.projectinternalresto.utils.setPriceWatcherUtils
+import com.dantsu.escposprinter.EscPosPrinter
+import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
+import com.dantsu.escposprinter.textparser.PrinterTextParserImg
 import com.google.android.material.tabs.TabLayout
 import org.koin.android.ext.android.inject
 
@@ -33,12 +54,37 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     private val authViewModel: AuthViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
     private var unformattedTotalPaid = 0
-    private var paymentMethod = "Offline"
+    private var paymentMethod = "Cash"
     private val dataOrderSummary: DummyModel.OrderSummary? by lazy {
         arguments?.getParcelable(
             BUNDLE_DATA_ORDER_TO_PAYMENT
         )
     }
+    private val dataIdOrder: String? by lazy { arguments?.getString(Key.BUNDLE_ID_ORDER) }
+    private val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        arrayOf(
+            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_CONNECT
+        )
+    } else {
+        arrayOf(
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN
+        )
+    }
+
+    private val requestMultiplePermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            if (permissions.all { it.value }) {
+//                printReceipt()
+            } else {
+                // Permissions not granted, show error message
+                NotificationHandle.showErrorSnackBar(
+                    requireView(),
+                    "Izin Bluetooth diperlukan untuk mencetak struk."
+                )
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -53,27 +99,37 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     }
 
     private fun setupNavigation() {
-        binding.cardPayment.buttonPayment.setOnClickListener {
-            viewModel.orderMenu(token, createOrderRequest()).observe(viewLifecycleOwner) { result ->
-                when (result.status) {
-                    Status.LOADING -> {}
-                    Status.SUCCESS -> {
-                        findNavController().popBackStack()
-                    }
-
-                    Status.ERROR -> {
-                        NotificationHandle.showErrorSnackBar(
-                            requireView(),
-                            result.message.toString()
-                        )
-                    }
-                }
-            }
+        binding.cardPayment.buttonCancel.setOnClickListener {
+            findNavController().popBackStack()
         }
-        binding.cardPayment.buttonCancel.setOnClickListener { findNavController() }
+        binding.cardPayment.buttonPayment.setOnClickListener {
+            setupPostDataPayment()
+        }
+    }
+
+    private fun checkBluetoothPermissionsAndPrint(data: PayResponse?) {
+        if (hasBluetoothPermissions()) {
+            printReceipt(data)
+        } else {
+            requestMultiplePermissions.launch(bluetoothPermissions)
+        }
+    }
+
+
+    private fun hasBluetoothPermissions(): Boolean {
+        return bluetoothPermissions.all {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                it
+            ) == PackageManager.PERMISSION_GRANTED
+        }
     }
 
     private fun setupView() {
+        UiHandle.setupDisableHintForField(
+            binding.cardPayment.edlNameBuyer,
+            binding.cardPayment.edlTotalPayment
+        )
         dataOrderSummary?.let { orderSummary ->
             binding.cardConfirmOrder.apply {
                 textValueSubTotal.text = formatCurrency(orderSummary.totalPurchase)
@@ -85,6 +141,9 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
             edtTotalPayment.setPriceWatcherUtils { total ->
                 unformattedTotalPaid = total
             }
+        }
+        if (paymentMethod == "Qris") {
+            binding.cardPayment.edtTotalPayment.isEnabled = false
         }
     }
 
@@ -135,7 +194,112 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         }
     }
 
-    fun createOrderRequest(
+    private fun setupPostDataPayment() {
+        Log.e("Check", "Data id : $dataIdOrder")
+        if (dataIdOrder != null) {
+            viewModel.paymentOrder(token, dataIdOrder.toString(), collectDataPayment())
+                .observe(viewLifecycleOwner) { result ->
+                    when (result.status) {
+                        Status.LOADING -> {
+                            ProgressHandle.setupVisibilityProgressBar(
+                                binding.cardPayment.progressBar,
+                                binding.cardPayment.textLoading,
+                                true
+                            )
+                        }
+
+                        Status.SUCCESS -> {
+                            ProgressHandle.setupVisibilityProgressBar(
+                                binding.cardPayment.progressBar,
+                                binding.cardPayment.textLoading,
+                                false
+                            )
+                            PaymentSuccessDialog.show(
+                                childFragmentManager,
+                                result.data
+                            ) { shouldPrint ->
+                                if (shouldPrint) {
+                                    checkBluetoothPermissionsAndPrint(result.data)
+                                } else {
+                                    findNavController().navigate(
+                                        R.id.nav_staff_order,
+                                        null,
+                                        NavOptions.Builder().setPopUpTo(R.id.nav_staff_menu, true)
+                                            .build()
+                                    )
+                                }
+                            }
+                        }
+
+                        Status.ERROR -> {
+                            ProgressHandle.setupVisibilityProgressBar(
+                                binding.cardPayment.progressBar,
+                                binding.cardPayment.textLoading,
+                                false
+                            )
+                            NotificationHandle.showErrorSnackBar(
+                                requireView(),
+                                result.message.toString()
+                            )
+                        }
+                    }
+                }
+        } else {
+            viewModel.payFromOrderContinuation(token, collectDataOrderAndPayment())
+                .observe(viewLifecycleOwner) { result ->
+                    when (result.status) {
+                        Status.LOADING -> {
+                            ProgressHandle.setupVisibilityProgressBar(
+                                binding.cardPayment.progressBar,
+                                binding.cardPayment.textLoading,
+                                true
+                            )
+                        }
+
+                        Status.SUCCESS -> {
+                            ProgressHandle.setupVisibilityProgressBar(
+                                binding.cardPayment.progressBar,
+                                binding.cardPayment.textLoading,
+                                false
+                            )
+
+                            PaymentSuccessDialog.show(
+                                childFragmentManager,
+                                result.data
+                            ) { shouldPrint ->
+                                if (shouldPrint) {
+                                    checkBluetoothPermissionsAndPrint(result.data)
+                                } else {
+                                    findNavController().popBackStack()
+                                }
+                            }
+                        }
+
+                        Status.ERROR -> {
+                            ProgressHandle.setupVisibilityProgressBar(
+                                binding.cardPayment.progressBar,
+                                binding.cardPayment.textLoading,
+                                false
+                            )
+                            NotificationHandle.showErrorSnackBar(
+                                requireView(),
+                                result.message.toString()
+                            )
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun collectDataPayment(): PaymentRequest {
+        return PaymentRequest(
+            nameBuyer = binding.cardPayment.edtNameBuyer.text.toString(),
+            methodPayment = paymentMethod,
+            totalPaid = unformattedTotalPaid
+        )
+    }
+
+    private fun collectDataOrderAndPayment(
     ): OrderRequest {
         val itemOrder = dataOrderSummary?.listCartItems?.map { items ->
             OrderItemRequest(menuId = items.menuItem.idMenu.toString(),
@@ -151,5 +315,115 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
             totalPaid = unformattedTotalPaid,
             order = itemOrder
         )
+    }
+
+    private fun printReceipt(orderResponse: PayResponse?) {
+        try {
+            val items = mutableListOf<Pair<String, Int>>()
+
+            orderResponse?.data?.orderItems?.forEach { item ->
+                val menuName = item?.nama.toString()
+                val note = item?.note
+                val toppings = item?.topping?.joinToString(", ") { it?.nama ?: "" }
+
+                // Combine item details into a single line if it fits
+                var itemText = menuName
+                var totalLength = menuName.length
+                if (toppings?.isNotEmpty() == true) {
+                    itemText += if (totalLength + toppings.length + 4 <= 20) {
+                        " (+$toppings)"
+                    } else {
+                        if (itemText.contains("\n")) {
+                            "\n(+$toppings)"
+                        } else {
+                            "\n(+$toppings)"
+                        }
+                    }
+                }
+
+                if (note != null) {
+                    if (totalLength + note.length + 4 <= 20) { // 4 for parentheses
+                        itemText += " ($note)"
+                        totalLength += note.length + 4
+                    } else {
+                        itemText += "\n($note)"
+                    }
+                }
+
+
+                val price = item?.hargaPesanan ?: 0
+                val qty = item?.qty ?: 0
+                items.add(Pair(itemText, price * qty))
+            }
+
+            // Menghubungkan ke printer melalui Bluetooth
+            val printerConnection = BluetoothPrintersConnections.selectFirstPaired()
+
+            if (printerConnection == null) {
+                NotificationHandle.showErrorSnackBar(requireView(), "Printer tidak ditemukan!")
+                return
+            }
+
+            val printer = EscPosPrinter(printerConnection, 203, 48f, 32)
+
+            // Ubah cara memproses gambar
+            val bitmap = requireContext().resources.getDrawableForDensity(
+                R.drawable.logo_sushi_key,
+                DisplayMetrics.DENSITY_MEDIUM
+            )?.toBitmap()
+
+            // Compress dan resize bitmap
+            val resizedBitmap = Bitmap.createScaledBitmap(bitmap!!, 300, 100, true)
+
+            val logoHex = PrinterTextParserImg.bitmapToHexadecimalString(printer, resizedBitmap)
+
+            // Buat text receipt
+            var receiptText = "[C]<img>$logoHex</img>\n" +
+                    "[C]===============================\n" +
+                    "[L]No. Order: ${orderResponse?.data?.payment?.nomorOrder}\n" +
+                    "[L]Nama: ${orderResponse?.data?.payment?.namaPembeli}\n" +
+                    "[L]Nama Kasir: ${orderResponse?.data?.staffName}\n" +
+                    "[L]Lokasi Resto: ${orderResponse?.data?.locationName}\n" +
+                    "[C]===============================\n" +
+                    "[L]Nama Barang[R]Harga\n" +
+                    "[C]-------------------------------\n"
+
+            // Tambahkan setiap item
+            items.forEach { (nama, harga) ->
+                receiptText += "[L]$nama[R]${formatCurrency(harga)}\n"
+            }
+
+            val cash = if (orderResponse?.data?.payment?.metode == "Qris") {
+                formatCurrency(orderResponse.data.payment.totalHarga ?: 0)
+            } else {
+                formatCurrency(orderResponse?.data?.payment?.uangDibayarkan ?: 0)
+            }
+
+            val cashBack = if (orderResponse?.data?.payment?.metode == "Qris") {
+                formatCurrency(0)
+            } else {
+                formatCurrency(
+                    orderResponse?.data?.payment?.uangDibayarkan?.minus(
+                        orderResponse.data.payment.totalHarga ?: 0
+                    ) ?: 0
+                )
+            }
+            receiptText += "[C]-------------------------------\n" +
+                    "[L]Total[R] ${formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)}\n" +
+                    "[L]Tunai[R] $cash\n" +
+                    "[L]Kembalian[R] $cashBack\n" +
+                    "[C]===============================\n" +
+                    "[L]Tanggal: ${Formatter.getCurrentDate()}\n" +
+                    "[L]Terima kasih telah berbelanja!"
+
+            printer.printFormattedText(receiptText)
+            NotificationHandle.showSuccessSnackBar(requireView(), "Struk berhasil dicetak")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            NotificationHandle.showErrorSnackBar(
+                requireView(),
+                "Gagal mencetak struk: ${e.message}"
+            )
+        }
     }
 }
