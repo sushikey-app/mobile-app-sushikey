@@ -2,19 +2,21 @@ package com.am.projectinternalresto.ui.feature.admin.manage_menu
 
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.am.projectinternalresto.R
-import com.am.projectinternalresto.data.params.MenuBody
+import com.am.projectinternalresto.data.body_params.ItemTopping
+import com.am.projectinternalresto.data.body_params.MenuBody
 import com.am.projectinternalresto.data.response.admin.category.DataItemCategory
 import com.am.projectinternalresto.data.response.admin.menu.AddOrUpdateMenuResponse
 import com.am.projectinternalresto.data.response.admin.menu.DataItemMenu
+import com.am.projectinternalresto.data.response.admin.menu.ToppingItem
 import com.am.projectinternalresto.databinding.FragmentAddOrUpdateMenuBinding
 import com.am.projectinternalresto.service.source.Resource
 import com.am.projectinternalresto.service.source.Status
@@ -27,7 +29,11 @@ import com.am.projectinternalresto.utils.Key
 import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
 import com.am.projectinternalresto.utils.UiHandle
+import com.am.projectinternalresto.utils.setMinusPrice
+import com.am.projectinternalresto.utils.setPriceWatcherUtils
 import com.bumptech.glide.Glide
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
 
 class AddOrUpdateMenuFragment : Fragment() {
@@ -58,52 +64,66 @@ class AddOrUpdateMenuFragment : Fragment() {
             binding.actionHeadline.textHeadline.text = getString(R.string.edit_data)
             binding.dropdownCategory.setText(dataMenu?.category?.nameCategory)
             binding.edtNameMenu.setText(dataMenu?.nameMenu)
-            binding.edtNoMenu.setText(dataMenu?.noMenu)
-            binding.edtQuotaMenu.setText(dataMenu?.quota.toString())
-            binding.edtComposition.setText(dataMenu?.composition)
             binding.edtPriceMenu.setText(Formatter.formatCurrency(dataMenu?.price ?: 0))
             Glide.with(requireContext()).load(dataMenu?.imageMenu.toString())
                 .into(binding.imageMenu)
+            dataMenu?.topping?.forEach { topping ->
+                addToppingLayout(topping)
+            }
         } else {
             binding.actionHeadline.textHeadline.text = getString(R.string.add_menu)
         }
         binding.buttonAddOrUpdateMenu.text = getString(R.string.save_data)
         UiHandle.setupDisableHintForField(
             binding.edlCategory,
-            binding.edlComposition,
-            binding.edlNoMenu,
             binding.edlNameMenu,
-            binding.edlQuotaMenu,
             binding.EdlPriceMenu,
-            binding.EdlTopping
         )
-        binding.edtPriceMenu.addTextChangedListener(object : TextWatcher {
-            private var currentText = ""
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        binding.textAddTopping.setOnClickListener {
+            addToppingLayout()
+            it.visibility = View.INVISIBLE
+        }
+        binding.edtPriceMenu.setPriceWatcherUtils { price ->
+            unformattedPrice = price
+        }
 
-            override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (text.toString() != currentText) {
-                    binding.edtPriceMenu.removeTextChangedListener(this)
+    }
 
-                    val cleanString = text.toString().replace("[Rp,.]".toRegex(), "").trim()
-                    if (cleanString.isNotEmpty()) {
-                        val price = cleanString.toInt()
-                        val formattedPrice = Formatter.formatCurrency(price)
+    private fun addToppingLayout(existingTopping: ToppingItem? = null) {
+        if (existingTopping != null) {
+            binding.textAddTopping.visibility = View.INVISIBLE
+        }
+        val newToppingView = layoutInflater.inflate(
+            R.layout.item_content_topping,
+            binding.layoutToppingContainer,
+            false
+        )
+        newToppingView.tag = "topping_item"
 
-                        currentText = formattedPrice
-                        binding.edtPriceMenu.setText(formattedPrice)
-                        binding.edtPriceMenu.setSelection(formattedPrice.length)
-                        unformattedPrice = price
-                    } else {
-                        unformattedPrice = null
-                    }
+        val textAddMoreTopping = newToppingView.findViewById<TextView>(R.id.textAddMoreTopping)
+        val edlTextNameTopping = newToppingView.findViewById<TextInputLayout>(R.id.edlToppingName)
+        val edtTextNameTopping = newToppingView.findViewById<TextInputEditText>(R.id.edtToppingName)
+        val edlTextPriceTopping = newToppingView.findViewById<TextInputLayout>(R.id.edlToppingPrice)
+        val edtTextPriceTopping =
+            newToppingView.findViewById<TextInputEditText>(R.id.edtToppingPrice)
 
-                    binding.edtPriceMenu.addTextChangedListener(this)
-                }
-            }
+        UiHandle.setupDisableHintForField(edlTextNameTopping, edlTextPriceTopping)
+        edtTextPriceTopping.setMinusPrice { }
 
-            override fun afterTextChanged(p0: Editable?) {}
-        })
+        existingTopping?.let {
+            edtTextNameTopping.setText(it.nama)
+            edtTextPriceTopping.setText(Formatter.formatCurrency(it.harga ?: 0))
+        }
+
+        binding.layoutToppingContainer.addView(newToppingView)
+        textAddMoreTopping.setOnClickListener {
+            it.visibility = View.GONE
+            addToppingLayout()
+        }
+
+        if (existingTopping == null) {
+            binding.textAddTopping.visibility = View.VISIBLE
+        }
     }
 
     private fun setupNavigation() {
@@ -166,10 +186,12 @@ class AddOrUpdateMenuFragment : Fragment() {
     }
 
     private fun setupPutDataMenuApi() {
-        viewModel.updateMenu(token, dataMenu?.idMenu.toString(), dataResultMenu())
-            .observe(viewLifecycleOwner) { result ->
-                handleApiStatus(result)
-            }
+        Log.e("Check_data_menu", "data : ${dataResultMenu()}")
+        viewModel.updateMenu(
+            token,
+            dataMenu?.idMenu.toString(),
+            dataResultMenu()
+        ).observe(viewLifecycleOwner) { result -> handleApiStatus(result) }
     }
 
 
@@ -184,14 +206,7 @@ class AddOrUpdateMenuFragment : Fragment() {
             }
 
             Status.SUCCESS -> {
-                UiHandle.setupClearTextForField(
-                    binding.edtNameMenu,
-                    binding.edtNoMenu,
-                    binding.edtPriceMenu,
-                    binding.edtQuotaMenu,
-                    binding.edtComposition,
-                    binding.edtTopping
-                )
+                UiHandle.setupClearTextForField(binding.edtNameMenu, binding.edtPriceMenu)
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar, binding.textLoading, false
                 )
@@ -211,15 +226,45 @@ class AddOrUpdateMenuFragment : Fragment() {
         }
     }
 
+    private fun collectToppingData(): List<ItemTopping> {
+        val toppings = mutableListOf<ItemTopping>()
+
+        for (i in 0 until binding.layoutToppingContainer.childCount) {
+            val toppingView = binding.layoutToppingContainer.getChildAt(i)
+            if (toppingView.tag == "topping_item") {
+
+                val edtTextNameTopping: TextInputEditText =
+                    toppingView.findViewById(R.id.edtToppingName)
+                val edtTextPriceTopping: TextInputEditText =
+                    toppingView.findViewById(R.id.edtToppingPrice)
+
+                val name = edtTextNameTopping.text.toString()
+                val priceText = edtTextPriceTopping.text.toString()
+
+                if (name.isNotBlank() && priceText.isNotBlank()) {
+                    val price = try {
+                        val cleanPrice = priceText.replace("[Rp,.]".toRegex(), "").trim()
+                            .replace("\\s+".toRegex(), "")
+                        cleanPrice.toInt()
+                    } catch (e: NumberFormatException) {
+                        Log.e("ToppingParsing", "Invalid price format: $priceText")
+                        0
+                    }
+
+                    toppings.add(ItemTopping(name, price))
+                }
+            }
+        }
+        return toppings
+    }
+
     private fun dataResultMenu(): MenuBody {
         return MenuBody(
             idCategory = selectIdCategoryMenu ?: dataMenu?.category?.id.toString(),
-            noMenu = binding.edtNoMenu.text.toString(),
             nameMenu = binding.edtNameMenu.text.toString(),
-            composition = binding.edtComposition.text.toString(),
-            quota = binding.edtQuotaMenu.text.toString().toInt(),
             price = unformattedPrice ?: dataMenu?.price!!,
-            image = uriSelectedImage?.let { Formatter.uriToFile(it, requireContext()) }
+            image = uriSelectedImage?.let { Formatter.uriToFile(it, requireContext()) },
+            itemToppings = collectToppingData()
         )
     }
 }

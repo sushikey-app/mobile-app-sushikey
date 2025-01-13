@@ -1,14 +1,13 @@
 package com.am.projectinternalresto.ui.feature.admin.manage_category
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.am.projectinternalresto.R
-import com.am.projectinternalresto.data.params.CategoryBody
+import com.am.projectinternalresto.data.body_params.CategoryRequest
 import com.am.projectinternalresto.data.response.admin.category.AddOrUpdateCategoryResponse
 import com.am.projectinternalresto.data.response.admin.category.DataItemCategory
 import com.am.projectinternalresto.databinding.FragmentAddOrUpdateCategoryBinding
@@ -28,6 +27,7 @@ class AddOrUpdateCategoryMenuFragment : Fragment() {
     private val authViewModel: AuthViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
     private val dataCategory: DataItemCategory? by lazy { arguments?.getParcelable(Key.BUNDLE_DATA_CATEGORY) }
+    private var isSaveButtonEnabled = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,10 +54,15 @@ class AddOrUpdateCategoryMenuFragment : Fragment() {
     private fun setupNavigation() {
         binding.actionHeadline.buttonBack.setOnClickListener { findNavController().popBackStack() }
         binding.buttonSave.setOnClickListener {
-            if (dataCategory != null) {
-                setupPutDataCategoryToApi()
-            } else {
-                setupPostDataCategoryToApi()
+            if (isSaveButtonEnabled) {
+                isSaveButtonEnabled = false
+                binding.buttonSave.isEnabled = false
+                UiHandle.setupHideKeyboard(it)
+                if (dataCategory != null) {
+                    setupPutDataCategoryToApi()
+                } else {
+                    setupPostDataCategoryToApi()
+                }
             }
         }
     }
@@ -103,12 +108,14 @@ class AddOrUpdateCategoryMenuFragment : Fragment() {
                     binding.progressBar, binding.textLoading, false
                 )
                 NotificationHandle.showErrorSnackBar(requireView(), result.message.toString())
+                isSaveButtonEnabled = true
+                binding.buttonSave.isEnabled = true
             }
         }
     }
 
-    private fun dataCategory(): CategoryBody {
-        return CategoryBody(
+    private fun dataCategory(): CategoryRequest {
+        return CategoryRequest(
             nameCategory = binding.edtNameCategory.text.toString(),
             codeCategory = binding.edtCodeCategory.text.toString()
         )

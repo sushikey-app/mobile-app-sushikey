@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardBackgroundColor="#00424242">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp">
+
+        <TextView
+            android:id="@+id/textId"
+            style="@style/CustomTextStyle.Body.PopSemiBold"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/pink"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/example_id_category" />
+
+        <TextView
+            android:id="@+id/textStatus"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/example_id_category" />
+
+        <TextView
+            android:id="@+id/textName"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:maxLines="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/textId"
+            app:layout_constraintTop_toBottomOf="@id/textId"
+            tools:text="@string/example_name_staff" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDetailOrder"
+            style="@style/CustomButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_weight="1"
+            android:text="@string/detail_orders"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/textName" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/buttonDetailOrder">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonCancelYes"
+                style="@style/CustomButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cancel_yes"
+                android:textSize="14sp"
+                app:backgroundTint="@color/orange" />
+
+            <Space
+                android:layout_width="15dp"
+                android:layout_height="match_parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonCancelNo"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/pop_semi_bold"
+                android:padding="8dp"
+                android:text="@string/cancel_no"
+                android:textColor="@color/pink"
+                android:textSize="16sp"
+                app:cornerRadius="20dp"
+                app:layout_constraintBottom_toBottomOf="@id/textManage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/pink"
+                app:strokeWidth="2dp" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

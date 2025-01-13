@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="20dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:tag="topping_item">
+
+    <TextView
+        android:id="@+id/textToppingName"
+        style="@style/CustomTextStyle.Body.PopSemiBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/topping_name" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlToppingName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:hint="@string/input_topping_name"
+        android:textColorHint="@color/grey">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtToppingName"
+            style="@style/CustomEditTextStyle"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textToppingPrice"
+        style="@style/CustomTextStyle.Body.PopSemiBold"
+        android:layout_marginTop="16dp"
+        android:text="@string/topping_price" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edlToppingPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:hint="@string/input_topping_price"
+        android:textColorHint="@color/grey">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtToppingPrice"
+            style="@style/CustomEditTextStyle"
+            android:inputType="numberSigned" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textAddMoreTopping"
+        style="@style/CustomTextStyle.Body.PopSemiBold"
+        android:layout_marginTop="16dp"
+        android:text="@string/add_more_topping" />
+</LinearLayout>

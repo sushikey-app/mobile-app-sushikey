@@ -7,17 +7,53 @@
 
     <fragment
         android:id="@+id/nav_staff_menu"
-        android:name="com.am.projectinternalresto.ui.feature.staff.menu.OrderMenuFragment"
+        android:name="com.am.projectinternalresto.ui.feature.staff.order_menu.OrderMenuFragment"
         android:label="@string/title_nav_staff_menu"
-        tools:layout="@layout/fragment_order_menu" />
+        tools:layout="@layout/fragment_order_menu">
+        <action
+            android:id="@+id/action_nav_staff_menu_to_confirmOrderAndPaymentMethodFragment"
+            app:destination="@id/confirmOrderAndPaymentMethodFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_staff_order"
-        android:name="com.am.projectinternalresto.ui.feature.staff.order.OrderFragment"
+        android:name="com.am.projectinternalresto.ui.feature.staff.list_order.OrderFragment"
         android:label="@string/title_nav_staff_order"
-        tools:layout="@layout/fragment_order" />
+        tools:layout="@layout/fragment_order" >
+        <action
+            android:id="@+id/action_nav_staff_order_to_detailOrderFragment"
+            app:destination="@id/detailOrderFragment" />
+        <action
+            android:id="@+id/action_nav_staff_order_to_confirmOrderAndPaymentMethodFragment"
+            app:destination="@id/confirmOrderAndPaymentMethodFragment" />
+        <action
+            android:id="@+id/action_nav_staff_order_to_nav_staff_menu"
+            app:destination="@id/nav_staff_menu" />
+        <action
+            android:id="@+id/action_nav_staff_order_to_detailOrderFragment2"
+            app:destination="@id/detailOrderFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_staff_order_history"
         android:name="com.am.projectinternalresto.ui.feature.staff.order_history.OrderHistoryFragment"
-        android:label="@string/title_nav_staff_order_history"
-        tools:layout="@layout/fragment_order_history" />
+        android:label="@string/title_nav_staff_order_report"
+        tools:layout="@layout/fragment_order_history" >
+
+        <action
+            android:id="@+id/action_nav_staff_order_history_to_detailHistoryFragment"
+            app:destination="@id/detailHistoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/confirmOrderAndPaymentMethodFragment"
+        android:name="com.am.projectinternalresto.ui.feature.staff.payment.ConfirmOrderAndPaymentMethodFragment"
+        android:label="fragment_confirm_order_and_payment_method"
+        tools:layout="@layout/fragment_confirm_order_and_payment_method"/>
+    <fragment
+        android:id="@+id/detailOrderFragment"
+        android:name="com.am.projectinternalresto.ui.feature.staff.detail_order.DetailOrderFragment"
+        android:label="fragment_detail_order"
+        tools:layout="@layout/fragment_detail_order" />
+    <fragment
+        android:id="@+id/detailHistoryFragment"
+        android:name="com.am.projectinternalresto.ui.feature.staff.order_history.DetailHistoryFragment"
+        android:label="DetailHistoryFragment" />
 </navigation>

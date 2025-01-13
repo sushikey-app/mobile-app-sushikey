@@ -30,4 +30,17 @@
         app:layout_constraintStart_toEndOf="@id/navigationRailsSuperAdmin"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/navigation_super_admin" />
+
+
+    <me.ibrahimsn.lib.SmoothBottomBar
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:padding="12dp"
+        app:backgroundColor="@color/pink"
+        app:cornerRadius="10dp"
+        app:iconSize="25dp"
+        app:itemFontFamily="@font/pop_medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/menu_navigation_super_admin" />
 </androidx.constraintlayout.widget.ConstraintLayout>

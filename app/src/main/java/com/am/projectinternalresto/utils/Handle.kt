@@ -2,6 +2,8 @@ package com.am.projectinternalresto.utils
 
 import android.content.Context
 import android.graphics.Color
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.am.projectinternalresto.R
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -29,6 +32,28 @@ object UiHandle {
         }
     }
 
+    fun setupDisplayDataFromSearchOrGet(
+        editLayout: TextInputLayout,
+        editText: TextInputEditText,
+        onSearchDisplayData: ((String) -> Unit)? = null,
+        onDisplayDataDefault: (() -> Unit)? = null,
+    ) {
+        setupDisableHintForField(editLayout)
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun afterTextChanged(text: Editable?) {
+                if (text.isNullOrEmpty() || text.length < 2) {
+                    onDisplayDataDefault?.invoke()
+                } else {
+                    onSearchDisplayData?.invoke(text.toString())
+                }
+            }
+        })
+    }
+
     fun setupHideKeyboard(view: View) {
         val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
@@ -43,7 +68,11 @@ object ProgressHandle {
         textLoading.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
-    fun setupVisibilityShimmerLoading(layout: LinearLayout, isVisible: Boolean) {
+    fun setupVisibilityShimmerLoadingInLinearLayout(layout: LinearLayout, isVisible: Boolean) {
+        layout.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
+
+    fun setupVisibilityShimmerLoadingLayout(layout: ShimmerFrameLayout, isVisible: Boolean) {
         layout.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 }

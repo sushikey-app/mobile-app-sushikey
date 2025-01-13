@@ -1,141 +1,153 @@
 package com.am.projectinternalresto.ui.feature.super_admin.dashboard
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.am.projectinternalresto.R
-import com.am.projectinternalresto.data.dummy.DummyData
+import com.am.projectinternalresto.data.response.super_admin.dashboard.DataItemSales
+import com.am.projectinternalresto.data.response.super_admin.dashboard.MenuFavoriteResponse
+import com.am.projectinternalresto.data.response.super_admin.location.DataItemLocation
 import com.am.projectinternalresto.databinding.FragmentDashboardBinding
-import com.am.projectinternalresto.ui.adapter.dahboard.MenuFavoriteAdapter
+import com.am.projectinternalresto.service.source.Resource
+import com.am.projectinternalresto.service.source.Status
+import com.am.projectinternalresto.ui.adapter.dahboard.MenuFavoriteSuperAdminAdapter
+import com.am.projectinternalresto.ui.feature.admin.manage_menu.ManageMenuViewModel
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
-import com.am.projectinternalresto.ui.widget.dialog_fragment.FilterSalesDialogFragment
-import com.am.projectinternalresto.ui.widget.chart.CustomStyleRoundedBarChart
-import com.am.projectinternalresto.utils.MyValueFormatter
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
+import com.am.projectinternalresto.ui.feature.staff.order_menu.ManageOrderMenuViewModel
+import com.am.projectinternalresto.ui.feature.super_admin.manage_location.LocationViewModel
+import com.am.projectinternalresto.ui.widget.chart.Chart.setupSalesChart
+import com.am.projectinternalresto.utils.Formatter.formatCurrency
+import com.am.projectinternalresto.utils.NotificationHandle
+import com.am.projectinternalresto.utils.ProgressHandle
 import com.google.android.material.tabs.TabLayout
 import org.koin.android.ext.android.inject
+import java.util.Calendar
 
 class DashboardSuperAdminFragment : Fragment() {
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
-    private val authViewModel : AuthViewModel by inject()
+    private val authViewModel: AuthViewModel by inject()
+    private val viewModel: ManageOrderMenuViewModel by inject()
+    private val locationViewModel: LocationViewModel by inject()
+    private val menuViewModel: ManageMenuViewModel by inject()
+    private val token: String by lazy { authViewModel.getTokenUser().toString() }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        setupView()
+        setupGetDataSales()
+        setupGetAllLocation()
         setupNavigation()
         return binding.root
     }
 
     private fun setupNavigation() {
-        binding.textFilter.setOnClickListener {
-            FilterSalesDialogFragment.show(childFragmentManager)
+//        binding.textFilter.setOnClickListener {
+//            FilterSalesDialogFragment.show(childFragmentManager)
+//        }
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            setupGetDataSales()
+            setupGetAllLocation()
         }
     }
 
-    private fun setupView() {
-        setupCardMenuFavorite()
-        setupTabLayout()
-        setupChartSales()
+
+    private fun setupGetAllLocation() {
+        locationViewModel.getLocation(token).observe(viewLifecycleOwner) { result ->
+            handleApiStatus(result = result, result.message.toString()) {
+                setupTabLayout(result.data?.data as List<DataItemLocation>)
+            }
+        }
+    }
+
+    private fun setupGetMenuFavorite(locationId: String) {
+        menuViewModel.getMenuFavoriteSuperAdmin(token, locationId)
+            .observe(viewLifecycleOwner) { result ->
+                when (result.status) {
+                    Status.LOADING -> {
+
+                    }
+
+                    Status.SUCCESS -> {
+                        setupMenuFavoriteAdapter(result.data)
+                    }
+
+                    Status.ERROR -> {
+                        NotificationHandle.showErrorSnackBar(
+                            requireView(),
+                            result.message.toString()
+                        )
+                    }
+                }
+            }
+    }
+
+    private fun setupGetDataSales() {
+        viewModel.getDataSales(token).observe(viewLifecycleOwner) { result ->
+            handleApiStatus(result, result.message.toString()) {
+                setupDashboardViewWithData(result.data?.data)
+                setupSalesChart(
+                    binding.cardChartSales.chartSales,
+                    result.data?.data?.yearlyRevenue
+                )
+            }
+        }
+    }
+
+    private fun setupDashboardViewWithData(data: DataItemSales?) {
+        binding.cardChartSales.textYear.text = Calendar.getInstance().get(Calendar.YEAR).toString()
+        binding.cardChartSales.textTitleCard.text = getString(R.string.sales)
         binding.cardIncomeDays.apply {
             textTitleContent.text = getString(R.string.text_income_today)
-            textValueContent.text = "Rp. 200.000"
+            textValueContent.text = formatCurrency(data?.todayRevenue ?: 0)
             iconContent.setImageResource(R.drawable.icon_income_today)
         }
         binding.cardIncomeMonth.apply {
             textTitleContent.text = getString(R.string.text_income_this_month)
-            textValueContent.text = "Rp. 200.000"
+            textValueContent.text = formatCurrency(data?.currentMonthRevenue ?: 0)
             iconContent.setImageResource(R.drawable.icon_income_this_month)
         }
         binding.cardTotalSalesMonth.apply {
             textTitleContent.text = getString(R.string.text_total_order_today)
-            textValueContent.text = "50"
+            textValueContent.text = data?.todayTotalSales.toString()
             iconContent.setImageResource(R.drawable.icon_total_order)
         }
         binding.cardTotalSalesOfflineOrder.apply {
             textTitleContent.text = getString(R.string.text_order_offline)
-            textValueContent.text = "30"
+            textValueContent.text = data?.offlineOrders.toString()
             iconContent.setImageResource(R.drawable.icon_order_offline)
         }
         binding.cardTotalSalesOnlineOrder.apply {
             textTitleContent.text = getString(R.string.text_order_online)
-            textValueContent.text = "20"
+            textValueContent.text = data?.onlineOrders.toString()
             iconContent.setImageResource(R.drawable.icon_order_online)
         }
     }
 
-    private fun setupChartSales() {
-        val barChart = binding.cardChartSales.chartSales
-        val entries = ArrayList<BarEntry>()
-        entries.add(BarEntry(0f, 5f))
-        entries.add(BarEntry(1f, 6f))
-        entries.add(BarEntry(2f, 7f))
-        entries.add(BarEntry(3f, 8f))
-        entries.add(BarEntry(4f, 6f))
-        entries.add(BarEntry(5f, 5f))
-        entries.add(BarEntry(6f, 7f))
-        entries.add(BarEntry(7f, 6f))
-        entries.add(BarEntry(8f, 5f))
-        entries.add(BarEntry(9f, 7f))
-        entries.add(BarEntry(10f, 6f))
-        entries.add(BarEntry(11f, 5f))
 
-        val dataSet = BarDataSet(entries, "Penjualan 2024")
-        dataSet.color = Color.parseColor("#FF7F7F")
-        dataSet.valueTextColor = Color.BLACK
-        dataSet.valueTextSize = 10f
-
-        val data = BarData(dataSet)
-        barChart.data = data
-        barChart.description.isEnabled = false
-
-        // Set custom renderer
-        barChart.renderer =
-            CustomStyleRoundedBarChart(barChart, barChart.animator, barChart.viewPortHandler)
-
-        // Customisasi tambahan
-        barChart.setDrawGridBackground(false)
-        barChart.axisLeft.setDrawGridLines(false)
-        barChart.axisRight.setDrawGridLines(false)
-        barChart.xAxis.setDrawGridLines(false)
-
-        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-        barChart.axisRight.isEnabled = false
-
-        // Set value formatter untuk sumbu X
-        barChart.xAxis.valueFormatter = MyValueFormatter()
-        barChart.xAxis.labelCount = 12
-        barChart.xAxis.granularity = 1f
-
-        barChart.animateY(1000)
-        barChart.invalidate()
-    }
-
-    private fun setupCardMenuFavorite() {
-        val adapter = MenuFavoriteAdapter()
-        adapter.submitList(DummyData.dummyCardMenuFavorite)
+    private fun setupMenuFavoriteAdapter(data: MenuFavoriteResponse?) {
+        val adapter = MenuFavoriteSuperAdminAdapter().apply { submitList(data?.data) }
         binding.cardMenuFavorite.apply {
             recyclerViewFavoriteMenu.layoutManager = LinearLayoutManager(requireContext())
             recyclerViewFavoriteMenu.adapter = adapter
         }
     }
 
-
-    private fun setupTabLayout() {
+    private fun setupTabLayout(data: List<DataItemLocation>) {
         val tabLayout = binding.cardMenuFavorite.tabLayout
-        tabLayout.addTab(tabLayout.newTab().setText("All"))
-        tabLayout.addTab(tabLayout.newTab().setText("Makanan"))
-        tabLayout.addTab(tabLayout.newTab().setText("Minuman"))
+        tabLayout.removeAllTabs()
+
+        data.distinctBy { it.id }.forEach { location ->
+            val tab = tabLayout.newTab().apply {
+                text = location.outletName
+                tag = location.id
+            }
+            tabLayout.addTab(tab)
+        }
 
         for (i in 0 until tabLayout.tabCount) {
             val tab = (tabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
@@ -146,12 +158,59 @@ class DashboardSuperAdminFragment : Fragment() {
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                Toast.makeText(requireContext(), tab.text.toString(), Toast.LENGTH_SHORT).show()
+                val locationId = tab.tag as String
+                setupGetMenuFavorite(locationId)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+    }
+
+    private fun setupShimmerVisibility(isVisible: Boolean) {
+        val cards = listOf(
+            binding.cardIncomeMonth,
+            binding.cardIncomeDays,
+            binding.cardTotalSalesMonth,
+            binding.cardTotalSalesOfflineOrder,
+            binding.cardTotalSalesOnlineOrder
+        )
+
+        binding.cardChartSales.apply {
+            ProgressHandle.setupVisibilityShimmerLoadingLayout(shimmerLayoutFirst, isVisible)
+            ProgressHandle.setupVisibilityShimmerLoadingLayout(shimmerLayoutSecond, isVisible)
+            ProgressHandle.setupVisibilityShimmerLoadingLayout(shimmerLayoutThird, isVisible)
+        }
+        cards.forEach { card ->
+            card.apply {
+                ProgressHandle.setupVisibilityShimmerLoadingLayout(shimmerLayoutFirst, isVisible)
+                ProgressHandle.setupVisibilityShimmerLoadingLayout(shimmerLayoutSecond, isVisible)
+                ProgressHandle.setupVisibilityShimmerLoadingLayout(shimmerLayoutThird, isVisible)
+            }
+        }
+    }
+
+    private fun <T> handleApiStatus(
+        result: Resource<T>,
+        errorMessage: String,
+        onSuccess: () -> Unit
+    ) {
+        when (result.status) {
+            Status.LOADING -> {
+                setupShimmerVisibility(true)
+            }
+
+            Status.SUCCESS -> {
+                setupShimmerVisibility(false)
+                binding.swipeRefreshLayout.isRefreshing = false
+                onSuccess.invoke()
+            }
+
+            Status.ERROR -> {
+                setupShimmerVisibility(false)
+                binding.swipeRefreshLayout.isRefreshing = false
+                NotificationHandle.showErrorSnackBar(requireView(), errorMessage)
+            }
+        }
     }
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.feature.staff.payment.ConfirmOrderAndPaymentMethodFragment">
+
+    <TextView
+        android:id="@+id/textHeadlineConfirmOrder"
+        style="@style/CustomTextStyle.Body.PopSemiBold"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/confirm_order"
+        android:textColor="@color/pink"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/cardConfirmOrder"
+        layout="@layout/card_confirm_order"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textHeadlineConfirmOrder"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <TextView
+        android:id="@+id/textHeadlinePayment"
+        style="@style/CustomTextStyle.Body.PopSemiBold"
+        android:text="@string/payment"
+        android:textColor="@color/pink"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toEndOf="@id/cardConfirmOrder" />
+
+    <include
+        android:id="@+id/cardPayment"
+        layout="@layout/card_payment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/textHeadlinePayment"
+        app:layout_constraintTop_toTopOf="@id/cardConfirmOrder"
+        app:layout_constraintWidth_percent="0.48" />
+</androidx.constraintlayout.widget.ConstraintLayout>

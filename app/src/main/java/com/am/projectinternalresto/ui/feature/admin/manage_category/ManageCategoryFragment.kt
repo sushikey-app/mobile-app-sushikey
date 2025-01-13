@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.am.projectinternalresto.R
 import com.am.projectinternalresto.databinding.FragmentManageCategoryBinding
 import com.am.projectinternalresto.service.source.Resource
 import com.am.projectinternalresto.service.source.Status
@@ -17,6 +18,7 @@ import com.am.projectinternalresto.utils.Key
 import com.am.projectinternalresto.utils.Navigation
 import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
+import com.am.projectinternalresto.utils.UiHandle
 import org.koin.android.ext.android.inject
 
 class ManageCategoryFragment : Fragment() {
@@ -33,30 +35,57 @@ class ManageCategoryFragment : Fragment() {
     ): View {
         _binding = FragmentManageCategoryBinding.inflate(inflater, container, false)
         setupManageCategoryAdapter()
+        setupView()
         setupNavigation()
-        setupGetDataFromApi()
         return binding.root
+    }
+
+    private fun setupView() {
+        binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataFromApi() }
+        setupGetDataFromApi()
+        UiHandle.setupDisplayDataFromSearchOrGet(
+            editLayout = binding.search.edlSearch,
+            editText = binding.search.edtSearch,
+            onSearchDisplayData = { keyword -> setupSearchCategoryByName(keyword) },
+            onDisplayDataDefault = { setupGetDataFromApi() }
+        )
     }
 
     private fun setupNavigation() {
         /*add new category*/
         binding.cardManageCategory.buttonAdd.setOnClickListener {
             Navigation.navigateFragment(
-                Destination.MANAGE_CATEGORY_TO_ADD_OR_UPDATE_CATEGORY,
-                findNavController()
+                Destination.MANAGE_CATEGORY_TO_ADD_OR_UPDATE_CATEGORY, findNavController()
             )
         }
+
+        binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataFromApi() }
     }
 
     private fun setupGetDataFromApi() {
         viewModel.getCategoryMenu(token).observe(viewLifecycleOwner) { result ->
-            handleApiStatus(
-                result,
-                result.data?.message.toString(),
-                result.message.toString()
-            ) {
+            handleApiStatus(result, result.message.toString()) {
                 adapter.submitList(result.data?.data)
+                if (result.data == null) {
+                    binding.cardManageCategory.textDataIsNull.apply {
+                        text = getString(R.string.data_category_is_empty)
+                        visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
 
+    private fun setupSearchCategoryByName(keyword: String) {
+        viewModel.searchCategoryMenu(token, keyword).observe(viewLifecycleOwner) { result ->
+            handleApiStatus(result, result.message.toString()) {
+                adapter.submitList(result.data?.data)
+                if (result.data == null) {
+                    binding.cardManageCategory.textDataIsNull.apply {
+                        text = getString(R.string.data_category_is_null_or_empty)
+                        visibility = View.VISIBLE
+                    }
+                }
             }
         }
     }
@@ -65,7 +94,6 @@ class ManageCategoryFragment : Fragment() {
         viewModel.deleteCategoryMenu(token, idCategory).observe(viewLifecycleOwner) { result ->
             handleApiStatus(
                 result = result,
-                result.data?.message.toString(),
                 result.message.toString()
             ) {
                 adapter.submitList(null)
@@ -76,33 +104,33 @@ class ManageCategoryFragment : Fragment() {
 
     private fun <T> handleApiStatus(
         result: Resource<T>,
-        successMessage: String,
         errorMessage: String,
         onSuccess: () -> Unit
     ) {
         when (result.status) {
             Status.LOADING -> {
                 adapter.submitList(emptyList())
-                ProgressHandle.setupVisibilityShimmerLoading(
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                     binding.cardManageCategory.shimmerLayout,
                     true
                 )
             }
 
             Status.SUCCESS -> {
-                ProgressHandle.setupVisibilityShimmerLoading(
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                     binding.cardManageCategory.shimmerLayout,
                     false
                 )
+                binding.swipeRefreshLayout.isRefreshing = false
                 onSuccess.invoke()
-                NotificationHandle.showSuccessSnackBar(requireView(), successMessage)
             }
 
             Status.ERROR -> {
-                ProgressHandle.setupVisibilityShimmerLoading(
+                ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
                     binding.cardManageCategory.shimmerLayout,
                     false
                 )
+                binding.swipeRefreshLayout.isRefreshing = false
                 NotificationHandle.showErrorSnackBar(requireView(), errorMessage)
             }
         }

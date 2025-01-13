@@ -6,63 +6,80 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.am.projectinternalresto.data.model.DummyModel
-import com.am.projectinternalresto.databinding.ItemContentOrderInformationCartBinding
+import com.am.projectinternalresto.databinding.ItemContentOrderInformationBinding
+import com.am.projectinternalresto.utils.Formatter.formatCurrency
 import com.bumptech.glide.Glide
 
-class CartAdapter : ListAdapter<DummyModel.DummyModelCart, CartAdapter.ViewHolder>(DIFF_CALLBACK) {
-    var callbackOnClickDelete: (() -> Unit)? = null
-    var callbackOnClickPlus: (() -> Unit)? = null
-    var callbackOnclickMinus: (() -> Unit)? = null
-
-    inner class ViewHolder(private val binding: ItemContentOrderInformationCartBinding) :
+@Suppress("UNCHECKED_CAST")
+class CartAdapter(
+    private val onQuantityChanged: (itemId: String, increment: Boolean) -> Unit,
+) : ListAdapter<DummyModel.CartItem, CartAdapter.ViewHolder>(DIFF_CALLBACK) {
+    inner class ViewHolder(private val binding: ItemContentOrderInformationBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(dataCart: DummyModel.DummyModelCart) {
-            Glide.with(binding.root.context).load(dataCart.image)
+        fun bind(dataCart: DummyModel.CartItem) {
+            val toppingText = dataCart.selectedToppings.joinToString(", ") { it.nama ?: "" }
+            val toppingPrice = dataCart.selectedToppings.sumOf { it.harga ?: 0 }
+            val totalItemPrice = (dataCart.menuItem.price ?: 0) + toppingPrice
+
+            Glide.with(binding.root.context).load(dataCart.menuItem.imageMenu)
                 .into(binding.itemMenuOrder.imageMenu)
-            binding.itemMenuOrder.textValueTopping.text = dataCart.topping
-            binding.itemMenuOrder.textValueNote.text = dataCart.note
-            binding.textPrice.text = dataCart.price
-            binding.textQty.text = dataCart.qty.toString()
-            binding.textTotal.text = dataCart.total
-            binding.buttonDelete.setOnClickListener {
-                callbackOnClickDelete?.invoke()
+            binding.itemMenuOrder.apply {
+                textNameMenu.text = dataCart.menuItem.nameMenu
+                textValueTopping.text = toppingText.ifEmpty { "-" }
+                textValueNote.text = dataCart.note.ifEmpty { "-" }
+                textPriceItemMenu.text = formatCurrency(dataCart.menuItem.price ?: 0)
             }
+            binding.textQty.text = dataCart.qty.toString()
+            binding.textPrice.text = formatCurrency(totalItemPrice * dataCart.qty)
             binding.buttonPlus.setOnClickListener {
-                callbackOnClickPlus?.invoke()
+                onQuantityChanged(dataCart.id, true)
             }
             binding.buttonMinus.setOnClickListener {
-                callbackOnclickMinus?.invoke()
+                onQuantityChanged(dataCart.id, false)
             }
+        }
+
+        fun updateQuantityAndPrice(newQty: Int, pricePerItem: Int?) {
+            binding.textQty.text = newQty.toString()
+            binding.textPrice.text = formatCurrency(pricePerItem?.times(newQty) ?: 0)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartAdapter.ViewHolder {
         return ViewHolder(
-            ItemContentOrderInformationCartBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+            ItemContentOrderInformationBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
             )
         )
     }
 
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isNotEmpty()) {
+            val data = payloads[0] as Pair<Int, Int>
+            val newQty = data.first
+            val pricePerItem = data.second
+            holder.updateQuantityAndPrice(newQty, pricePerItem)
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
+        }
+    }
+
     override fun onBindViewHolder(holder: CartAdapter.ViewHolder, position: Int) {
-        val dataCart = getItem(position)
-        holder.bind(dataCart)
+        holder.bind(getItem(position))
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DummyModel.DummyModelCart>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DummyModel.CartItem>() {
             override fun areItemsTheSame(
-                oldItem: DummyModel.DummyModelCart,
-                newItem: DummyModel.DummyModelCart
+                oldItem: DummyModel.CartItem,
+                newItem: DummyModel.CartItem
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: DummyModel.DummyModelCart,
-                newItem: DummyModel.DummyModelCart
+                oldItem: DummyModel.CartItem,
+                newItem: DummyModel.CartItem
             ): Boolean {
                 return oldItem == newItem
             }

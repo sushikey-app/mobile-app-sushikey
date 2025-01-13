@@ -1,120 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="220dp"
-    android:layout_height="300dp"
-    app:cardBackgroundColor="@color/salted_egg"
-    app:cardCornerRadius="20dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textInformationOrder"
-            style="@style/CustomTextStyle.Body.MonMedium"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/payment"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/dividerTop"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            app:dividerColor="@color/pink"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--Table Header-->
-        <TableLayout
-            android:id="@+id/tableHeader"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:background="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
+        <TextView
+            android:id="@+id/textPaymentMethod"
+            style="@style/CustomTextStyle.Body.PopReg"
+            android:layout_marginTop="10dp"
+            android:text="@string/payment_method"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInformationOrder">
+            app:layout_constraintTop_toBottomOf="@id/dividerTop" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:ignore="UselessParent">
-
-                <TextView
-                    android:layout_width="65dp"
-                    android:layout_height="50dp"
-                    android:fontFamily="@font/pop_reg"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="5dp"
-                    android:text="@string/item"
-                    android:textColor="@color/deep_grey"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/pop_reg"
-                    android:gravity="center"
-                    android:text="@string/Qty"
-                    android:textColor="@color/deep_grey"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
-                    android:fontFamily="@font/pop_reg"
-                    android:gravity="center_vertical"
-                    android:text="@string/total_order"
-                    android:textColor="@color/deep_grey"
-                    android:textSize="12sp" />
-            </TableRow>
-        </TableLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewItemPayment"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/CustomTabLayoutStyle"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
-            app:layout_constrainedHeight="true"
-            app:layout_constraintBottom_toTopOf="@id/textTotal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tableHeader"
-            tools:itemCount="2"
-            tools:listitem="@layout/item_content_payment" />
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="@color/transparent"
+            app:layout_constraintEnd_toEndOf="@id/dividerTop"
+
+            app:layout_constraintStart_toStartOf="@id/textPaymentMethod"
+            app:layout_constraintTop_toBottomOf="@id/textPaymentMethod"
+            app:tabMode="scrollable" />
 
         <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/dividerBottom"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="15dp"
-            android:layout_marginBottom="10dp"
-            app:dividerColor="@color/grey"
-            app:layout_constraintBottom_toTopOf="@id/textTotal" />
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            app:dividerColor="@color/pink"
+            app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
         <TextView
-            android:id="@+id/textTotal"
+            android:id="@+id/textTotalPayment"
             style="@style/CustomTextStyle.Body.PopReg"
-            android:layout_marginStart="15dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="16dp"
             android:text="@string/total_payment"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/dividerBottom"
+            app:layout_constraintTop_toBottomOf="@id/dividerBottom" />
 
-        <TextView
-            style="@style/CustomTextStyle.Body.PopMedium"
-            android:layout_marginEnd="15dp"
-            android:text="@string/example_price_pl"
-            android:textSize="12sp"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toBottomOf="@id/textTotal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1"
-            app:layout_constraintStart_toEndOf="@id/textTotal"
-            app:layout_constraintTop_toTopOf="@id/textTotal" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edlTotalPayment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/input_your_user_total_payment"
+            android:textColorHint="@color/grey"
+            app:layout_constraintEnd_toEndOf="@id/tabLayout"
+            app:layout_constraintStart_toStartOf="@id/textTotalPayment"
+            app:layout_constraintTop_toBottomOf="@id/textTotalPayment">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtTotalPayment"
+                style="@style/CustomEditTextStyle"
+                android:layout_height="55dp"
+                android:inputType="numberDecimal"
+                android:padding="10dp"
+                android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewOptionPay"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginVertical="10dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/linearLayoutAction"
+            app:layout_constraintEnd_toEndOf="@id/dividerBottom"
+            app:layout_constraintStart_toStartOf="@id/dividerBottom"
+            app:layout_constraintTop_toBottomOf="@id/edlTotalPayment"
+            app:spanCount="3"
+            tools:listitem="@layout/item_content_total_payment" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonCancel"
+                style="@style/CustomButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_weight="1"
+                android:text="@string/cancel"
+                android:textColor="@color/pink"
+                app:backgroundTint="@android:color/transparent"
+                app:strokeColor="@color/pink"
+                app:strokeWidth="2.5dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonPayment"
+                style="@style/CustomButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_weight="1"
+                android:text="@string/pay" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/pink"
+            android:indeterminateTintMode="src_in"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/recyclerViewOptionPay"
+            app:layout_constraintEnd_toEndOf="@id/dividerBottom"
+            app:layout_constraintStart_toStartOf="@id/dividerBottom"
+            app:layout_constraintTop_toTopOf="@id/textPaymentMethod" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textLoading"
+            style="@style/CustomTextStyle.Body.PopReg.smallSp"
+            android:layout_marginStart="3dp"
+            android:text="@string/text_loading"
+            android:textColor="@color/pink"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/progressBar"
+            app:layout_constraintStart_toStartOf="@id/progressBar"
+            app:layout_constraintTop_toBottomOf="@id/progressBar" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</androidx.core.widget.NestedScrollView>

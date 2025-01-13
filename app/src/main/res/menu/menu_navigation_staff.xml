@@ -15,7 +15,7 @@
         android:id="@+id/nav_staff_order_history"
         android:enabled="true"
         android:icon="@drawable/icon_order_history"
-        android:title="@string/title_nav_staff_order_history" />
+        android:title="@string/title_nav_staff_order_report" />
     <item
         android:id="@+id/nav_staff_logout"
         android:enabled="true"

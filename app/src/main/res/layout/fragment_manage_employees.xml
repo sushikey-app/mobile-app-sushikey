@@ -19,6 +19,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <include
+            android:id="@+id/search"
             layout="@layout/custom_search_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

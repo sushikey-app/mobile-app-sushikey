@@ -2,9 +2,9 @@ package com.am.projectinternalresto.service.source
 
 
 import androidx.lifecycle.liveData
-import com.am.projectinternalresto.data.params.AdminAndSuperAdminBody
-import com.am.projectinternalresto.data.params.LoginBody
-import com.am.projectinternalresto.data.params.StaffBody
+import com.am.projectinternalresto.data.body_params.AdminAndSuperAdminRequest
+import com.am.projectinternalresto.data.body_params.LoginRequest
+import com.am.projectinternalresto.data.body_params.StaffRequest
 import com.am.projectinternalresto.service.api.ApiService
 import com.am.projectinternalresto.utils.Key
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ class UserRepository(private val apiService: ApiService) {
     fun login(username: String, password: String) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
-            val bodyParameter = LoginBody(username, password)
+            val bodyParameter = LoginRequest(username, password)
             val response = apiService.login(bodyParameter)
             if (response.isSuccessful) {
                 emit(Resource.success(response.body()))
@@ -46,9 +46,26 @@ class UserRepository(private val apiService: ApiService) {
         }
     }
 
+    fun searchAdminAndSuperAdmin(token: String, keyword: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.searchAdminAndSuperAdmin("Bearer $token", keyword)
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(Key.ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
+
     fun addAdminOrSuperAdmin(
         token: String,
-        payload: AdminAndSuperAdminBody
+        payload: AdminAndSuperAdminRequest
     ) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
@@ -69,7 +86,7 @@ class UserRepository(private val apiService: ApiService) {
     fun updateAdminOrSuperAdmin(
         token: String,
         idUser: String,
-        payload: AdminAndSuperAdminBody
+        payload: AdminAndSuperAdminRequest
     ) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
@@ -122,7 +139,24 @@ class UserRepository(private val apiService: ApiService) {
         }
     }
 
-    fun addStaff(token: String, dataStaff: StaffBody) = liveData(Dispatchers.IO) {
+     fun searchStaff(token: String, keyword: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.searchStaff("Bearer $token", keyword)
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(Key.ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
+
+    fun addStaff(token: String, dataStaff: StaffRequest) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
             val response = apiService.addStaff("Bearer $token", dataStaff)
@@ -139,7 +173,7 @@ class UserRepository(private val apiService: ApiService) {
         }
     }
 
-    fun updateStaff(token: String, idStaff: String, dataStaff: StaffBody) =
+    fun updateStaff(token: String, idStaff: String, dataStaff: StaffRequest) =
         liveData(Dispatchers.IO) {
             emit(Resource.loading(null))
             try {

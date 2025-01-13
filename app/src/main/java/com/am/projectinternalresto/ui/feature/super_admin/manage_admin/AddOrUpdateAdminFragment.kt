@@ -1,6 +1,7 @@
 package com.am.projectinternalresto.ui.feature.super_admin.manage_admin
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.am.projectinternalresto.R
-import com.am.projectinternalresto.data.params.AdminAndSuperAdminBody
+import com.am.projectinternalresto.data.body_params.AdminAndSuperAdminRequest
 import com.am.projectinternalresto.data.response.super_admin.location.DataItemLocation
 import com.am.projectinternalresto.data.response.super_admin.manage_admin.AddOrUpdateAdminSuperAdminResponse
 import com.am.projectinternalresto.data.response.super_admin.manage_admin.DataItemManageAdminAndSuperAdmin
@@ -34,13 +35,16 @@ class AddOrUpdateAdminFragment : Fragment() {
     private val locationViewModel: LocationViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
     private var selectedRole: String? = null
-    private var selectIdLocation: String? = null
+    private var selectIdLocation: String? = ""
+    private var isSaveButtonEnabled = true
     private lateinit var adapterDropdownSelectAdminWork: SelectWorkLocationAdapter
     private val dataAdmin: DataItemManageAdminAndSuperAdmin? by lazy {
         arguments?.getParcelable(
             Key.BUNDLE_DATA_ADMIN_OR_SUPER_ADMIN
         )
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -111,51 +115,60 @@ class AddOrUpdateAdminFragment : Fragment() {
     }
 
     private fun setupDisplayDropdownRole() {
-        val role = listOf(
+        val roles = listOf(
             KEY_LOGIN_ROLE.KEY_SUPER_ADMIN,
-            KEY_LOGIN_ROLE.KEY_ADMIN,
+            KEY_LOGIN_ROLE.KEY_ADMIN
         )
         val view = binding.dropDownRole
         val adapterDropdownRole = ArrayAdapter(
-            requireContext(), R.layout.item_content_dropdown, role
+            requireContext(),
+            R.layout.item_content_dropdown,
+            roles
         )
         view.setAdapter(adapterDropdownRole)
-        view.onItemClickListener = AdapterView.OnItemClickListener { adapterView, _, i, _ ->
-            selectedRole = adapterView.getItemAtPosition(i) as? String
 
-            // TODO :: waiting for the fire to be ready to make changes to this feature.
-            //  where the super admin will have coverage of all outlets and the admin is just one outlet.
-            //   if (selectedRole.equals(KEY_LOGIN_ROLE.KEY_ADMIN)) {
-            //      binding.textLocation.visibility = View.VISIBLE
-            //                binding.edlLocation.visibility = View.VISIBLE
-            //            } else {
-            //                binding.textLocation.visibility = View.GONE
-            //                binding.edlLocation.visibility = View.GONE
-            //            }
+        // Set initial state based on existing data (for update scenario)
+        if (dataAdmin != null) {
+            view.setText(dataAdmin?.role, false)
+            selectedRole = dataAdmin?.role
+            updateLocationVisibility(selectedRole)
         }
-        // TODO :: continue
-        //        if (selectedRole.equals(KEY_LOGIN_ROLE.KEY_ADMIN)) {
-        //            binding.textLocation.visibility = View.VISIBLE
-        //            binding.edlLocation.visibility = View.VISIBLE
-        //        } else {
-        //            binding.textLocation.visibility = View.GONE
-        //            binding.edlLocation.visibility = View.GONE
-        //        }
+
+        view.onItemClickListener = AdapterView.OnItemClickListener { adapterView, _, position, _ ->
+            selectedRole = adapterView.getItemAtPosition(position) as? String
+            updateLocationVisibility(selectedRole)
+        }
+    }
+
+    private fun updateLocationVisibility(role: String?) {
+        val isAdmin = role == KEY_LOGIN_ROLE.KEY_ADMIN
+        binding.textLocation.visibility = if (isAdmin) View.VISIBLE else View.GONE
+        binding.edlLocation.visibility = if (isAdmin) View.VISIBLE else View.GONE
+
+        // If updating an admin, ensure location is populated
+        if (isAdmin && dataAdmin != null) {
+            binding.dropdownLocation.setText(dataAdmin?.location?.locationOutlet)
+        }
     }
 
     private fun setupNavigation() {
         binding.actionHeadline.buttonBack.setOnClickListener { findNavController().popBackStack() }
         binding.buttonSave.setOnClickListener {
-            UiHandle.setupHideKeyboard(it)
-            if (dataAdmin != null) {
-                setupPutDataAdminToApi()
-            } else {
-                setupPostDataAdminToApi()
+            if (isSaveButtonEnabled) {
+                isSaveButtonEnabled = false
+                binding.buttonSave.isEnabled = false
+                UiHandle.setupHideKeyboard(it)
+                if (dataAdmin != null) {
+                    setupPutDataAdminToApi()
+                } else {
+                    setupPostDataAdminToApi()
+                }
             }
         }
     }
 
     private fun setupPostDataAdminToApi() {
+        Log.e("check", "data ${dataResultAdminOrSuperAdmin()}")
         viewModel.addAdminOrSuperAdmin(token, dataResultAdminOrSuperAdmin())
             .observe(viewLifecycleOwner) { result ->
                 handleStatusApi(result)
@@ -182,8 +195,17 @@ class AddOrUpdateAdminFragment : Fragment() {
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar, binding.textLoading, false,
                 )
+                UiHandle.setupClearTextForField(
+                    binding.edtName,
+                    binding.edtUsername,
+                    binding.edtPhoneNumber,
+                    binding.edtPassword
+                )
                 findNavController().popBackStack()
-                NotificationHandle.showSuccessSnackBar(requireView(), result.data.toString())
+                NotificationHandle.showSuccessSnackBar(
+                    requireView(),
+                    result.data?.message.toString()
+                )
             }
 
             Status.ERROR -> {
@@ -191,12 +213,14 @@ class AddOrUpdateAdminFragment : Fragment() {
                     binding.progressBar, binding.textLoading, false,
                 )
                 NotificationHandle.showErrorSnackBar(requireView(), result.message.toString())
+                isSaveButtonEnabled = true
+                binding.buttonSave.isEnabled = true
             }
         }
     }
 
-    private fun dataResultAdminOrSuperAdmin(): AdminAndSuperAdminBody {
-        return AdminAndSuperAdminBody(
+    private fun dataResultAdminOrSuperAdmin(): AdminAndSuperAdminRequest {
+        return AdminAndSuperAdminRequest(
             locationId = selectIdLocation ?: dataAdmin?.locationId.toString(),
             name = binding.edtName.text.toString(),
             username = binding.edtUsername.text.toString(),
