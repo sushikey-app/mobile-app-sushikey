@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.data.response.super_admin.report.DataItemReport
+import com.am.projectinternalresto.data.response.super_admin.report.PrintReportResponse
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
 import com.itextpdf.layout.Document
@@ -25,7 +26,7 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-fun generatePDFReport(context: Context, data: List<DataItemReport>): Uri? {
+fun generatePDFReport(context: Context, response: PrintReportResponse): Uri? {
     val fileName = "LaporanPesanan.pdf"
     val filePath = context.getExternalFilesDir(null)?.absolutePath + File.separator + fileName
 
@@ -39,86 +40,90 @@ fun generatePDFReport(context: Context, data: List<DataItemReport>): Uri? {
         title.setTextAlignment(TextAlignment.CENTER)
         title.setBold()
         document.add(title)
+        document.add(Paragraph("\n"))
 
-        // Create table
-        val table = Table(UnitValue.createPercentArray(floatArrayOf(20f, 20f, 20f, 15f, 10f, 15f)))
+        // Create main table
+        val table = Table(UnitValue.createPercentArray(floatArrayOf(15f, 15f, 10f, 15f, 20f, 15f, 10f)))
         table.width = UnitValue.createPercentValue(100f)
 
         // Add table headers
         val headers = arrayOf(
-            "Tanggal Pemesanan",
-            "Nomor Order",
-            "Menu",
-            "Harga",
+            "Tanggal",
+            "No Order",
             "Qty",
-            "Total Harga Pesanan"
+            "Potongan",
+            "Total Pembayaran",
+            "Status",
+            "Pembayaran"
         )
         headers.forEach { header ->
             table.addHeaderCell(Cell().add(Paragraph(header).setBold()))
         }
 
-        var totalHargaSemuaPesanan = 0
+        // Track totals for summary
+        var totalAmount = 0
+        val paymentMethodCounts = mutableMapOf<String, Int>()
 
         // Add table rows
-        data.filter { it.typePesanan == "Offline" }.forEach { order ->
-            val tanggalPemesanan = SimpleDateFormat(
-                "yyyy-MM-dd",
-                Locale.getDefault()
-            ).parse(order.tanggalPemesanan.toString())
-            val formattedDate =
-                SimpleDateFormat("dd-MM-yyyy / HH:mm:ss", Locale.getDefault()).format(
-                    tanggalPemesanan
-                )
+        response.data?.forEach { order ->
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val date = dateFormat.parse(order?.tanggalPemesanan ?: "")
+            val formattedDate = dateFormat.format(date)
 
-            order.pesanan?.forEach { item ->
-                table.addCell(formattedDate)
-                table.addCell(order.nomorOrder)
-                table.addCell(item?.menu?.nama)
-                table.addCell(
-                    "Rp ${
-                        NumberFormat.getNumberInstance(Locale("id", "ID")).format(item?.menu?.harga)
-                    }"
-                )
-                table.addCell(item?.qty.toString())
+            val totalQty = order?.pesanan?.sumOf { it?.qty ?: 0 } ?: 0
+            val totalPayment = order?.pesanan?.sumOf { (it?.menu?.harga ?: 0) * (it?.qty ?: 0) } ?: 0
 
-                val totalHarga = item?.menu?.harga?.times(item.qty ?: 0)
-                table.addCell(
-                    "Rp ${
-                        NumberFormat.getNumberInstance(Locale("id", "ID")).format(totalHarga)
-                    }"
-                )
+            table.addCell(formattedDate)
+            table.addCell(order?.nomorOrder ?: "")
+            table.addCell(totalQty.toString())
+            table.addCell("Rp ${NumberFormat.getNumberInstance(Locale("id", "ID")).format(0)}")
+            table.addCell("Rp ${NumberFormat.getNumberInstance(Locale("id", "ID")).format(totalPayment)}")
+            table.addCell(order?.statusPesanan ?: "")
+            table.addCell(order?.metode ?: "")
 
-                totalHargaSemuaPesanan += totalHarga ?: 0
-            }
+            totalAmount += totalPayment
+            paymentMethodCounts[order?.metode ?: ""] = (paymentMethodCounts[order?.metode] ?: 0) + 1
         }
 
         // Add total row
         table.addCell(
-            Cell(1, 5).add(
-                Paragraph("Total Harga Semua Pesanan").setTextAlignment(
-                    TextAlignment.RIGHT
-                ).setBold()
+            Cell(1, 6).add(
+                Paragraph("Total").setTextAlignment(TextAlignment.RIGHT).setBold()
             )
         )
         table.addCell(
             Cell().add(
                 Paragraph(
-                    "Rp ${
-                        NumberFormat.getNumberInstance(Locale("id", "ID"))
-                            .format(totalHargaSemuaPesanan)
-                    }"
+                    "Rp ${NumberFormat.getNumberInstance(Locale("id", "ID")).format(totalAmount)}"
                 ).setBold()
             )
         )
 
         document.add(table)
+        document.add(Paragraph("\n"))
+
+        // Add summary section
+        val summaryTitle = Paragraph("RANGKUMAN")
+        summaryTitle.setBold()
+        document.add(summaryTitle)
+
+        val summaryTable = Table(UnitValue.createPercentArray(floatArrayOf(30f, 70f)))
+        summaryTable.width = UnitValue.createPercentValue(50f)
+
+        // Add payment method summary
+        paymentMethodCounts.forEach { (method, count) ->
+            summaryTable.addCell(method)
+            summaryTable.addCell(count.toString())
+        }
+
+        document.add(summaryTable)
         document.close()
 
-        // Membuat Uri untuk file PDF
+        // Create URI for PDF file
         val file = File(filePath)
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
 
-        // Mengirim notifikasi bahwa PDF sudah jadi
+        // Send notification
         sendNotification(context, "PDF Report Generated", "Your report is ready to view", uri)
 
         return uri

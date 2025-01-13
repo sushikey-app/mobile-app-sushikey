@@ -5,12 +5,11 @@ import android.view.View
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.databinding.ActivityMainSuperAdminBinding
-import com.am.projectinternalresto.ui.widget.alert.showAlertLogout
+import com.am.projectinternalresto.ui.widget.alert.showLogoutAlert
 
 class MainSuperAdminActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainSuperAdminBinding
@@ -41,7 +40,7 @@ class MainSuperAdminActivity : AppCompatActivity() {
         binding.navigationRailsSuperAdmin.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_super_admin_logout -> {
-                    showAlertLogout(this@MainSuperAdminActivity)
+                    showLogoutAlert(this@MainSuperAdminActivity)
                     true
                 }
                 else -> NavigationUI.onNavDestinationSelected(item, navController)

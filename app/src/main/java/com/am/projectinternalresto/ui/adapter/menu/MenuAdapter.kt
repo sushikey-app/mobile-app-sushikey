@@ -18,12 +18,6 @@ class MenuAdapter(private var onClickAddToCart: ((data: DataItemMenu) -> Unit)? 
     fun callbackOnClickListener(listener: (data: DataItemMenu) -> Unit) {
         onClickAddToCart = listener
     }
-
-    fun updateStock(newStockMap: Map<String, Int>) {
-        stockMap = newStockMap
-        notifyDataSetChanged()
-    }
-
     inner class ViewHolder(private val binding: ItemContentMenuBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
@@ -31,14 +25,9 @@ class MenuAdapter(private var onClickAddToCart: ((data: DataItemMenu) -> Unit)? 
             Glide.with(binding.root.context).load(dataMenu.imageMenu).into(binding.imageMenu)
             binding.textCategory.text = dataMenu.category?.nameCategory
             binding.textName.text = dataMenu.nameMenu
-            val stock = stockMap[dataMenu.idMenu] ?: 0
-            binding.textQuota.text = Formatter.formatQuantity(stock ?: 0)
             binding.textPrice.text = Formatter.formatCurrency(dataMenu.price ?: 0)
-
             binding.root.setOnClickListener {
-                if (stock > 0) {
-                    onClickAddToCart?.invoke(dataMenu)
-                }
+                onClickAddToCart?.invoke(dataMenu)
             }
         }
     }

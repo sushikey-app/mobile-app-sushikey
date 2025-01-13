@@ -66,7 +66,7 @@
         android:id="@+id/textStatusOrder"
         style="@style/CustomTextStyle.Body.PopMedium"
         android:layout_marginTop="10dp"
-        android:text="@string/name_buyer"
+        android:text="@string/status"
         app:layout_constraintStart_toStartOf="@id/textBuyerName"
         app:layout_constraintTop_toBottomOf="@id/textBuyerName" />
 

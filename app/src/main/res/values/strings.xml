@@ -124,7 +124,7 @@
     <string name="title_nav_staff_menu">Menu</string>
     <string name="title_nav_staff_cart">Keranjang</string>
     <string name="title_nav_staff_order">Pesanan</string>
-    <string name="title_nav_staff_order_history">Riwayat</string>
+    <string name="title_nav_staff_order_report">Laporan</string>
     <string name="title_nav_staff_logout">Keluar</string>
     <string name="quota">Kuota:</string>
     <string name="price_">Harga:</string>
@@ -200,7 +200,6 @@
     <string name="ppn">PPN</string>
     <string name="payment_method">Metode Pembayaran</string>
     <string name="input_your_user_total_payment">"Masukan total pembayaran "</string>
-    <string name="confitm_exit_app">apakah anda yakin keluar?</string>
     <string name="yes">Ya</string>
     <string name="name_buyer">Nama Pembeli</string>
     <string name="input_your_name_buyer">Masukan nama pembeli</string>
@@ -233,8 +232,13 @@
     <string name="choose_location">Pilih lokasi</string>
     <string name="choose_your_location">Pilih lokasi yang diinginkan</string>
     <string name="choose_mount">Pilih bulan (opsional)</string>
-    <string name="choose_your_date">Pilih bulan yang diinginkan</string>
+    <string name="choose_your_date">Pilih tanggal yang diinginkan</string>
     <string name="choose_year">Pilih tahun (opsional)</string>
     <string name="choose_your_years">Pilih tahun yang diinginkan</string>
     <string name="reason_cancel_orders">"Alasan dibatalkan "</string>
+    <string name="name_staff_cashier">Nama kasir</string>
+    <string name="text_order">Jumlah pesanan</string>
+    <string name="cancel_order">Batalkan pesanan</string>
+    <string name="choose_initial_date">Pilih tanggal awal</string>
+    <string name="choose_deadline_date">Pilih batas tanggal akhir</string>
 </resources>

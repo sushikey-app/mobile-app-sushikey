@@ -6,16 +6,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.am.projectinternalresto.data.response.super_admin.report.ItemDataReport
+import com.am.projectinternalresto.data.response.super_admin.report.OrderItems
 import com.am.projectinternalresto.databinding.ItemContentOrderInformationBinding
 import com.am.projectinternalresto.utils.Formatter
 import com.bumptech.glide.Glide
 
 class DetailReportOrderAdapter :
-    ListAdapter<ItemDataReport, DetailReportOrderAdapter.ViewHolder>(DIFF_CALLBACK) {
+    ListAdapter<OrderItems, DetailReportOrderAdapter.ViewHolder>(DIFF_CALLBACK) {
     inner class ViewHolder(private val binding: ItemContentOrderInformationBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: ItemDataReport) {
+        fun bind(data: OrderItems) {
             val toppingText = data.topping?.joinToString(", ") { it?.nama ?: "" }
             val toppingPrice = data.topping?.sumOf { it?.harga ?: 0 }
             val totalItemPrice = (data.hargaPesanan ?: 0) + toppingPrice!!
@@ -31,7 +31,7 @@ class DetailReportOrderAdapter :
                 Formatter.formatCurrency(data.menu?.harga ?: 0)
             binding.itemMenuOrder.textValueTopping.text = toppingText
             binding.itemMenuOrder.textValueNote.text = data.note
-            binding.textPrice.text = Formatter.formatCurrency(totalItemPrice ?: 0)
+            binding.textPrice.text = Formatter.formatCurrency(totalItemPrice)
         }
     }
 
@@ -50,15 +50,15 @@ class DetailReportOrderAdapter :
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ItemDataReport>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<OrderItems>() {
             override fun areItemsTheSame(
-                oldItem: ItemDataReport, newItem: ItemDataReport
+                oldItem: OrderItems, newItem: OrderItems
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: ItemDataReport, newItem: ItemDataReport
+                oldItem: OrderItems, newItem: OrderItems
             ): Boolean {
                 return oldItem == newItem
             }

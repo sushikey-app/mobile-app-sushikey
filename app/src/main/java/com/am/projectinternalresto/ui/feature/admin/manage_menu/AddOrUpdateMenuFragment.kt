@@ -29,6 +29,7 @@ import com.am.projectinternalresto.utils.Key
 import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
 import com.am.projectinternalresto.utils.UiHandle
+import com.am.projectinternalresto.utils.setMinusPrice
 import com.am.projectinternalresto.utils.setPriceWatcherUtils
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputEditText
@@ -63,8 +64,6 @@ class AddOrUpdateMenuFragment : Fragment() {
             binding.actionHeadline.textHeadline.text = getString(R.string.edit_data)
             binding.dropdownCategory.setText(dataMenu?.category?.nameCategory)
             binding.edtNameMenu.setText(dataMenu?.nameMenu)
-            binding.edtQuotaMenu.setText(dataMenu?.quota.toString())
-            binding.edtComposition.setText(dataMenu?.composition)
             binding.edtPriceMenu.setText(Formatter.formatCurrency(dataMenu?.price ?: 0))
             Glide.with(requireContext()).load(dataMenu?.imageMenu.toString())
                 .into(binding.imageMenu)
@@ -77,13 +76,12 @@ class AddOrUpdateMenuFragment : Fragment() {
         binding.buttonAddOrUpdateMenu.text = getString(R.string.save_data)
         UiHandle.setupDisableHintForField(
             binding.edlCategory,
-            binding.edlComposition,
             binding.edlNameMenu,
-            binding.edlQuotaMenu,
             binding.EdlPriceMenu,
         )
         binding.textAddTopping.setOnClickListener {
             addToppingLayout()
+            it.visibility = View.INVISIBLE
         }
         binding.edtPriceMenu.setPriceWatcherUtils { price ->
             unformattedPrice = price
@@ -110,7 +108,7 @@ class AddOrUpdateMenuFragment : Fragment() {
             newToppingView.findViewById<TextInputEditText>(R.id.edtToppingPrice)
 
         UiHandle.setupDisableHintForField(edlTextNameTopping, edlTextPriceTopping)
-        edtTextPriceTopping.setPriceWatcherUtils { }
+        edtTextPriceTopping.setMinusPrice { }
 
         existingTopping?.let {
             edtTextNameTopping.setText(it.nama)
@@ -135,7 +133,6 @@ class AddOrUpdateMenuFragment : Fragment() {
                 setupPutDataMenuApi()
             } else {
                 setupPostDataMenuToApi()
-                Log.e("Check", "data : ${dataResultMenu()}")
             }
         }
         binding.actionHeadline.buttonBack.setOnClickListener {
@@ -194,10 +191,7 @@ class AddOrUpdateMenuFragment : Fragment() {
             token,
             dataMenu?.idMenu.toString(),
             dataResultMenu()
-        )
-            .observe(viewLifecycleOwner) { result ->
-                handleApiStatus(result)
-            }
+        ).observe(viewLifecycleOwner) { result -> handleApiStatus(result) }
     }
 
 
@@ -212,12 +206,7 @@ class AddOrUpdateMenuFragment : Fragment() {
             }
 
             Status.SUCCESS -> {
-                UiHandle.setupClearTextForField(
-                    binding.edtNameMenu,
-                    binding.edtPriceMenu,
-                    binding.edtQuotaMenu,
-                    binding.edtComposition,
-                )
+                UiHandle.setupClearTextForField(binding.edtNameMenu, binding.edtPriceMenu)
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar, binding.textLoading, false
                 )
@@ -254,9 +243,11 @@ class AddOrUpdateMenuFragment : Fragment() {
 
                 if (name.isNotBlank() && priceText.isNotBlank()) {
                     val price = try {
-                        // Remove non-digit characters and parse to Int
-                        priceText.replace("[Rp,.]".toRegex(), "").trim().toInt()
+                        val cleanPrice = priceText.replace("[Rp,.]".toRegex(), "").trim()
+                            .replace("\\s+".toRegex(), "")
+                        cleanPrice.toInt()
                     } catch (e: NumberFormatException) {
+                        Log.e("ToppingParsing", "Invalid price format: $priceText")
                         0
                     }
 
@@ -271,8 +262,6 @@ class AddOrUpdateMenuFragment : Fragment() {
         return MenuBody(
             idCategory = selectIdCategoryMenu ?: dataMenu?.category?.id.toString(),
             nameMenu = binding.edtNameMenu.text.toString(),
-            composition = binding.edtComposition.text.toString(),
-            quota = binding.edtQuotaMenu.text.toString().toInt(),
             price = unformattedPrice ?: dataMenu?.price!!,
             image = uriSelectedImage?.let { Formatter.uriToFile(it, requireContext()) },
             itemToppings = collectToppingData()

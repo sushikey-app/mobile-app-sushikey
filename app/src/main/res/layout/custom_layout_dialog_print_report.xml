@@ -73,11 +73,11 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/textChooseMonth"
+                android:id="@+id/textChooseInitialDate"
                 style="@style/CustomTextStyle.Body.PopSemiBold"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/choose_mount"
+                android:text="@string/choose_initial_date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edlLocationReport" />
 
@@ -90,8 +90,8 @@
                 android:hint="@string/choose_your_date"
                 android:textColorHint="@color/grey"
                 app:layout_constraintEnd_toEndOf="@id/edlLocationReport"
-                app:layout_constraintStart_toStartOf="@id/textChooseMonth"
-                app:layout_constraintTop_toBottomOf="@id/textChooseMonth">
+                app:layout_constraintStart_toStartOf="@id/textChooseInitialDate"
+                app:layout_constraintTop_toBottomOf="@id/textChooseInitialDate">
 
                 <AutoCompleteTextView
                     android:id="@+id/dropdownInitialDateReport"
@@ -107,11 +107,11 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/textChooseYear"
+                android:id="@+id/textChooseDeadlineDate"
                 style="@style/CustomTextStyle.Body.PopSemiBold"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/choose_year"
+                android:text="@string/choose_deadline_date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edlChooseMonthReport" />
 
@@ -121,14 +121,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:hint="@string/choose_your_years"
+                android:hint="@string/choose_your_date"
                 android:textColorHint="@color/grey"
                 app:layout_constraintEnd_toEndOf="@id/edlLocationReport"
-                app:layout_constraintStart_toStartOf="@id/textChooseYear"
-                app:layout_constraintTop_toBottomOf="@id/textChooseYear">
+                app:layout_constraintStart_toStartOf="@id/textChooseDeadlineDate"
+                app:layout_constraintTop_toBottomOf="@id/textChooseDeadlineDate">
 
                 <AutoCompleteTextView
-                    android:id="@+id/dropdownChooseYear"
+                    android:id="@+id/dropdownChooseDeadlineDate"
                     style="@style/CustomEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"

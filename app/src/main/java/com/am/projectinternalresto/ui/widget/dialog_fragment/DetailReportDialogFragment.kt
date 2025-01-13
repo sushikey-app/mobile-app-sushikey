@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +18,9 @@ import com.am.projectinternalresto.service.source.Status
 import com.am.projectinternalresto.ui.adapter.report.DetailReportOrderAdapter
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
 import com.am.projectinternalresto.ui.feature.super_admin.report.ManageReportViewModel
+import com.am.projectinternalresto.utils.Formatter
 import com.am.projectinternalresto.utils.NotificationHandle
+import com.am.projectinternalresto.utils.ProgressHandle
 import org.koin.android.ext.android.inject
 
 class DetailReportDialogFragment(private val idOrderReport: String) : DialogFragment() {
@@ -66,15 +67,27 @@ class DetailReportDialogFragment(private val idOrderReport: String) : DialogFrag
         viewModel.getDetailReport(token, idOrderReport).observe(viewLifecycleOwner) { result ->
             when (result.status) {
                 Status.LOADING -> {
+                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                        binding.layoutShimmer,
+                        true
+                    )
 
                 }
 
                 Status.SUCCESS -> {
+                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                        binding.layoutShimmer,
+                        false
+                    )
                     setupAdapter(result.data?.data)
+                    setupView(result.data?.data)
                 }
 
                 Status.ERROR -> {
-                    Log.e("Check", "error : ${result.message}")
+                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                        binding.layoutShimmer,
+                        false
+                    )
                     NotificationHandle.showErrorSnackBar(
                         requireView(),
                         result.message.toString()
@@ -84,11 +97,26 @@ class DetailReportDialogFragment(private val idOrderReport: String) : DialogFrag
         }
     }
 
+    private fun setupView(data: DataItemDetailReport?) {
+        binding.textNoOrder.text = data?.pembayaran?.nomorOrder
+        binding.textValueStaffName.text = data?.namaKasir
+        binding.textValueBuyer.text = data?.pembayaran?.namaPembeli
+        binding.textValueStatus.text = data?.pembayaran?.statusPesanan
+        binding.textValueDateOrder.text =
+            Formatter.formatDatetime(data?.pembayaran?.createdAt ?: "")
+        binding.textValueReasonCancel.text = data?.alasanPembatalan ?: "-"
+        binding.layoutOrder.textValueSubTotal.text =
+            Formatter.formatCurrency(data?.pembayaran?.totalHarga ?: 0)
+        binding.layoutOrder.textValuePPN.text = Formatter.formatCurrency(0)
+        binding.layoutOrder.textValueTotal.text =
+            Formatter.formatCurrency(data?.pembayaran?.totalHarga ?: 0)
+    }
+
     private fun setupAdapter(data: DataItemDetailReport?) {
         val adapter = DetailReportOrderAdapter().apply {
             submitList(data?.pesanan)
         }
-        binding.recyclerViewItem.let {
+        binding.layoutOrder.recyclerConfirmOrder.let {
             it.adapter = adapter
             it.layoutManager = LinearLayoutManager(requireContext())
         }

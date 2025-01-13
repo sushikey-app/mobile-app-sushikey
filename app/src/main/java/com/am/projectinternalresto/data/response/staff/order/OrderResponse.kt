@@ -29,7 +29,9 @@ data class DataItemOrder(
     @field:SerializedName("nama_kasir")
     val staffName: String? = null,
 
-    )
+    @field:SerializedName("alasan_pembatalan")
+    val reasonCancelOrder: String? = null,
+)
 
 data class Payment(
 

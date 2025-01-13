@@ -105,13 +105,13 @@ class DashboardAdminFragment : Fragment() {
             iconContent.setImageResource(R.drawable.icon_total_order)
         }
         binding.cardTotalSalesOfflineOrder.apply {
-            textTitleContent.text = getString(R.string.text_order_offline)
-            textValueContent.text = data?.offlineOrders.toString()
+            textTitleContent.text = getString(R.string.text_order)
+            textValueContent.text = data?.totalOrders.toString()
             iconContent.setImageResource(R.drawable.icon_order_offline)
         }
         binding.cardTotalSalesOnlineOrder.apply {
             textTitleContent.text = getString(R.string.text_order_online)
-            textValueContent.text = data?.onlineOrders.toString()
+            textValueContent.text = data?.totalOrders.toString()
             iconContent.setImageResource(R.drawable.icon_order_online)
         }
     }

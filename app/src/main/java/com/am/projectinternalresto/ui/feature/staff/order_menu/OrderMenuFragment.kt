@@ -1,7 +1,6 @@
 package com.am.projectinternalresto.ui.feature.staff.order_menu
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.am.projectinternalresto.R
 import com.am.projectinternalresto.data.model.DummyModel
 import com.am.projectinternalresto.data.response.admin.category.DataItemCategory
 import com.am.projectinternalresto.databinding.FragmentOrderMenuBinding
@@ -17,11 +17,14 @@ import com.am.projectinternalresto.service.source.Status
 import com.am.projectinternalresto.ui.adapter.cart.CartAdapter
 import com.am.projectinternalresto.ui.adapter.menu.MenuAdapter
 import com.am.projectinternalresto.ui.feature.admin.manage_category.ManageCategoryViewModel
+import com.am.projectinternalresto.ui.feature.admin.manage_menu.ManageMenuViewModel
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
 import com.am.projectinternalresto.ui.widget.alert.showAlertAddToCart
+import com.am.projectinternalresto.ui.widget.alert.showAlertSaveCustomerName
 import com.am.projectinternalresto.utils.Destination
 import com.am.projectinternalresto.utils.Formatter
 import com.am.projectinternalresto.utils.Key
+import com.am.projectinternalresto.utils.Key.BUNDLE_CUSTOMER_NAME
 import com.am.projectinternalresto.utils.Key.BUNDLE_DATA_ORDER_TO_PAYMENT
 import com.am.projectinternalresto.utils.Key.BUNDLE_ID_ORDER
 import com.am.projectinternalresto.utils.Navigation.navigateFragment
@@ -29,6 +32,7 @@ import com.am.projectinternalresto.utils.NotificationHandle.showErrorSnackBar
 import com.am.projectinternalresto.utils.NotificationHandle.showSuccessSnackBar
 import com.am.projectinternalresto.utils.ProgressHandle.setupVisibilityProgressBar
 import com.am.projectinternalresto.utils.ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout
+import com.am.projectinternalresto.utils.UiHandle
 import com.google.android.material.tabs.TabLayout
 import org.koin.android.ext.android.inject
 
@@ -39,6 +43,7 @@ class OrderMenuFragment : Fragment() {
     private val viewModel: ManageOrderMenuViewModel by inject()
     private val authViewModel: AuthViewModel by inject()
     private val categoryViewModel: ManageCategoryViewModel by inject()
+    private val menuViewModel: ManageMenuViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
     private lateinit var cartAdapter: CartAdapter
     private lateinit var menuAdapter: MenuAdapter
@@ -48,7 +53,7 @@ class OrderMenuFragment : Fragment() {
         )
     }
     private var editingOrderId: String? = null
-    private val dataIdOrder: String? by lazy { arguments?.getString(Key.BUNDLE_ID_ORDER) }
+    private val dataIdOrder: String? by lazy { arguments?.getString(BUNDLE_ID_ORDER) }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,9 +74,35 @@ class OrderMenuFragment : Fragment() {
     private fun setupInitialUI() {
         setupMenuRecyclerViews()
         setupCartRecyclerView()
-        setupTabLayoutOrderType()
         handleEditOrderState()
         setupNavigation()
+        UiHandle.setupDisplayDataFromSearchOrGet(
+            editLayout= binding.search.edlSearch,
+            editText = binding.search.edtSearch,
+            onSearchDisplayData = { keyword -> setupSearchMenu(keyword) },
+            onDisplayDataDefault = { setupGetDataMenuFromApi() }
+        )
+    }
+
+
+    private fun setupSearchMenu(keyword: String) {
+        viewModel.searchMenuOrder(token, keyword).observe(viewLifecycleOwner) { result ->
+            when (result.status) {
+                Status.LOADING -> {
+                    setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, true)
+                }
+
+                Status.SUCCESS -> {
+                    setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, false)
+                    result.data?.data?.let { menuAdapter.submitList(it) }
+                }
+
+                Status.ERROR -> {
+                    setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, false)
+                    showErrorSnackBar(requireView(), result.message.toString())
+                }
+            }
+        }
     }
 
     private fun setupMenuRecyclerViews() {
@@ -102,37 +133,13 @@ class OrderMenuFragment : Fragment() {
         }
     }
 
-    private fun setupTabLayoutOrderType() {
-        val tabLayout = binding.cardChart.tabLayout
-        tabLayout.addTab(tabLayout.newTab().setText("Offline"))
-        tabLayout.addTab(tabLayout.newTab().setText("Online"))
-
-        // Atur margin untuk setiap tab
-        for (i in 0 until tabLayout.tabCount) {
-            val tab = (tabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
-            val params = tab.layoutParams as ViewGroup.MarginLayoutParams
-            params.setMargins(10, 0, 10, 0)
-            tab.requestLayout()
-        }
-
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                viewModel.setTypeOrder(tab.text.toString())
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
-    }
-
     // setup ui when edit order
     private fun handleEditOrderState() {
         dataEditingOrderSummary?.let {
             cartAdapter.submitList(dataEditingOrderSummary?.listCartItems)
             viewModel.initializeCartWithExistingOrder(dataEditingOrderSummary!!)
-            binding.cardChart.buttonSave.text = "Cancel Order"
+            binding.cardChart.buttonSave.text = getString(R.string.cancel_order)
         }
-
     }
 
     private fun setupGetDataCategory() {
@@ -159,7 +166,6 @@ class OrderMenuFragment : Fragment() {
             tabLayout.addTab(tabLayout.newTab().setText(category.nameCategory))
         }
 
-        // Atur margin untuk setiap tab
         for (i in 0 until tabLayout.tabCount) {
             val tab = (tabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
             val params = tab.layoutParams as ViewGroup.MarginLayoutParams
@@ -168,7 +174,17 @@ class OrderMenuFragment : Fragment() {
         }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {}
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val position = tab.position
+                if (position == 0) {
+                    menuAdapter.submitList(emptyList())
+                    setupGetDataMenuFromApi()
+                } else {
+                    val selectedCategory = categories[position - 1]
+                    menuAdapter.submitList(emptyList())
+                    setupFilterMenuByCategory(selectedCategory.id)
+                }
+            }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -179,11 +195,11 @@ class OrderMenuFragment : Fragment() {
         binding.cardChart.buttonPay.setOnClickListener { navigateToPayment() }
         binding.cardChart.buttonSave.setOnClickListener {
             if (dataEditingOrderSummary != null) {
-                Log.e("Check", "Is Cancel")
                 setupCancelOrder()
             } else {
-                Log.e("Check", "Is Edit")
-                setupPostDataSaveOrderToApi()
+                showAlertSaveCustomerName(requireContext()) { nameCustomer ->
+                    setupPostDataSaveOrderToApi(nameCustomer)
+                }
             }
         }
     }
@@ -192,19 +208,20 @@ class OrderMenuFragment : Fragment() {
         val orderSummary = DummyModel.OrderSummary(
             orderId = editingOrderId,
             listCartItems = viewModel.cartItems.value ?: emptyList(),
-            typeOrder = viewModel.orderType.value.toString(),
             totalPurchase = viewModel.totalPurchase.value ?: 0
         )
-        navigateFragment(
-            Destination.ORDER_MENU_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
-            findNavController(),
-            Bundle().apply {
-                putString(BUNDLE_ID_ORDER, dataIdOrder)
-                putParcelable(BUNDLE_DATA_ORDER_TO_PAYMENT, orderSummary)
-            }
-        )
-
-        clearDataChart()
+        showAlertSaveCustomerName(requireContext()) { nameCustomer ->
+            navigateFragment(
+                Destination.ORDER_MENU_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
+                findNavController(),
+                Bundle().apply {
+                    putString(BUNDLE_CUSTOMER_NAME, nameCustomer)
+                    putString(BUNDLE_ID_ORDER, dataIdOrder)
+                    putParcelable(BUNDLE_DATA_ORDER_TO_PAYMENT, orderSummary)
+                }
+            )
+            clearDataChart()
+        }
     }
 
     private fun setupGetDataMenuFromApi() {
@@ -217,12 +234,6 @@ class OrderMenuFragment : Fragment() {
                 Status.SUCCESS -> {
                     setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, false)
                     result.data?.data?.let { menuAdapter.submitList(it) }
-                    result.data?.data?.forEach {
-                        viewModel.updateItemStock(
-                            it?.idMenu.toString(),
-                            it?.quota ?: 0
-                        )
-                    }
                 }
 
                 Status.ERROR -> {
@@ -233,8 +244,28 @@ class OrderMenuFragment : Fragment() {
         }
     }
 
-    private fun setupPostDataSaveOrderToApi() {
-        viewModel.saveDataOrder(token).observe(viewLifecycleOwner) { result ->
+    private fun setupFilterMenuByCategory(idMenu: String) {
+        menuViewModel.filterMenuByCategory(token, idMenu).observe(viewLifecycleOwner) { result ->
+            when (result.status) {
+                Status.LOADING -> {
+                    setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, true)
+                }
+
+                Status.SUCCESS -> {
+                    setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, false)
+                    result.data?.data?.let { menuAdapter.submitList(it) }
+                }
+
+                Status.ERROR -> {
+                    setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, false)
+                    showErrorSnackBar(requireView(), result.message.toString())
+                }
+            }
+        }
+    }
+
+    private fun setupPostDataSaveOrderToApi(name: String) {
+        viewModel.saveDataOrder(token, name).observe(viewLifecycleOwner) { result ->
             handleApiStatus(result, result.message.toString()) {
                 clearDataChart()
                 setupGetDataMenuFromApi()
@@ -244,7 +275,6 @@ class OrderMenuFragment : Fragment() {
     }
 
     private fun setupCancelOrder() {
-        Log.e("token", "Token : $token | ${dataEditingOrderSummary?.orderId}" )
         viewModel.cancelOrder(token, dataEditingOrderSummary?.orderId.toString())
             .observe(viewLifecycleOwner) { result ->
                 handleApiStatus(result, result.message.toString()) {
@@ -272,23 +302,8 @@ class OrderMenuFragment : Fragment() {
                 }
             }
         }
-
-        viewModel.itemStock.observe(viewLifecycleOwner) { stock ->
-            menuAdapter.updateStock(stock)
-        }
         viewModel.totalPurchase.observe(viewLifecycleOwner) { total ->
             binding.cardChart.textTotal.text = Formatter.formatCurrency(total)
-        }
-        viewModel.orderType.observe(viewLifecycleOwner) { type ->
-            updateOrderTypeUI(type)
-        }
-    }
-
-    private fun updateOrderTypeUI(type: String) {
-        val tabLayout = binding.cardChart.tabLayout
-        when (type) {
-            "Offline" -> tabLayout.getTabAt(0)?.select()
-            "Online" -> tabLayout.getTabAt(1)?.select()
         }
     }
 
@@ -297,7 +312,6 @@ class OrderMenuFragment : Fragment() {
         cartAdapter.submitList(emptyList())
         binding.cardChart.textTotal.text = Formatter.formatCurrency(0)
     }
-
 
     private fun <T> handleApiStatus(
         result: Resource<T>,

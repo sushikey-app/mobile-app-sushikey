@@ -8,103 +8,189 @@
     app:cardCornerRadius="20dp"
     app:cardElevation="10dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            style="@style/CustomTextStyle.Body.PopSemiBold"
-            android:layout_margin="16dp"
-            android:text="@string/information_order"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textNoOrder"
-            style="@style/CustomTextStyle.Body.PopMedium"
-            android:layout_margin="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="sample_no_order" />
-
-        <com.google.android.material.divider.MaterialDivider
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="16dp"
-            app:dividerColor="@color/red"
-            app:layout_constraintTop_toBottomOf="@id/textNoOrder" />
-
-        <LinearLayout
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginHorizontal="16dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/textNoOrder">
+            android:layout_height="match_parent">
 
             <TextView
-                style="@style/CustomTextStyle.Body.PopMedium"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="10dp"
-                android:text="@string/item"
-                android:textSize="14sp" />
+                android:id="@+id/textInformationOrder"
+                style="@style/CustomTextStyle.Body.PopSemiBold"
+                android:layout_margin="16dp"
+                android:text="@string/information_order"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
 
             <TextView
+                android:id="@+id/textNoOrder"
                 style="@style/CustomTextStyle.Body.PopMedium"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.4"
-                android:gravity="center"
-                android:text="@string/qty"
-                android:textSize="14sp" />
+                android:layout_margin="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="sample_no_order" />
 
             <TextView
+                android:id="@+id/textName"
                 style="@style/CustomTextStyle.Body.PopMedium"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:text="@string/total"
-                android:textSize="14sp" />
-        </LinearLayout>
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/name_staff_cashier"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textInformationOrder" />
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="16dp"
-            app:dividerColor="@color/red"
-            app:layout_constraintTop_toBottomOf="@id/header" />
+            <TextView
+                android:id="@+id/textValueStaffName"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@id/textName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textName"
+                tools:text="@string/example_name_staff" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewItem"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toTopOf="@id/buttonBack"
-            app:layout_constraintEnd_toEndOf="@id/header"
-            app:layout_constraintStart_toStartOf="@id/header"
-            app:layout_constraintTop_toBottomOf="@id/header"
-            tools:itemCount="2"
-            tools:listitem="@layout/item_content_order_information" />
+            <TextView
+                android:id="@+id/textBuyerName"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/name_buyer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textName" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonBack"
-            style="@style/CustomButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:paddingHorizontal="50dp"
-            android:paddingVertical="10dp"
-            android:text="@string/back"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:id="@+id/textValueBuyer"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@id/textBuyerName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textBuyerName"
+                tools:text="@string/example_name_staff" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/textStatus"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/status"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textBuyerName" />
+
+            <TextView
+                android:id="@+id/textValueStatus"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@id/textStatus"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textStatus"
+                tools:text="@string/example_status" />
+
+            <TextView
+                android:id="@+id/textDateOrder"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/order_date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textStatus" />
+
+            <TextView
+                android:id="@+id/textValueDateOrder"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@id/textDateOrder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textDateOrder"
+                tools:text="@string/example_date" />
+
+            <TextView
+                android:id="@+id/textReasonCancel"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/reason_cancel_orders"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textDateOrder" />
+
+            <TextView
+                android:id="@+id/textValueReasonCancel"
+                style="@style/CustomTextStyle.Body.PopMedium"
+                android:layout_marginEnd="16dp"
+                android:text="@string/no"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/textReasonCancel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textReasonCancel" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:id="@+id/layoutShimmer"
+                android:layout_margin="16dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/dividerTop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:layout_width="150dp"
+                    android:layout_height="25dp"
+                    android:background="@color/darker_grey" />
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:layout_width="150dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/darker_grey" />
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:layout_width="150dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/darker_grey" />
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:layout_width="150dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/darker_grey" />
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:layout_width="150dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/darker_grey" />
+
+            </LinearLayout>
+
+            <include
+                android:id="@+id/layoutOrder"
+                layout="@layout/card_confirm_order"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/textReasonCancel" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonBack"
+                style="@style/CustomButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp"
+                android:paddingHorizontal="50dp"
+                android:paddingVertical="10dp"
+                android:text="@string/back"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layoutOrder" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </com.google.android.material.card.MaterialCardView>

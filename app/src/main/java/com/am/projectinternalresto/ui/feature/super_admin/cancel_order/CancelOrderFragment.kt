@@ -15,6 +15,7 @@ import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
 import com.am.projectinternalresto.ui.feature.staff.order_menu.ManageOrderMenuViewModel
 import com.am.projectinternalresto.ui.widget.alert.showAlertCancelOrder
 import com.am.projectinternalresto.ui.widget.alert.showAlertReasonCancelOrder
+import com.am.projectinternalresto.ui.widget.dialog_fragment.DetailReportDialogFragment
 import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
 import org.koin.android.ext.android.inject
@@ -68,8 +69,8 @@ class CancelOrderFragment : Fragment() {
     private fun setupAdapter(data: ListCancelResponse?) {
         val adapter = CancelOrderAdapter().apply {
             submitList(data?.data)
-            callbackClickDetailOrder {
-                NotificationHandle.showSuccessSnackBar(requireView(), it)
+            callbackClickDetailOrder { id ->
+                DetailReportDialogFragment.show(childFragmentManager, id)
             }
             callbackClickYes { id ->
                 showAlertCancelOrder(requireContext()) {

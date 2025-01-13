@@ -1,6 +1,5 @@
 package com.am.projectinternalresto.utils
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Color
 import android.text.Editable
@@ -14,16 +13,11 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.am.projectinternalresto.R
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 object UiHandle {
     fun setupDisableHintForField(vararg editLayout: TextInputLayout) {
@@ -39,10 +33,12 @@ object UiHandle {
     }
 
     fun setupDisplayDataFromSearchOrGet(
+        editLayout: TextInputLayout,
         editText: TextInputEditText,
         onSearchDisplayData: ((String) -> Unit)? = null,
         onDisplayDataDefault: (() -> Unit)? = null,
     ) {
+        setupDisableHintForField(editLayout)
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 

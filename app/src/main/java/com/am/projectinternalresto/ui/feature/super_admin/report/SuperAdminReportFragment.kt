@@ -10,14 +10,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.am.projectinternalresto.data.response.super_admin.report.DataItemReport
 import com.am.projectinternalresto.data.response.super_admin.report.ListReportResponse
 import com.am.projectinternalresto.databinding.FragmentReportBinding
 import com.am.projectinternalresto.service.source.Status
 import com.am.projectinternalresto.ui.adapter.report.ManageReportAdapter
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
 import com.am.projectinternalresto.ui.feature.super_admin.manage_location.LocationViewModel
-import com.am.projectinternalresto.ui.widget.alert.showAlertFilterPrintReport
+import com.am.projectinternalresto.ui.widget.alert.showAlertFilterAndPrintReportSuperAdmin
+import com.am.projectinternalresto.ui.widget.alert.showConfirmDeleteReportAlert
 import com.am.projectinternalresto.ui.widget.dialog_fragment.DetailReportDialogFragment
 import com.am.projectinternalresto.utils.Destination
 import com.am.projectinternalresto.utils.Navigation
@@ -25,7 +25,6 @@ import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
 import com.am.projectinternalresto.utils.generatePDFReport
 import org.koin.android.ext.android.inject
-import java.util.Calendar
 
 
 class SuperAdminReportFragment : Fragment() {
@@ -36,8 +35,13 @@ class SuperAdminReportFragment : Fragment() {
     private val locationViewModel: LocationViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
     private var currentLocationId: String? = null
-    private var currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
-    private var currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    private var currentStartDate: Int = 0
+    private var currentStartMonth: Int = 0
+    private var currentStartYear: Int = 0
+    private var currentEndDate: Int = 0
+    private var currentEndMonth: Int = 0
+    private var currentEndYear: Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,58 +61,142 @@ class SuperAdminReportFragment : Fragment() {
             )
         }
         binding.cardReport.buttonFilter.setOnClickListener {
-            showAlertFilterPrintReport(
+            showAlertFilterAndPrintReportSuperAdmin(
                 requireContext(),
                 locationViewModel,
                 token
-            ) { locationId, month, year ->
+            ) { locationId, startDate, startMonth, startYear, endDate, endMonth, endYear ->
+                setupFilterReport(
+                    locationId, startDate, startMonth, startYear, endDate, endMonth, endYear
+                )
+                Log.e(
+                    "CheckPrint",
+                    "id : $locationId | $startDate | $startMonth | $endDate | $endMonth"
+                )
                 currentLocationId = locationId
-                currentMonth = month
-                currentYear = year
-//                setupGeneratePdf(locationId, initialDate, deadlineDate)
+                currentStartDate = startDate
+                currentStartMonth = startMonth
+                currentStartYear = startYear
+                currentEndDate = endDate
+                currentEndMonth = endMonth
+                currentEndYear = endYear
             }
-//            showAlertFilterReportByLocation(
-//                requireContext(),
-//                locationViewModel,
-//                token
-//            ) { locationId ->
-//
-//                setupFilterReport(locationId)
-//            }
         }
         binding.cardReport.buttonPrint.setOnClickListener {
-            showAlertFilterPrintReport(
-                requireContext(),
-                locationViewModel,
-                token
-            ) { locationId, initialDate, deadlineDate ->
-                Log.e("CheckPrint", "id : $locationId | $initialDate | $deadlineDate")
-//                setupGeneratePdf(locationId, initialDate, deadlineDate)
-            }
-        }
-
-        binding.cardReport.buttonDelete.setOnClickListener {
             if (currentLocationId != null) {
-                Log.e(
-                    "Check",
-                    "check delete data : $currentLocationId | $currentMonth | $currentYear"
+                setupGeneratePdf(
+                    currentLocationId.toString(),
+                    currentStartDate,
+                    currentStartMonth,
+                    currentStartYear,
+                    currentEndDate,
+                    currentEndMonth,
+                    currentEndYear
                 )
-                setupDeleteDataReport(currentLocationId.toString(), currentMonth, currentYear)
             } else {
-                showAlertFilterPrintReport(
+                showAlertFilterAndPrintReportSuperAdmin(
                     requireContext(),
                     locationViewModel,
                     token
-                ) { locationId, month, year ->
-                    Log.e("Check", "check delete data : $locationId | $month | $year")
-                    setupDeleteDataReport(locationId, month, year)
+                ) { locationId, startDate, startMonth, startYear, endDate, endMonth, endYear ->
+                    Log.e(
+                        "CheckPrint",
+                        "id : $locationId | $locationId | $startDate | $startMonth | $endDate | $endMonth"
+                    )
+                    setupGeneratePdf(
+                        locationId,
+                        startDate,
+                        startMonth,
+                        startYear,
+                        endDate,
+                        endMonth,
+                        endYear
+                    )
+                }
+            }
+
+            binding.cardReport.buttonDelete.setOnClickListener {
+                if (currentLocationId != null) {
+                    showConfirmDeleteReportAlert(requireContext()) {
+                        setupDeleteDataReport(
+                            currentLocationId.toString(),
+                            currentStartDate,
+                            currentStartMonth,
+                            currentStartYear,
+                            currentEndDate,
+                            currentEndMonth,
+                            currentEndYear
+                        )
+                    }
+                } else {
+                    showAlertFilterAndPrintReportSuperAdmin(
+                        requireContext(),
+                        locationViewModel,
+                        token
+                    ) { locationId, startDate, startYear, startMonth, endDate, endMonth, endYear ->
+                        Log.e(
+                            "CheckPrint",
+                            "id : $locationId | $locationId | $startDate | $startMonth | $startYear | $endDate | $endMonth | $endYear"
+                        )
+                        showConfirmDeleteReportAlert(requireContext()) {
+                            setupDeleteDataReport(
+                                locationId,
+                                startDate, startMonth, startYear, endDate, endMonth, endYear
+                            )
+                        }
+                    }
                 }
             }
         }
     }
 
-    private fun setupDeleteDataReport(locationId: String, month: Int, year: Int) {
-        viewModel.deleteReportSuperAdmin(token, locationId, month, year)
+    private fun setupFilterReport(
+        locationId: String,
+        startDate: Int, startMonth: Int, startYear: Int, endDate: Int, endMonth: Int, endYear: Int
+    ) {
+        viewModel.getDataFilter(
+            token, locationId, startDate, startMonth, startYear, endDate, endMonth, endYear
+        )
+            .observe(viewLifecycleOwner) { result ->
+                when (result.status) {
+                    Status.LOADING -> {
+                        ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                            binding.cardReport.shimmerLayout,
+                            true
+                        )
+                    }
+
+                    Status.SUCCESS -> {
+                        ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                            binding.cardReport.shimmerLayout,
+                            false
+                        )
+                        binding.swipeRefreshLayout.isRefreshing = false
+                        setupAdapter(result.data)
+                    }
+
+                    Status.ERROR -> {
+                        ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                            binding.cardReport.shimmerLayout,
+                            false
+                        )
+                        binding.swipeRefreshLayout.isRefreshing = false
+                        NotificationHandle.showErrorSnackBar(
+                            requireView(),
+                            result.message.toString()
+                        )
+                    }
+                }
+            }
+    }
+
+    private fun setupDeleteDataReport(
+        locationId: String,
+        startDate: Int, startMonth: Int, startYear: Int, endDate: Int, endMonth: Int, endYear: Int
+    ) {
+        viewModel.deleteReportSuperAdmin(
+            token, locationId, startDate, startMonth, startYear, endDate, endMonth, endYear
+        )
             .observe(viewLifecycleOwner) { result ->
                 when (result.status) {
                     Status.LOADING -> {
@@ -127,6 +215,10 @@ class SuperAdminReportFragment : Fragment() {
                     }
 
                     Status.ERROR -> {
+                        ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
+                            binding.cardReport.shimmerLayout,
+                            false
+                        )
                         NotificationHandle.showErrorSnackBar(
                             requireView(),
                             result.message.toString()
@@ -137,13 +229,19 @@ class SuperAdminReportFragment : Fragment() {
             }
     }
 
-    private fun setupGeneratePdf(locationId: String, initialDate: String, deadlineDate: String) {
-        viewModel.getDataReportForPrint(token, locationId, initialDate, deadlineDate)
+
+    private fun setupGeneratePdf(
+        locationId: String,
+        startDate: Int, startMonth: Int, startYear: Int, endDate: Int, endMonth: Int, endYear: Int
+    ) {
+        viewModel.getDataReportForPrint(
+            token, locationId, startDate, startMonth, startYear, endDate, endMonth, endYear
+        )
             .observe(viewLifecycleOwner) { result ->
                 when (result.status) {
                     Status.LOADING -> {}
                     Status.SUCCESS -> {
-                        val data = result.data?.data as? List<DataItemReport>
+                        val data = result.data
                         if (data != null) {
                             val pdfUri = generatePDFReport(requireContext(), data)
                             if (pdfUri != null) {
@@ -175,37 +273,6 @@ class SuperAdminReportFragment : Fragment() {
                     }
                 }
             }
-    }
-
-    private fun setupFilterReport(id: String) {
-        viewModel.filterReportByLocation(token, id).observe(viewLifecycleOwner) { result ->
-            when (result.status) {
-                Status.LOADING -> {
-                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
-                        binding.cardReport.shimmerLayout,
-                        true
-                    )
-                }
-
-                Status.SUCCESS -> {
-                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
-                        binding.cardReport.shimmerLayout,
-                        false
-                    )
-                    binding.swipeRefreshLayout.isRefreshing = false
-                    setupAdapter(result.data)
-                }
-
-                Status.ERROR -> {
-                    ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
-                        binding.cardReport.shimmerLayout,
-                        false
-                    )
-                    binding.swipeRefreshLayout.isRefreshing = false
-                    NotificationHandle.showErrorSnackBar(requireView(), result.message.toString())
-                }
-            }
-        }
     }
 
     private fun setupGetDataReport() {
@@ -240,7 +307,7 @@ class SuperAdminReportFragment : Fragment() {
     }
 
     private fun setupAdapter(data: ListReportResponse?) {
-        val adapter = ManageReportAdapter().apply {
+        val adapter = ManageReportAdapter(true).apply {
             submitList(data?.data)
             callbackOnclickToDetail { id ->
                 DetailReportDialogFragment.show(childFragmentManager, id)
@@ -259,4 +326,6 @@ class SuperAdminReportFragment : Fragment() {
         }
         startActivity(intent)
     }
+
+
 }

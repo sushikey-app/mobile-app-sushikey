@@ -9,10 +9,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.am.projectinternalresto.data.response.staff.order.DataItemListOrder
 import com.am.projectinternalresto.databinding.ItemContentPaidOrderBinding
 
-class HistoryOrderAdapter(private var onclickDetailOrder: ((idOrder: String) -> Unit)? = null) :
+class HistoryOrderAdapter(
+    private var onclickDetailOrder: ((idOrder: String) -> Unit)? = null,
+    private var onclickCancelOrder: ((idOrder: String) -> Unit)? = null
+) :
     ListAdapter<DataItemListOrder, HistoryOrderAdapter.ViewHolder>(DIFF_CALLBACK) {
     fun callbackClickDetailOrder(listener: (idOrder: String) -> Unit) {
         onclickDetailOrder = listener
+    }
+
+    fun callbackClickCancelOrder(listener: (idOrder: String) -> Unit) {
+        onclickCancelOrder = listener
     }
 
     inner class ViewHolder(private val binding: ItemContentPaidOrderBinding) :
@@ -23,6 +30,7 @@ class HistoryOrderAdapter(private var onclickDetailOrder: ((idOrder: String) -> 
             binding.textStatus.visibility = View.INVISIBLE
             binding.buttonChangeStatus.visibility = View.GONE
             binding.buttonToDetailOrder.setOnClickListener { onclickDetailOrder?.invoke(data.id.toString()) }
+            binding.buttonCancelOrders.setOnClickListener { onclickCancelOrder?.invoke(data.id.toString()) }
         }
     }
 

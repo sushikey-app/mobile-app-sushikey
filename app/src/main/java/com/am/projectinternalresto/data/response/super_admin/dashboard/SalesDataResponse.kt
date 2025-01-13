@@ -71,5 +71,8 @@ data class DataItemSales(
     val onlineOrders: Int? = null,
 
     @field:SerializedName("pesananOffline")
-    val offlineOrders: Int? = null
+    val offlineOrders: Int? = null,
+
+    @field:SerializedName("pesanan")
+    val totalOrders: Int? = null
 )

@@ -64,14 +64,6 @@
             app:layout_constraintStart_toStartOf="@id/textName"
             app:layout_constraintTop_toBottomOf="@id/textName" />
 
-        <TextView
-            android:id="@+id/textQuota"
-            style="@style/CustomTextStyle.Body.PopMedium"
-            android:textSize="11sp"
-            app:layout_constraintBottom_toBottomOf="@id/buttonAdd"
-            app:layout_constraintStart_toStartOf="@id/textName"
-            app:layout_constraintTop_toTopOf="@id/buttonAdd"
-            tools:text="@tools:sample/us_zipcodes" />
 
         <ImageView
             android:id="@+id/buttonAdd"

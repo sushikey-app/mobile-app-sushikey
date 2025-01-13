@@ -104,11 +104,12 @@
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="0.5"
-                    android:gravity="center"
+                    android:gravity="center_vertical"
                     android:text="@string/status"
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/textLocation"
                     style="@style/CustomTextStyle.Body.PopSemiBold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -133,9 +134,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="5dp"
-                    android:layout_weight="0.6"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/detail_order"
+                    android:text="@string/action"
                     android:textSize="16sp" />
             </TableRow>
         </TableLayout>

@@ -43,6 +43,7 @@ class ManageAdminFragment : Fragment() {
         UiHandle.setupDisableHintForField(binding.search.edlSearch)
         setupGetDataFromApi()
         UiHandle.setupDisplayDataFromSearchOrGet(
+            editLayout= binding.search.edlSearch,
             editText = binding.search.edtSearch,
             onSearchDisplayData = { keyword -> setupSearchAdminAndSuperAdminByName(keyword) },
             onDisplayDataDefault = { setupGetDataFromApi() }

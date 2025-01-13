@@ -43,8 +43,8 @@ class ManageCategoryFragment : Fragment() {
     private fun setupView() {
         binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataFromApi() }
         setupGetDataFromApi()
-        UiHandle.setupClearTextForField(binding.search.edtSearch)
         UiHandle.setupDisplayDataFromSearchOrGet(
+            editLayout = binding.search.edlSearch,
             editText = binding.search.edtSearch,
             onSearchDisplayData = { keyword -> setupSearchCategoryByName(keyword) },
             onDisplayDataDefault = { setupGetDataFromApi() }

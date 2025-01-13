@@ -1,6 +1,5 @@
 package com.am.projectinternalresto.ui.feature.admin.manage_menu
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.am.projectinternalresto.data.body_params.MenuBody
@@ -15,13 +14,8 @@ class ManageMenuViewModel(private val repository: MenuRepository) : ViewModel() 
     fun updateMenu(
         token: String, idMenu: String, payload: MenuBody
     ): LiveData<Resource<AddOrUpdateMenuResponse?>> {
-
-        Log.e("Check_viewmodel_manage_menu", "token : $token")
-        Log.e("Check_viewmodel_manage_menu", "idMenu : $idMenu")
-
         return repository.updateMenu(token, idMenu, payload)
     }
-
 
     fun deleteMenu(token: String, idMenu: String) = repository.deleteMenu(token, idMenu)
 
@@ -32,4 +26,6 @@ class ManageMenuViewModel(private val repository: MenuRepository) : ViewModel() 
         repository.getMenuFavoriteAdmin(token, categoryId)
 
     fun searchMenu(token: String, keyword: String) = repository.searchMenu(token, keyword)
+    fun filterMenuByCategory(token: String, idMenu: String) =
+        repository.filterMenuByCategory(token, idMenu)
 }

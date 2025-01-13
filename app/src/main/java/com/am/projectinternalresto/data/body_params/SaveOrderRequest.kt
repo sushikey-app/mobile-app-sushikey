@@ -4,14 +4,13 @@ import com.google.gson.annotations.SerializedName
 
 data class OrderRequest(
     @SerializedName("nama_pembeli") val nameBuyer: String,
-    @SerializedName("type_pesanan") val typeOrder: String,
     @SerializedName("metode") val methodPayment: String,
     @SerializedName("uang_dibayarkan") val totalPaid: Int? = null,
     @SerializedName("pesanan") val order: List<OrderItemRequest>
 )
 
 data class SaveOrderRequest(
-    @SerializedName("type_pesanan") val typeOrder: String,
+    @SerializedName("nama_pembeli") val nameCustomer: String,
     @SerializedName("pesanan") val order: List<OrderItemRequest>
 )
 

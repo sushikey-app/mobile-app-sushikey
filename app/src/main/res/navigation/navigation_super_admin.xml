@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_nav_super_admin_report_to_cancelOrderFragment"
             app:destination="@id/cancelOrderFragment" />
+        <action
+            android:id="@+id/action_nav_super_admin_report_to_detailHistoryFragment2"
+            app:destination="@id/detailHistoryFragment2" />
     </fragment>
 
     <fragment
@@ -55,5 +58,13 @@
         android:id="@+id/cancelOrderFragment"
         android:name="com.am.projectinternalresto.ui.feature.super_admin.cancel_order.CancelOrderFragment"
         tools:layout="@layout/fragment_cancel_order"
-        android:label="CancelOrderFragment" />
+        android:label="CancelOrderFragment" >
+        <action
+            android:id="@+id/action_cancelOrderFragment_to_detailHistoryFragment2"
+            app:destination="@id/detailHistoryFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailHistoryFragment2"
+        android:name="com.am.projectinternalresto.ui.feature.staff.order_history.DetailHistoryFragment"
+        android:label="DetailHistoryFragment" />
 </navigation>

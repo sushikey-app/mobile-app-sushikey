@@ -39,9 +39,10 @@ class ManageMenuFragment : Fragment() {
     }
 
     private fun setupView() {
+        setupGetDataFromApi()
         binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataFromApi() }
-        UiHandle.setupClearTextForField(binding.search.edtSearch)
         UiHandle.setupDisplayDataFromSearchOrGet(
+            editLayout= binding.search.edlSearch,
             editText = binding.search.edtSearch,
             onSearchDisplayData = { keyword -> setupSearchMenu(keyword) },
             onDisplayDataDefault = { setupGetDataFromApi() }

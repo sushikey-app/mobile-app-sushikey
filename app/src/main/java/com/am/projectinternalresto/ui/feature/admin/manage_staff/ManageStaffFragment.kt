@@ -41,8 +41,8 @@ class ManageStaffFragment : Fragment() {
     private fun setupView() {
         setupGetDataStaffFromApi()
         binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataStaffFromApi() }
-        UiHandle.setupClearTextForField(binding.search.edtSearch)
         UiHandle.setupDisplayDataFromSearchOrGet(
+            editLayout= binding.search.edlSearch,
             editText = binding.search.edtSearch,
             onSearchDisplayData = { keyword -> setupSearchStaff(keyword) },
             onDisplayDataDefault = { setupGetDataStaffFromApi() }

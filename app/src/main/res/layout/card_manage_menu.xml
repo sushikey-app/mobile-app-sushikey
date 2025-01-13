@@ -96,15 +96,6 @@
                     android:text="@string/name_menu"
                     android:textSize="14sp" />
 
-                <TextView
-                    style="@style/CustomTextStyle.Body.PopSemiBold"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_weight="0.4"
-                    android:paddingHorizontal="10dp"
-                    android:text="@string/qty"
-                    android:textSize="14sp" />
 
                 <TextView
                     style="@style/CustomTextStyle.Body.PopSemiBold"
@@ -151,9 +142,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewContentTableLocation"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:itemCount="1"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tableHeader"
+            tools:itemCount="200"
             tools:listitem="@layout/item_content_manage_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

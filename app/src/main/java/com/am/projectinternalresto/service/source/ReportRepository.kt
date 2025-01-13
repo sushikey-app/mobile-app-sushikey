@@ -5,7 +5,6 @@ import com.am.projectinternalresto.service.api.ApiService
 import com.am.projectinternalresto.utils.Key.ERROR_MESSAGE
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONObject
-
 class ReportRepository(private val apiService: ApiService) {
 
     fun getListDataReportSuperAdmin(token: String) = liveData(Dispatchers.IO) {
@@ -28,17 +27,61 @@ class ReportRepository(private val apiService: ApiService) {
     fun getDataReportForPrintSuperAdmin(
         token: String,
         locationId: String,
-        initialDate: String,
-        deadlineDate: String
+        startDate: Int,
+        startMonth: Int,
+        startYear: Int,
+        endDate: Int,
+        endMonth: Int,
+        endYear: Int
     ) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
             val response =
-                apiService.getDataReportSuperAdmin(
+                apiService.getReportForPrint(
                     "Bearer $token",
                     locationId,
-                    initialDate,
-                    deadlineDate
+                    startDate,
+                    startMonth,
+                    startYear,
+                    endDate,
+                    endMonth,
+                    endYear
+                )
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
+
+    fun getDataFilterReportSuperAdmin(
+        token: String,
+        locationId: String,
+        startDate: Int,
+        startMonth: Int,
+        startYear: Int,
+        endDate: Int,
+        endMonth: Int,
+        endYear: Int
+    ) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response =
+                apiService.filterReportSuperAdmin(
+                    "Bearer $token",
+                    locationId,
+                    startDate,
+                    startMonth,
+                    startYear,
+                    endDate,
+                    endMonth,
+                    endYear
                 )
             if (response.isSuccessful) {
                 emit(Resource.success(response.body()))
@@ -87,20 +130,58 @@ class ReportRepository(private val apiService: ApiService) {
         }
     }
 
-    fun getDataReportForPrintAdmin(
+    fun deleteReportSuperAdmin(
         token: String,
         locationId: String,
-        initialDate: String,
-        deadlineDate: String
+        startDate: Int,
+        startMonth: Int,
+        startYear: Int,
+        endDate: Int,
+        endMonth: Int,
+        endYear: Int
+    ) =
+        liveData(Dispatchers.IO) {
+            emit(Resource.loading(null))
+            try {
+                val response = apiService.deleteReport(
+                    "Bearer $token",
+                    locationId,
+                    startDate,
+                    startMonth,
+                    startYear,
+                    endDate,
+                    endMonth,
+                    endYear
+                )
+                if (response.isSuccessful) {
+                    emit(Resource.success(response.body()))
+                } else {
+                    response.errorBody()?.let {
+                        val errorMessage = JSONObject(it.string()).getString(ERROR_MESSAGE)
+                        emit(Resource.error(null, errorMessage))
+                    }
+                }
+            } catch (exception: Exception) {
+                emit(Resource.error(null, exception.message ?: "Error Occurred!"))
+            }
+        }
+
+
+    fun getDataFilterReportAdmin(
+        token: String,
+        startDate: Int,
+        startMonth: Int,
+        startYear: Int,
+        endDate: Int,
+        endMonth: Int,
+        endYear: Int
     ) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
             val response =
-                apiService.getDataReportAdmin(
+                apiService.filterReportAdmin(
                     "Bearer $token",
-                    locationId,
-                    initialDate,
-                    deadlineDate
+                    startDate, startMonth, startYear, endDate, endMonth, endYear
                 )
             if (response.isSuccessful) {
                 emit(Resource.success(response.body()))
@@ -115,10 +196,22 @@ class ReportRepository(private val apiService: ApiService) {
         }
     }
 
-    fun getDetailDataReportAdmin(token: String, id: String) = liveData(Dispatchers.IO) {
+    fun getDataReportForPrintAdmin(
+        token: String,
+        startDate: Int,
+        startMonth: Int,
+        startYear: Int,
+        endDate: Int,
+        endMonth: Int,
+        endYear: Int
+    ) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
-            val response = apiService.getDetailReportAdmin("Bearer $token", id)
+            val response =
+                apiService.getDataPrintForAdmin(
+                    "Bearer $token",
+                    startDate, startMonth, startYear, endDate, endMonth, endYear
+                )
             if (response.isSuccessful) {
                 emit(Resource.success(response.body()))
             } else {
@@ -131,39 +224,4 @@ class ReportRepository(private val apiService: ApiService) {
             emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
         }
     }
-
-    fun filterReportByLocation(token: String, id: String) = liveData(Dispatchers.IO) {
-        emit(Resource.loading(null))
-        try {
-            val response = apiService.filterReportByLocation("Bearer $token", id)
-            if (response.isSuccessful) {
-                emit(Resource.success(response.body()))
-            } else {
-                response.errorBody()?.let {
-                    val errorMessage = JSONObject(it.string()).getString(ERROR_MESSAGE)
-                    emit(Resource.error(null, errorMessage))
-                }
-            }
-        } catch (exception: Exception) {
-            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
-        }
-    }
-
-    fun deleteReportSuperAdmin(token: String, locationId: String, month: Int, year: Int) =
-        liveData(Dispatchers.IO) {
-            emit(Resource.loading(null))
-            try {
-                val response = apiService.deleteReport("Bearer $token", locationId, month, year)
-                if (response.isSuccessful) {
-                    emit(Resource.success(response.body()))
-                } else {
-                    response.errorBody()?.let {
-                        val errorMessage = JSONObject(it.string()).getString(ERROR_MESSAGE)
-                        emit(Resource.error(null, errorMessage))
-                    }
-                }
-            } catch (exception: Exception) {
-                emit(Resource.error(null, exception.message ?: "Error Occurred!"))
-            }
-        }
 }

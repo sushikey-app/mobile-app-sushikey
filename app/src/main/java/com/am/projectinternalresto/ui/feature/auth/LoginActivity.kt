@@ -96,9 +96,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun handleNavigationByRole(role: String?) {
         when (role) {
-            KEY_SUPER_ADMIN -> goToActivity(MainSuperAdminActivity::class.java)
-            KEY_ADMIN -> goToActivity(MainAdminActivity::class.java)
-            KEY_STAFF -> goToActivity(MainStaffActivity::class.java)
+            KEY_SUPER_ADMIN -> goToActivity(MainSuperAdminActivity::class.java, true)
+            KEY_ADMIN -> goToActivity(MainAdminActivity::class.java, true)
+            KEY_STAFF -> goToActivity(MainStaffActivity::class.java, true)
             else -> NotificationHandle.showErrorSnackBar(binding.root, "$role tidak ditemukan")
         }
     }

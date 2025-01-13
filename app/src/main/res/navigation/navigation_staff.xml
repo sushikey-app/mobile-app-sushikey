@@ -35,7 +35,7 @@
     <fragment
         android:id="@+id/nav_staff_order_history"
         android:name="com.am.projectinternalresto.ui.feature.staff.order_history.OrderHistoryFragment"
-        android:label="@string/title_nav_staff_order_history"
+        android:label="@string/title_nav_staff_order_report"
         tools:layout="@layout/fragment_order_history" >
 
         <action

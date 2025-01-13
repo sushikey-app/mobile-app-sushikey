@@ -10,7 +10,7 @@
         android:id="@+id/textHeadline"
         style="@style/CustomTextStyle.Headline"
         android:layout_height="40dp"
-        android:text="@string/title_nav_staff_order_history"
+        android:text="@string/title_nav_staff_order_report"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

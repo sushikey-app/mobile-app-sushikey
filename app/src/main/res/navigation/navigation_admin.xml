@@ -33,7 +33,11 @@
         android:id="@+id/nav_admin_report"
         android:name="com.am.projectinternalresto.ui.feature.admin.report.AdminReportFragment"
         android:label="@string/title_nav_admin_report"
-        tools:layout="@layout/fragment_report" />
+        tools:layout="@layout/fragment_report" >
+        <action
+            android:id="@+id/action_nav_admin_report_to_detailHistoryFragment3"
+            app:destination="@id/detailHistoryFragment3" />
+    </fragment>
 
     <fragment
         android:id="@+id/addOrUpdateMenuFragment"
@@ -61,4 +65,8 @@
         android:name="com.am.projectinternalresto.ui.feature.admin.manage_category.AddOrUpdateCategoryMenuFragment"
         android:label="addOrUpdateCategoryMenu"
         tools:layout="@layout/fragment_add_or_update_category" />
+    <fragment
+        android:id="@+id/detailHistoryFragment3"
+        android:name="com.am.projectinternalresto.ui.feature.staff.order_history.DetailHistoryFragment"
+        android:label="DetailHistoryFragment" />
 </navigation>

@@ -44,17 +44,6 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/textQuota"
-            style="@style/CustomTextStyle.Body.PopMedium"
-            android:layout_width="0dp"
-            android:layout_weight="0.4"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="10dp"
-            android:text="@string/example_qty"
-            android:textSize="14sp" />
-
-        <TextView
             android:id="@+id/textPrice"
             style="@style/CustomTextStyle.Body.PopMedium"
             android:layout_width="0dp"

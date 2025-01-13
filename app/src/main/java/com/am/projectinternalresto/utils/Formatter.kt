@@ -11,27 +11,43 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
+import kotlin.math.absoluteValue
 
 object Formatter {
 
     private const val FILENAME_FORMAT = "yyyyMMdd_HHmmss"
     private val timeStamp: String = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(Date())
     fun formatCurrency(amount: Int): String {
-        val decimal = DecimalFormat("#,###.##")
-        return "Rp. ${decimal.format(amount)}"
+        val absAmount = amount.absoluteValue
+        val formatted = java.text.NumberFormat.getNumberInstance().format(absAmount)
+        return if (amount < 0) "-Rp $formatted" else "Rp $formatted"
     }
 
-    fun formatQuantity(qty: Int): String {
-        return "Qty : $qty"
-    }
     fun getCurrentDate(): String {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
         return dateFormat.format(Date())
     }
+
+    fun formatDatetime(date: String): String {
+        val formatInput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+        formatInput.timeZone = TimeZone.getTimeZone("UTC")
+
+        val formatOutput = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
+        formatOutput.timeZone = TimeZone.getTimeZone("Asia/Jakarta")
+
+        try {
+            val tanggal: Date = formatInput.parse(date) ?: return date
+
+            return formatOutput.format(tanggal)
+        } catch (e: Exception) {
+            return date
+        }
+    }
+
 
     fun getImageUri(context: Context): Uri {
         var uri: Uri? = null

@@ -28,9 +28,9 @@ import com.am.projectinternalresto.data.response.super_admin.location.AddOrUpdat
 import com.am.projectinternalresto.data.response.super_admin.location.LocationResponse
 import com.am.projectinternalresto.data.response.super_admin.manage_admin.AddOrUpdateAdminSuperAdminResponse
 import com.am.projectinternalresto.data.response.super_admin.manage_admin.ManageAdminAndSuperAdminResponse
-import com.am.projectinternalresto.data.response.super_admin.report.DetailReportOrderResponse
+import com.am.projectinternalresto.data.response.super_admin.report.DetailReportResponse
 import com.am.projectinternalresto.data.response.super_admin.report.ListReportResponse
-import com.am.projectinternalresto.data.response.super_admin.report.ReportResponse
+import com.am.projectinternalresto.data.response.super_admin.report.PrintReportResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -142,23 +142,42 @@ interface ApiService {
     suspend fun getDetailReportSuperAdmin(
         @Header("Authorization") bearer: String,
         @Path("id") id: String,
-    ): Response<DetailReportOrderResponse>
+    ): Response<DetailReportResponse>
 
     @GET("super-admin/laporan/filter-print-data")
-    suspend fun getDataReportSuperAdmin(
+    suspend fun getReportForPrint(
         @Header("Authorization") bearer: String,
         @Query("lokasi_id") locationId: String,
-        @Query("tanggal_awal") initialLimit: String,
-        @Query("tanggal_akhir") deadline: String,
-    ): Response<ReportResponse>
+        @Query("filter_tanggal_awal") startDate: Int,
+        @Query("filter_bulan_awal") startMonth: Int,
+        @Query("filter_tahun_awal") startYear: Int,
+        @Query("filter_tanggal_akhir") endDate: Int,
+        @Query("filter_bulan_akhir") endMonth: Int,
+        @Query("filter_tahun_akhir") endYear: Int,
+    ): Response<PrintReportResponse>
 
+    @GET("super-admin/laporan/filter-laporan")
+    suspend fun filterReportSuperAdmin(
+        @Header("Authorization") bearer: String,
+        @Query("lokasi_id") locationId: String,
+        @Query("filter_tanggal_awal") startDate: Int,
+        @Query("filter_bulan_awal") startMonth: Int,
+        @Query("filter_tahun_awal") startYear: Int,
+        @Query("filter_tanggal_akhir") endDate: Int,
+        @Query("filter_bulan_akhir") endMonth: Int,
+        @Query("filter_tahun_akhir") endYear: Int,
+    ): Response<ListReportResponse>
 
     @DELETE("super-admin/laporan/filter-delete-data")
     suspend fun deleteReport(
         @Header("Authorization") bearer: String,
         @Query("lokasi_id") locationId: String,
-        @Query("filter_bulan") month: Int,
-        @Query("filter_tahun") years: Int,
+        @Query("filter_tanggal_awal") startDate: Int,
+        @Query("filter_bulan_awal") startMonth: Int,
+        @Query("filter_tahun_awal") startYear: Int,
+        @Query("filter_tanggal_akhir") endDate: Int,
+        @Query("filter_bulan_akhir") endMonth: Int,
+        @Query("filter_tahun_akhir") endYear: Int,
     ): Response<GeneralResponse>
 
     @GET("admin/laporan")
@@ -170,15 +189,29 @@ interface ApiService {
     suspend fun getDetailReportAdmin(
         @Header("Authorization") bearer: String,
         @Path("id") id: String,
-    ): Response<DetailReportOrderResponse>
+    ): Response<DetailReportResponse>
 
     @GET("admin/laporan/filter-print-data")
-    suspend fun getDataReportAdmin(
+    suspend fun getDataPrintForAdmin(
         @Header("Authorization") bearer: String,
-        @Query("lokasi_id") locationId: String,
-        @Query("tanggal_awal") initialLimit: String,
-        @Query("tanggal_akhir") deadline: String,
-    ): Response<ReportResponse>
+        @Query("filter_tanggal_awal") startDate: Int,
+        @Query("filter_bulan_awal") startMonth: Int,
+        @Query("filter_tahun_awal") startYear: Int,
+        @Query("filter_tanggal_akhir") endDate: Int,
+        @Query("filter_bulan_akhir") endMonth: Int,
+        @Query("filter_tahun_akhir") endYear: Int,
+    ): Response<PrintReportResponse>
+
+    @GET("admin/laporan/filter-laporan")
+    suspend fun filterReportAdmin(
+        @Header("Authorization") bearer: String,
+        @Query("filter_tanggal_awal") startDate: Int,
+        @Query("filter_bulan_awal") startMonth: Int,
+        @Query("filter_tahun_awal") startYear: Int,
+        @Query("filter_tanggal_akhir") endDate: Int,
+        @Query("filter_bulan_akhir") endMonth: Int,
+        @Query("filter_tahun_akhir") endYear: Int,
+    ): Response<ListReportResponse>
 
     @GET("super-admin/laporan/filter-by-lokasi/{id}")
     suspend fun filterReportByLocation(
@@ -246,7 +279,7 @@ interface ApiService {
     @Multipart
     @POST("menu/{id}")
     suspend fun updateMenu(
-        @Header("Authorization") bearer: String,
+        @Header("Authorization") token: String,
         @Path("id") idMenu: String,
         @PartMap data: Map<String, @JvmSuppressWildcards RequestBody>,
         @Part image: MultipartBody.Part?
@@ -262,6 +295,12 @@ interface ApiService {
     suspend fun searchMenu(
         @Header("Authorization") bearer: String,
         @Query("keyword") keyword: String
+    ): Response<MenuResponse>
+
+    @GET("filter-menu-pesan-by-kategori/{id}")
+    suspend fun filterMenuByCategory(
+        @Header("Authorization") bearer: String,
+        @Path("id") idMenu: String
     ): Response<MenuResponse>
 
     @GET("pegawai-admin")
@@ -297,6 +336,11 @@ interface ApiService {
     @GET("pesan")
     suspend fun getDataOrder(@Header("Authorization") bearer: String): Response<MenuResponse>
 
+    @GET("pesan")
+    suspend fun searchMenuOrder(
+        @Header("Authorization") bearer: String,
+        @Query("keyword") keyword: String
+    ) : Response<MenuResponse>
 
     @POST("simpan-pesanan")
     suspend fun saveDataOrder(

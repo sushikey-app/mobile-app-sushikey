@@ -47,7 +47,7 @@ class AddOrUpdateStaffFragment : Fragment() {
         )
         if (user != null) {
             binding.actionHeadline.textHeadline.text = buildString {
-                append(getString(R.string.edit_data))
+                append("Ubah Data")
                 append(" ")
                 append("Pegawai")
             }
@@ -56,7 +56,7 @@ class AddOrUpdateStaffFragment : Fragment() {
             binding.edtNumberTelephone.setText(user?.phoneNumber)
         } else {
             binding.actionHeadline.textHeadline.text = buildString {
-                append(R.string.add_data)
+                append("Tambah Data")
                 append(" ")
                 append("Pegawai")
             }

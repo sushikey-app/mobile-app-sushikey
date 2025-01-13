@@ -1,6 +1,7 @@
 package com.am.projectinternalresto.ui.adapter.report
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,10 +10,18 @@ import com.am.projectinternalresto.data.response.super_admin.report.DataItemList
 import com.am.projectinternalresto.databinding.ItemContentReportBinding
 import com.am.projectinternalresto.utils.Formatter
 
-class ManageReportAdapter(private var onClickToDetail: ((idOrder: String) -> Unit)? = null) :
+class ManageReportAdapter(
+    private var isReport: Boolean,
+    private var onClickToDetail: ((idOrder: String) -> Unit)? = null,
+    private var onClickCancelOrder: ((idOrder: String) -> Unit)? = null,
+) :
     ListAdapter<DataItemListReport, ManageReportAdapter.ViewHolder>(DIFF_CALLBACK) {
     fun callbackOnclickToDetail(listener: (String) -> Unit) {
         onClickToDetail = listener
+    }
+
+    fun callbackOnclickCancelOrders(listener: (String) -> Unit) {
+        onClickCancelOrder = listener
     }
 
     inner class ViewHolder(private val binding: ItemContentReportBinding) :
@@ -22,10 +31,16 @@ class ManageReportAdapter(private var onClickToDetail: ((idOrder: String) -> Uni
             binding.textNumberOrder.text = dataReport.noOrder
             binding.textTotal.text = Formatter.formatCurrency(dataReport.totalPrice ?: 0)
             binding.textStatus.text = dataReport.statusOrder
-            binding.textLocation.text = dataReport.location?.namaResto
+            if (dataReport.location != null) {
+                binding.textLocation.text = dataReport.location.namaResto
+            } else {
+                binding.textLocation.visibility = View.GONE
+            }
             binding.buttonToDetail.setOnClickListener {
                 onClickToDetail?.invoke(dataReport.id.toString())
             }
+            binding.buttonCancel.setOnClickListener { onClickCancelOrder?.invoke(dataReport.id.toString()) }
+            binding.buttonCancel.visibility = if (isReport) View.GONE else View.VISIBLE
         }
     }
 

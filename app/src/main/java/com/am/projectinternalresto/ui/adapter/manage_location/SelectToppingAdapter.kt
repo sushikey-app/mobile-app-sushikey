@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.am.projectinternalresto.data.response.admin.menu.ToppingItem
 import com.am.projectinternalresto.databinding.ItemContentSelectCheckboxBinding
+import com.am.projectinternalresto.utils.Formatter
 
 class SelectToppingAdapter :
     ListAdapter<ToppingItem, SelectToppingAdapter.ViewHolder>(DIFF_CALLBACK) {
@@ -16,7 +17,7 @@ class SelectToppingAdapter :
             binding.checkbox.text = buildString {
                 append(dataSelectTopping.nama)
                 append(" ")
-                append("(+${dataSelectTopping.harga})")
+                append("(${Formatter.formatCurrency(dataSelectTopping.harga ?: 0)})")
             }
             binding.checkbox.isChecked = dataSelectTopping.isSelected
             binding.checkbox.setOnCheckedChangeListener { _, isSelected ->

@@ -1,7 +1,6 @@
 package com.am.projectinternalresto.ui.feature.super_admin.manage_location
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,9 +41,9 @@ class ManageLocationFragment : Fragment() {
     private fun setupView() {
         binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataFromApi() }
         UiHandle.setupClearTextForField(binding.search.edtSearch)
-        UiHandle.setupDisableHintForField(binding.search.edlSearch)
         setupGetDataFromApi()
         UiHandle.setupDisplayDataFromSearchOrGet(
+            editLayout = binding.search.edlSearch,
             editText = binding.search.edtSearch,
             onSearchDisplayData = { keyword -> setupSearchLocationByLocationOutlet(keyword) },
             onDisplayDataDefault = { setupGetDataFromApi() }

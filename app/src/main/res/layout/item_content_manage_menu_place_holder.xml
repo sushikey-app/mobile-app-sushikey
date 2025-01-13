@@ -37,13 +37,6 @@
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_marginHorizontal="10dp"
-            android:layout_weight="0.4"
-            android:background="@color/darker_grey" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginHorizontal="10dp"
             android:layout_weight="0.5"
             android:background="@color/darker_grey" />
 

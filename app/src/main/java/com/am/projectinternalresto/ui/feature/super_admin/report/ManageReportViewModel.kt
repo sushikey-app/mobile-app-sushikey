@@ -8,9 +8,29 @@ class ManageReportViewModel(private val repository: ReportRepository) : ViewMode
     fun getDataReportForPrint(
         token: String,
         locationId: String,
-        initialDate: String,
-        deadlineDate: String
-    ) = repository.getDataReportForPrintSuperAdmin(token, locationId, initialDate, deadlineDate)
+        startDate: Int, startMonth: Int, startYear: Int, endDate: Int, endMonth: Int,
+        endYear: Int
+    ) = repository.getDataReportForPrintSuperAdmin(
+        token,
+        locationId,
+        startDate, startMonth, startYear, endDate, endMonth, endYear
+    )
+
+    fun getDataFilter(
+        token: String,
+        locationId: String,
+        startDate: Int, startMonth: Int, startYear: Int, endDate: Int, endMonth: Int, endYear: Int
+    ) = repository.getDataFilterReportSuperAdmin(
+        token, locationId, startDate, startMonth, startYear, endDate, endMonth, endYear
+    )
+
+    fun getDataFilterAdmin(
+        token: String,
+        startDate: Int, startMonth: Int, startYear: Int, endDate: Int, endMonth: Int, endYear: Int
+    ) = repository.getDataFilterReportAdmin(
+        token,
+        startDate, startMonth, startYear, endDate, endMonth, endYear
+    )
 
     fun getDetailReport(token: String, id: String) =
         repository.getDetailDataReportSuperAdmin(token, id)
@@ -18,17 +38,19 @@ class ManageReportViewModel(private val repository: ReportRepository) : ViewMode
     fun getReportAdmin(token: String) = repository.getListDataReportAdmin(token)
     fun getDataReportForPrintAdmin(
         token: String,
-        locationId: String,
-        initialDate: String,
-        deadlineDate: String
-    ) = repository.getDataReportForPrintAdmin(token, locationId, initialDate, deadlineDate)
+        startDate: Int, startMonth: Int, startYear: Int, endDate: Int, endMonth: Int, endYear: Int
+    ) = repository.getDataReportForPrintAdmin(
+        token, startDate, startMonth, startYear, endDate, endMonth, endYear
+    )
 
-    fun getDetailReportAdmin(token: String, id: String) =
-        repository.getDetailDataReportSuperAdmin(token, id)
 
-    fun filterReportByLocation(token: String, locationId: String) =
-        repository.filterReportByLocation(token, locationId)
-
-    fun deleteReportSuperAdmin(token: String, locationId: String, month: Int, years: Int) =
-        repository.deleteReportSuperAdmin(token, locationId, month, years)
+    fun deleteReportSuperAdmin(
+        token: String, locationId: String,
+        startDate: Int, startMonth: Int, startYear: Int, endDate: Int, endMonth: Int, endYear: Int
+    ) =
+        repository.deleteReportSuperAdmin(
+            token,
+            locationId,
+            startDate, startMonth, startYear, endDate, endMonth, endYear
+        )
 }

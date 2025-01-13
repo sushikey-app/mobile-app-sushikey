@@ -61,6 +61,23 @@ class OrderRepository(private val apiService: ApiService) {
         }
     }
 
+    fun searchDataMenuOrder(token: String, keyword: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.searchMenuOrder("Bearer $token", keyword)
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+        }
+    }
+
     fun saveOrder(token: String, saveOrderRequest: SaveOrderRequest) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {

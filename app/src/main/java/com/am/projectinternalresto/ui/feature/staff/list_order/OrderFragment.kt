@@ -97,7 +97,6 @@ class OrderFragment : Fragment() {
                                                 DummyModel.OrderSummary(
                                                     orderId = orderDetails.payment?.id,
                                                     listCartItems = it,
-                                                    typeOrder = orderDetails.payment?.typeOrder.toString(),
                                                     totalPurchase = orderDetails.payment?.totalPrice
                                                         ?: 0
                                                 )
@@ -106,7 +105,10 @@ class OrderFragment : Fragment() {
                                                 Destination.ORDER_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
                                                 findNavController(),
                                                 Bundle().apply {
-                                                    putString(Key.BUNDLE_ID_ORDER, orderDetails?.payment?.id.toString())
+                                                    putString(
+                                                        BUNDLE_ID_ORDER,
+                                                        orderDetails?.payment?.id.toString()
+                                                    )
                                                     putParcelable(
                                                         Key.BUNDLE_DATA_ORDER_TO_PAYMENT,
                                                         orderSummary
@@ -161,7 +163,6 @@ class OrderFragment : Fragment() {
                                                 DummyModel.OrderSummary(
                                                     orderId = orderDetails.payment?.id,
                                                     listCartItems = it,
-                                                    typeOrder = orderDetails.payment?.typeOrder.toString(),
                                                     totalPurchase = orderDetails.payment?.totalPrice
                                                         ?: 0
                                                 )
@@ -170,10 +171,12 @@ class OrderFragment : Fragment() {
                                                 Destination.ORDER_TO_ORDER_MENU,
                                                 findNavController(),
                                                 Bundle().apply {
-                                                    putString(Key.BUNDLE_ID_ORDER, orderDetails?.payment?.id.toString())
+                                                    putString(
+                                                        BUNDLE_ID_ORDER,
+                                                        orderDetails?.payment?.id.toString()
+                                                    )
                                                     putParcelable(
-                                                        Key.BUNDLE_DATA_ORDER_TO_EDIT,
-                                                        orderSummary
+                                                        Key.BUNDLE_DATA_ORDER_TO_EDIT, orderSummary
                                                     )
                                                 }
                                             )
@@ -181,13 +184,15 @@ class OrderFragment : Fragment() {
                                     }
 
                                     Status.ERROR -> {
-                                        Log.e("Check", "is error")
                                         showErrorSnackBar(requireView(), result.message.toString())
                                     }
                                 }
                             }
                     }
                 }
+            }
+            callbackOnclickCancelListener { id ->
+                setupCancelOrder(id)
             }
         }
 
@@ -225,6 +230,26 @@ class OrderFragment : Fragment() {
         }
     }
 
+    private fun setupCancelOrder(id: String) {
+        viewModel.cancelOrder(token, id).observe(viewLifecycleOwner) { result ->
+            when (result.status) {
+                Status.LOADING -> {
+
+                }
+
+                Status.SUCCESS -> {
+                    showSuccessSnackBar(requireView(), result.data?.message.toString())
+                    clearAdapters()
+                    setupGetDataOrder()
+                }
+
+                Status.ERROR -> {
+                    showErrorSnackBar(requireView(), result.message.toString())
+                }
+            }
+        }
+    }
+
     private fun setupPostChangeStatusOrder(idOrder: String) {
         viewModel.changeStatusOrder(token, idOrder).observe(viewLifecycleOwner) { result ->
             when (result.status) {
@@ -234,6 +259,7 @@ class OrderFragment : Fragment() {
 
                 Status.SUCCESS -> {
                     showSuccessSnackBar(requireView(), result.data?.message.toString())
+                    clearAdapters()
                     setupGetDataOrder()
                 }
 
@@ -242,5 +268,10 @@ class OrderFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun clearAdapters() {
+        (binding.layoutPaidOrders.recyclerView.adapter as? OrderAdapter)?.submitList(emptyList())
+        (binding.layoutUnpaidOrders.recyclerView.adapter as? OrderAdapter)?.submitList(emptyList())
     }
 }

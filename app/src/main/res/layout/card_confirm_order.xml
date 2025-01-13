@@ -83,7 +83,7 @@
         android:id="@+id/textValueSubTotal"
         style="@style/CustomTextStyle.Body.PopSemiBold"
         android:layout_marginBottom="5dp"
-        android:text="@string/example_total"
+        tools:text="@string/example_total"
         app:layout_constraintBottom_toTopOf="@id/textValuePPN"
         app:layout_constraintEnd_toEndOf="@id/divider1" />
 
@@ -99,7 +99,7 @@
         android:id="@+id/textValuePPN"
         style="@style/CustomTextStyle.Body.PopSemiBold"
         android:layout_marginBottom="5dp"
-        android:text="@string/example_total"
+        tools:text="@string/example_total"
         app:layout_constraintBottom_toTopOf="@id/textValueTotal"
         app:layout_constraintEnd_toEndOf="@id/divider1" />
 
@@ -115,7 +115,7 @@
         android:id="@+id/textValueTotal"
         style="@style/CustomTextStyle.Body.PopSemiBold"
         android:layout_marginBottom="20dp"
-        android:text="@string/example_total"
+        tools:text="@string/example_total"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/divider1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,7 +29,7 @@ class ManageMenuAdapter(
             binding.textNoMenu.text = dataMenu.noMenu.toString()
             binding.textCategory.text = dataMenu.category?.nameCategory.toString()
             binding.textNameProduct.text = dataMenu.nameMenu.toString()
-            binding.textQuota.text = dataMenu.quota.toString()
+//            binding.textQuota.text = dataMenu.quota.toString()
             binding.textPrice.text = Formatter.formatCurrency(dataMenu.price ?: 0)
             binding.action.buttonEdit.setOnClickListener {
                 onEditClick?.invoke(dataMenu)

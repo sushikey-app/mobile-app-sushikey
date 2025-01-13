@@ -1,7 +1,7 @@
 package com.am.projectinternalresto.utils
 
 object Key {
-    const val BASE_URL = "http://192.168.1.59:8000/api/"
+    const val BASE_URL = "http://sushikey.157.173.218.120.sslip.io/api/"
 
 //    const val BASE_URL = "http://172.20.10.2:8000/api/"
     const val ERROR_MESSAGE = "message"
@@ -16,4 +16,5 @@ object Key {
     const val BUNDLE_DATA_ORDER_TO_PAYMENT = "data_orders"
     const val BUNDLE_DATA_ORDER_TO_EDIT = "data_edit_orders"
     const val BUNDLE_ID_ORDER = "id_order"
+    const val BUNDLE_CUSTOMER_NAME = "customer_name"
 }

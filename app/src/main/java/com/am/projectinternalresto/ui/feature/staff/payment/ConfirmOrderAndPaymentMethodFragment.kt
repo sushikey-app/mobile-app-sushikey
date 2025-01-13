@@ -36,6 +36,7 @@ import com.am.projectinternalresto.ui.widget.dialog_fragment.PaymentSuccessDialo
 import com.am.projectinternalresto.utils.Formatter
 import com.am.projectinternalresto.utils.Formatter.formatCurrency
 import com.am.projectinternalresto.utils.Key
+import com.am.projectinternalresto.utils.Key.BUNDLE_CUSTOMER_NAME
 import com.am.projectinternalresto.utils.Key.BUNDLE_DATA_ORDER_TO_PAYMENT
 import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
@@ -61,6 +62,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         )
     }
     private val dataIdOrder: String? by lazy { arguments?.getString(Key.BUNDLE_ID_ORDER) }
+    private val dataCustomerName: String? by lazy { arguments?.getString(BUNDLE_CUSTOMER_NAME) }
     private val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         arrayOf(
             Manifest.permission.BLUETOOTH_SCAN,
@@ -127,7 +129,6 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
 
     private fun setupView() {
         UiHandle.setupDisableHintForField(
-            binding.cardPayment.edlNameBuyer,
             binding.cardPayment.edlTotalPayment
         )
         dataOrderSummary?.let { orderSummary ->
@@ -142,15 +143,16 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 unformattedTotalPaid = total
             }
         }
-        if (paymentMethod == "Qris") {
-            binding.cardPayment.edtTotalPayment.isEnabled = false
-        }
+        val disabledPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
+        binding.cardPayment.edtTotalPayment.isEnabled = paymentMethod !in disabledPaymentMethods
     }
-
     private fun setupTabLayoutTypePayment() {
         val tabLayout = binding.cardPayment.tabLayout
-        tabLayout.addTab(tabLayout.newTab().setText("Cash"))
-        tabLayout.addTab(tabLayout.newTab().setText("Qris"))
+        tabLayout.addTab(tabLayout.newTab().setText("TUNAI"))
+        tabLayout.addTab(tabLayout.newTab().setText("TRANSFER"))
+        tabLayout.addTab(tabLayout.newTab().setText("QRIS"))
+        tabLayout.addTab(tabLayout.newTab().setText("GOJEK"))
+        tabLayout.addTab(tabLayout.newTab().setText("GRAB"))
 
         for (i in 0 until tabLayout.tabCount) {
             val tab = (tabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
@@ -293,7 +295,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
 
     private fun collectDataPayment(): PaymentRequest {
         return PaymentRequest(
-            nameBuyer = binding.cardPayment.edtNameBuyer.text.toString(),
+            nameBuyer = dataCustomerName.toString(),
             methodPayment = paymentMethod,
             totalPaid = unformattedTotalPaid
         )
@@ -309,8 +311,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         } ?: emptyList()
 
         return OrderRequest(
-            nameBuyer = binding.cardPayment.edtNameBuyer.text.toString(),
-            typeOrder = dataOrderSummary?.typeOrder ?: "",
+            nameBuyer = dataCustomerName.toString(),
             methodPayment = paymentMethod,
             totalPaid = unformattedTotalPaid,
             order = itemOrder
@@ -393,13 +394,15 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 receiptText += "[L]$nama[R]${formatCurrency(harga)}\n"
             }
 
-            val cash = if (orderResponse?.data?.payment?.metode == "Qris") {
-                formatCurrency(orderResponse.data.payment.totalHarga ?: 0)
+            val specialPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
+
+            val cash = if (orderResponse?.data?.payment?.metode in specialPaymentMethods) {
+                formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)
             } else {
                 formatCurrency(orderResponse?.data?.payment?.uangDibayarkan ?: 0)
             }
 
-            val cashBack = if (orderResponse?.data?.payment?.metode == "Qris") {
+            val cashBack = if (orderResponse?.data?.payment?.metode in specialPaymentMethods) {
                 formatCurrency(0)
             } else {
                 formatCurrency(

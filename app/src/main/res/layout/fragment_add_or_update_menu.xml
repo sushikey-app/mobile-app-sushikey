@@ -78,63 +78,6 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--composition Menu-->
-        <TextView
-            android:id="@+id/textComposition"
-            style="@style/CustomTextStyle.Body.PopSemiBold"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/composition"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edlNameMenu" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edlComposition"
-            android:layout_width="0dp"
-            android:hint="@string/input_your_composition"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="5dp"
-            app:layout_constraintEnd_toEndOf="@id/edlCategory"
-            android:textColorHint="@color/grey"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textComposition">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtComposition"
-                style="@style/CustomEditTextStyle"
-                android:layout_height="130dp"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!--Name Menu-->
-        <TextView
-            android:id="@+id/textQuotaMenu"
-            style="@style/CustomTextStyle.Body.PopSemiBold"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/quota_menu"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edlComposition" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edlQuotaMenu"
-            android:layout_width="0dp"
-            android:hint="@string/input_your_quota_menu"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="5dp"
-            app:layout_constraintEnd_toEndOf="@id/edlCategory"
-            android:textColorHint="@color/grey"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textQuotaMenu">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtQuotaMenu"
-                style="@style/CustomEditTextStyle"
-                android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
-
         <!--Price Menu-->
         <TextView
             android:id="@+id/textPriceMenu"
@@ -143,7 +86,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/price"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edlQuotaMenu" />
+            app:layout_constraintTop_toBottomOf="@id/edlNameMenu" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/EdlPriceMenu"
