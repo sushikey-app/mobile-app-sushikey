@@ -20,8 +20,13 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if (viewModel.isLoginUser() && !viewModel.isLoginExpired()) {
+            handleNavigationByRole(viewModel.getUserRole())
+        } else {
+            setupView()
+        }
         setupNavigation()
-        setupView()
+
     }
 
     private fun setupView() {
@@ -72,12 +77,15 @@ class LoginActivity : AppCompatActivity() {
                         ProgressHandle.setupVisibilityProgressBar(
                             binding.cardLogin.progressBar, binding.cardLogin.textLoading, false
                         )
-                        viewModel.saveTokenUser(resource.data?.token.toString())
+                        val token = resource.data?.token.toString()
+                        val role = resource.data?.data?.role.toString()
+                        viewModel.saveTokenUser(token, role)
+                        viewModel.saveUserRole(role)
                         UiHandle.setupClearTextForField(
                             binding.cardLogin.edtUsername,
                             binding.cardLogin.edtPassword
                         )
-                        handleNavigationByRole(resource.data?.data?.role)
+                        handleNavigationByRole(role)
                     }
 
                     Status.ERROR -> {

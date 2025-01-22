@@ -10,10 +10,20 @@ class UserPreference private constructor() {
         sharePref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     }
 
-    fun saveTokenUser(token: String) {
+    fun saveTokenUser(token: String, role: String) {
+        val currentTime = System.currentTimeMillis() // Waktu sekarang dalam milidetik
         sharePref.edit().apply {
-            putString(KEY_TOKEN, token)
-            putBoolean(KEY_LOGIN, true)
+            putString(KEY_TOKEN, token) // Simpan token
+            putString(KEY_ROLE, role)  // Simpan role
+            putBoolean(KEY_LOGIN, true) // Tandai bahwa pengguna login
+            putLong(KEY_LOGIN_TIME, currentTime) // Simpan waktu login
+            apply()
+        }
+    }
+
+    fun saveUserRole(role: String) {
+        sharePref.edit().apply {
+            putString(KEY_ROLE, role)
             apply()
         }
     }
@@ -22,8 +32,19 @@ class UserPreference private constructor() {
         return sharePref.getString(KEY_TOKEN, null)
     }
 
+    fun getUserRole(): String? {
+        return sharePref.getString(KEY_ROLE, null)
+    }
+
+
     fun isUserLogin(): Boolean {
         return sharePref.getBoolean(KEY_LOGIN, false)
+    }
+
+    fun isLoginExpired(): Boolean {
+        val loginTime = sharePref.getLong(KEY_LOGIN_TIME, 0)
+        val currentTime = System.currentTimeMillis()
+        return (currentTime - loginTime) >= ONE_DAY_IN_MILLIS
     }
 
     fun clearToken() {
@@ -34,6 +55,9 @@ class UserPreference private constructor() {
         private const val PREF_NAME = "user_pref"
         private const val KEY_TOKEN = "token"
         private const val KEY_LOGIN = "isLogin"
+        private const val KEY_ROLE = "role"
+        private const val KEY_LOGIN_TIME = "login_time"
+        private const val ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000 // 1 hari dalam milidetik
 
         @Volatile
         private var instance: UserPreference? = null
