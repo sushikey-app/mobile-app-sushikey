@@ -14,6 +14,4 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     fun isLoginUser() = userPref.isUserLogin()
     fun clearToken() = userPref.clearToken()
-
-
 }

@@ -197,6 +197,20 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     }
 
     private fun setupPostDataPayment() {
+        val specialPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
+        val totalPayment = dataOrderSummary?.totalPurchase ?: 0 // Total yang harus dibayar
+
+        if (unformattedTotalPaid == 0 && paymentMethod !in specialPaymentMethods) {
+            NotificationHandle.showErrorSnackBar(requireView(), "Masukkan nominal pembayaran")
+            return
+        }
+
+        if (unformattedTotalPaid < totalPayment && paymentMethod !in specialPaymentMethods) {
+            NotificationHandle.showErrorSnackBar(requireView(), "Nominal pembayaran tidak mencukupi")
+            return
+        }
+        Log.e("CHECK", "data $totalPayment")
+
         Log.e("Check", "Data id : $dataIdOrder")
         if (dataIdOrder != null) {
             viewModel.paymentOrder(token, dataIdOrder.toString(), collectDataPayment())
@@ -320,106 +334,13 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
 
     private fun printReceipt(orderResponse: PayResponse?) {
         try {
-            val items = mutableListOf<Pair<String, Int>>()
+            // Cetak pertama
+            printReceiptContent(orderResponse)
+            // Jeda sebentar sebelum cetak kedua
+            Thread.sleep(1000)
+            // Cetak kedua
+            printReceiptContent(orderResponse)
 
-            orderResponse?.data?.orderItems?.forEach { item ->
-                val menuName = item?.nama.toString()
-                val note = item?.note
-                val toppings = item?.topping?.joinToString(", ") { it?.nama ?: "" }
-
-                // Combine item details into a single line if it fits
-                var itemText = menuName
-                var totalLength = menuName.length
-                if (toppings?.isNotEmpty() == true) {
-                    itemText += if (totalLength + toppings.length + 4 <= 20) {
-                        " (+$toppings)"
-                    } else {
-                        if (itemText.contains("\n")) {
-                            "\n(+$toppings)"
-                        } else {
-                            "\n(+$toppings)"
-                        }
-                    }
-                }
-
-                if (note != null) {
-                    if (totalLength + note.length + 4 <= 20) { // 4 for parentheses
-                        itemText += " ($note)"
-                        totalLength += note.length + 4
-                    } else {
-                        itemText += "\n($note)"
-                    }
-                }
-
-
-                val price = item?.hargaPesanan ?: 0
-                val qty = item?.qty ?: 0
-                items.add(Pair(itemText, price * qty))
-            }
-
-            // Menghubungkan ke printer melalui Bluetooth
-            val printerConnection = BluetoothPrintersConnections.selectFirstPaired()
-
-            if (printerConnection == null) {
-                NotificationHandle.showErrorSnackBar(requireView(), "Printer tidak ditemukan!")
-                return
-            }
-
-            val printer = EscPosPrinter(printerConnection, 203, 48f, 32)
-
-            // Ubah cara memproses gambar
-            val bitmap = requireContext().resources.getDrawableForDensity(
-                R.drawable.logo_sushi_key,
-                DisplayMetrics.DENSITY_MEDIUM
-            )?.toBitmap()
-
-            // Compress dan resize bitmap
-            val resizedBitmap = Bitmap.createScaledBitmap(bitmap!!, 300, 100, true)
-
-            val logoHex = PrinterTextParserImg.bitmapToHexadecimalString(printer, resizedBitmap)
-
-            // Buat text receipt
-            var receiptText = "[C]<img>$logoHex</img>\n" +
-                    "[C]===============================\n" +
-                    "[L]No. Order: ${orderResponse?.data?.payment?.nomorOrder}\n" +
-                    "[L]Nama: ${orderResponse?.data?.payment?.namaPembeli}\n" +
-                    "[L]Nama Kasir: ${orderResponse?.data?.staffName}\n" +
-                    "[L]Lokasi Resto: ${orderResponse?.data?.locationName}\n" +
-                    "[C]===============================\n" +
-                    "[L]Nama Barang[R]Harga\n" +
-                    "[C]-------------------------------\n"
-
-            // Tambahkan setiap item
-            items.forEach { (nama, harga) ->
-                receiptText += "[L]$nama[R]${formatCurrency(harga)}\n"
-            }
-
-            val specialPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
-
-            val cash = if (orderResponse?.data?.payment?.metode in specialPaymentMethods) {
-                formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)
-            } else {
-                formatCurrency(orderResponse?.data?.payment?.uangDibayarkan ?: 0)
-            }
-
-            val cashBack = if (orderResponse?.data?.payment?.metode in specialPaymentMethods) {
-                formatCurrency(0)
-            } else {
-                formatCurrency(
-                    orderResponse?.data?.payment?.uangDibayarkan?.minus(
-                        orderResponse.data.payment.totalHarga ?: 0
-                    ) ?: 0
-                )
-            }
-            receiptText += "[C]-------------------------------\n" +
-                    "[L]Total[R] ${formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)}\n" +
-                    "[L]Tunai[R] $cash\n" +
-                    "[L]Kembalian[R] $cashBack\n" +
-                    "[C]===============================\n" +
-                    "[L]Tanggal: ${Formatter.getCurrentDate()}\n" +
-                    "[L]Terima kasih telah berbelanja!"
-
-            printer.printFormattedText(receiptText)
             NotificationHandle.showSuccessSnackBar(requireView(), "Struk berhasil dicetak")
         } catch (e: Exception) {
             e.printStackTrace()
@@ -428,5 +349,98 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 "Gagal mencetak struk: ${e.message}"
             )
         }
+    }
+
+    // Memisahkan logika cetak ke fungsi terpisah
+    private fun printReceiptContent(orderResponse: PayResponse?) {
+        val items = mutableListOf<Triple<String, Int, Int>>()
+
+        orderResponse?.data?.orderItems?.forEach { item ->
+            val menuName = item?.nama.toString()
+            val note = item?.note
+            val toppings = item?.topping?.joinToString(", ") { it?.nama ?: "" }
+
+            var itemText = menuName
+            if (toppings?.isNotEmpty() == true) {
+                itemText += if (itemText.length + toppings.length + 4 <= 20) {
+                    " ($toppings)"
+                } else {
+                    "\n($toppings)"
+                }
+            }
+
+            if (note != null) {
+                itemText += if (itemText.length + note.length + 4 <= 20) {
+                    " ($note)"
+                } else {
+                    "\n($note)"
+                }
+            }
+
+            val price = item?.hargaPesanan ?: 0
+            val qty = item?.qty ?: 0
+            items.add(Triple(itemText, price, qty))
+        }
+
+        val printerConnection = BluetoothPrintersConnections.selectFirstPaired()
+
+        if (printerConnection == null) {
+            throw Exception("Printer tidak ditemukan!")
+        }
+
+        val printer = EscPosPrinter(printerConnection, 203, 48f, 32)
+
+        val bitmap = requireContext().resources.getDrawableForDensity(
+            R.drawable.logo_sushi_key,
+            DisplayMetrics.DENSITY_MEDIUM
+        )?.toBitmap()
+
+        val resizedBitmap = Bitmap.createScaledBitmap(bitmap!!, 300, 100, true)
+
+        val logoHex = PrinterTextParserImg.bitmapToHexadecimalString(printer, resizedBitmap)
+
+        var receiptText = "[C]<img>$logoHex</img>\n" +
+                "[C]===============================\n" +
+                "[L]No. Order: ${orderResponse?.data?.payment?.nomorOrder}\n" +
+                "[L]Nama: ${orderResponse?.data?.payment?.namaPembeli}\n" +
+                "[L]Nama Kasir: ${orderResponse?.data?.staffName}\n" +
+                "[L]Lokasi Resto: ${orderResponse?.data?.locationName}\n" +
+                "[C]===============================\n" +
+                "[L]Menu[C]Qty[R]Total\n" +
+                "[C]-------------------------------\n"
+
+        items.forEach { (nama, harga, qty) ->
+            val totalHarga = harga * qty
+            receiptText += "[L]$nama\n" +
+                    "[L] [C]$qty[R]${formatCurrency(totalHarga)}\n"
+        }
+
+        val specialPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
+
+        val cash = if (orderResponse?.data?.payment?.metode in specialPaymentMethods) {
+            formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)
+        } else {
+            formatCurrency(orderResponse?.data?.payment?.uangDibayarkan ?: 0)
+        }
+
+        val cashBack = if (orderResponse?.data?.payment?.metode in specialPaymentMethods) {
+            formatCurrency(0)
+        } else {
+            formatCurrency(
+                orderResponse?.data?.payment?.uangDibayarkan?.minus(
+                    orderResponse.data.payment.totalHarga ?: 0
+                ) ?: 0
+            )
+        }
+
+        receiptText += "[C]-------------------------------\n" +
+                "[L]Total[R] ${formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)}\n" +
+                "[L]${orderResponse?.data?.payment?.metode}[R] $cash\n" +
+                "[L]Kembalian[R] $cashBack\n" +
+                "[C]===============================\n" +
+                "[L]Tanggal: ${Formatter.getCurrentDateAndTime()}\n" +
+                "[L]Terima kasih telah berbelanja!"
+
+        printer.printFormattedText(receiptText)
     }
 }

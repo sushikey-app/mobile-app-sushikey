@@ -22,6 +22,7 @@ import com.am.projectinternalresto.data.response.super_admin.location.Location
 import com.am.projectinternalresto.databinding.CustomLayoutDialogPrintReportBinding
 import com.am.projectinternalresto.databinding.CustomLayoutDialogToppingAndNoteBinding
 import com.am.projectinternalresto.service.source.Status
+import com.am.projectinternalresto.service.source.UserPreference
 import com.am.projectinternalresto.ui.adapter.manage_location.SelectToppingAdapter
 import com.am.projectinternalresto.ui.feature.auth.LoginActivity
 import com.am.projectinternalresto.ui.feature.staff.order_menu.ManageOrderMenuViewModel
@@ -41,9 +42,10 @@ fun showLogoutAlert(context: Context) {
         setMessage("Apakah anda yakin keluar?")
         setPositiveButton(context.getString(R.string.yes)) { _, _ ->
             if (context is Activity) {
+                UserPreference.getInstance().clearToken()
                 context.goToActivity(LoginActivity::class.java, withFinish = true)
             } else {
-                // Fallback jika context bukan Activity
+                UserPreference.getInstance().clearToken()
                 val intent = Intent(context.applicationContext, LoginActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 context.startActivity(intent)

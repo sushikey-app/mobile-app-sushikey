@@ -3,15 +3,15 @@ package com.am.projectinternalresto.ui.feature.super_admin.main
 import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.databinding.ActivityMainSuperAdminBinding
+import com.am.projectinternalresto.ui.feature.BaseActivity
 import com.am.projectinternalresto.ui.widget.alert.showLogoutAlert
 
-class MainSuperAdminActivity : AppCompatActivity() {
+class MainSuperAdminActivity : BaseActivity() {
     private lateinit var binding: ActivityMainSuperAdminBinding
     private val navController: NavController by lazy {
         (supportFragmentManager.findFragmentById(R.id.navigationHostSuperAdmin) as NavHostFragment).navController
@@ -19,6 +19,7 @@ class MainSuperAdminActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkLoginStatus()
         binding = ActivityMainSuperAdminBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupNavigation()
