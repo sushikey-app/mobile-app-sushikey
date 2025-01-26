@@ -360,6 +360,12 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
             val note = item?.note
             val toppings = item?.topping?.joinToString(", ") { it?.nama ?: "" }
 
+            // Hitung total harga item termasuk topping
+            val basePrice = item?.hargaPesanan ?: 0
+            val toppingPrice = item?.topping?.sumOf { it?.harga ?: 0 } ?: 0
+            val totalItemPrice = basePrice + toppingPrice
+            val qty = item?.qty ?: 0
+
             var itemText = menuName
             if (toppings?.isNotEmpty() == true) {
                 itemText += if (itemText.length + toppings.length + 4 <= 20) {
@@ -377,9 +383,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 }
             }
 
-            val price = item?.hargaPesanan ?: 0
-            val qty = item?.qty ?: 0
-            items.add(Triple(itemText, price, qty))
+            items.add(Triple(itemText, totalItemPrice, qty))
         }
 
         val printerConnection = BluetoothPrintersConnections.selectFirstPaired()
@@ -406,16 +410,17 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 "[L]Nama Kasir: ${orderResponse?.data?.staffName}\n" +
                 "[L]Lokasi Resto: ${orderResponse?.data?.locationName}\n" +
                 "[C]===============================\n" +
-                "[L]Menu[C]Qty[R]Total\n" +
+                "[L]Qty Menu[R]Total\n" +
                 "[C]-------------------------------\n"
 
         items.forEach { (nama, harga, qty) ->
             val totalHarga = harga * qty
-            receiptText += "[L]$nama\n" +
-                    "[L] [C]$qty[R]${formatCurrency(totalHarga)}\n"
+            receiptText += "[L]$qty " + "$nama[R]${formatCurrency(totalHarga)}\n"
         }
 
         val specialPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
+
+        val totalKeseluruhan = items.sumOf { it.second * it.third }
 
         val cash = if (orderResponse?.data?.payment?.metode in specialPaymentMethods) {
             formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)
@@ -434,12 +439,12 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         }
 
         receiptText += "[C]-------------------------------\n" +
-                "[L]Total[R] ${formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)}\n" +
+                "[L]Total[R] ${formatCurrency(totalKeseluruhan)}\n" +
                 "[L]${orderResponse?.data?.payment?.metode}[R] $cash\n" +
                 "[L]Kembalian[R] $cashBack\n" +
                 "[C]===============================\n" +
                 "[L]Tanggal: ${Formatter.getCurrentDateAndTime()}\n" +
-                "[L]Terima kasih telah berbelanja!"
+                "[L]Terima kasih!"
 
         printer.printFormattedText(receiptText)
     }

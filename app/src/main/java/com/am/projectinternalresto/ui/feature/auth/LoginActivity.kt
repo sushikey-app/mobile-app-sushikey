@@ -1,6 +1,7 @@
 package com.am.projectinternalresto.ui.feature.auth
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.am.projectinternalresto.databinding.ActivityLoginBinding
 import com.am.projectinternalresto.service.source.Status
@@ -20,8 +21,20 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        Log.e("Checklogin", "${viewModel.isLoginUser()} | ${viewModel.isLoginExpired()}")
+        if (!viewModel.isLoginUser()) {
+            setupView()
+        } else if (viewModel.isLoginExpired()) {
+            NotificationHandle.showErrorSnackBar(
+                binding.root,
+                "Sesi Anda telah habis. Silakan login kembali."
+            )
+            setupView()
+        } else {
+            handleNavigationByRole(viewModel.getUserRole())
+        }
         setupNavigation()
-        setupView()
+
     }
 
     private fun setupView() {
@@ -63,6 +76,10 @@ class LoginActivity : AppCompatActivity() {
             else -> viewModel.login(username, password).observe(this@LoginActivity) { resource ->
                 when (resource.status) {
                     Status.LOADING -> {
+                        binding.cardLogin.buttonLogin.apply {
+                            isEnabled = false
+                            alpha = 0.5f
+                        }
                         ProgressHandle.setupVisibilityProgressBar(
                             binding.cardLogin.progressBar, binding.cardLogin.textLoading, true
                         )
@@ -72,12 +89,15 @@ class LoginActivity : AppCompatActivity() {
                         ProgressHandle.setupVisibilityProgressBar(
                             binding.cardLogin.progressBar, binding.cardLogin.textLoading, false
                         )
-                        viewModel.saveTokenUser(resource.data?.token.toString())
+                        val token = resource.data?.token.toString()
+                        val role = resource.data?.data?.role.toString()
+                        viewModel.saveTokenUser(token, role)
+                        viewModel.saveUserRole(role)
                         UiHandle.setupClearTextForField(
                             binding.cardLogin.edtUsername,
                             binding.cardLogin.edtPassword
                         )
-                        handleNavigationByRole(resource.data?.data?.role)
+                        handleNavigationByRole(role)
                     }
 
                     Status.ERROR -> {

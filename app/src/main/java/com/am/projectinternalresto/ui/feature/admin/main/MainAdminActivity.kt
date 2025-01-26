@@ -7,10 +7,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.databinding.ActivityMainAdminBinding
-import com.am.projectinternalresto.ui.feature.BaseActivity
 import com.am.projectinternalresto.ui.widget.alert.showLogoutAlert
 
-class MainAdminActivity : BaseActivity() {
+class MainAdminActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainAdminBinding
     private val navController: NavController by lazy {
         (supportFragmentManager.findFragmentById(R.id.navigationHostAdmin) as NavHostFragment).navController
@@ -18,7 +17,6 @@ class MainAdminActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        checkLoginStatus()
         binding = ActivityMainAdminBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupNavigationRails()
@@ -36,10 +34,5 @@ class MainAdminActivity : BaseActivity() {
                 else -> NavigationUI.onNavDestinationSelected(item, navController)
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        checkLoginStatus()
     }
 }

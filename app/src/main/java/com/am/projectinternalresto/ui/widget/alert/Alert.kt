@@ -222,7 +222,8 @@ fun showAlertSaveCustomerName(
     binding.recyclerViewTopping.visibility = View.GONE
 
     binding.textHeadline.text = "Tambah Data Pembeli"
-    binding.textTitleNote.text = "Masukan nama pembeli"
+    binding.textTitleNote.text = "Nama Pembeli"
+    binding.edtNote.hint = "Masukan nama pembeli"
 
     binding.buttonCloseDialog.setOnClickListener {
         builder.dismiss()

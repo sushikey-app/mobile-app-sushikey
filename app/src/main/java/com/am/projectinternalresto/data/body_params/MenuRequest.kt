@@ -1,6 +1,8 @@
 package com.am.projectinternalresto.data.body_params
 
+import android.os.Parcelable
 import android.util.Log
+import kotlinx.parcelize.Parcelize
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -18,10 +20,11 @@ data class MenuBody(
     var itemToppings: List<ItemTopping>? = null
 )
 
+@Parcelize
 data class ItemTopping(
     val nama: String,
     val price: Int
-)
+) : Parcelable
 
 
 fun MenuBody.toMultipartBody(): Map<String, RequestBody> {

@@ -198,6 +198,10 @@ class OrderMenuFragment : Fragment() {
                 setupCancelOrder()
             } else {
                 showAlertSaveCustomerName(requireContext()) { nameCustomer ->
+                    if (nameCustomer.isEmpty()) {
+                        showErrorSnackBar(requireView(), "Nama tidak boleh kosong")
+                        return@showAlertSaveCustomerName
+                    }
                     setupPostDataSaveOrderToApi(nameCustomer)
                 }
             }
@@ -211,6 +215,10 @@ class OrderMenuFragment : Fragment() {
             totalPurchase = viewModel.totalPurchase.value ?: 0
         )
         showAlertSaveCustomerName(requireContext()) { nameCustomer ->
+            if (nameCustomer.isEmpty()) {
+                showErrorSnackBar(requireView(), "Nama tidak boleh kosong")
+                return@showAlertSaveCustomerName
+            }
             navigateFragment(
                 Destination.ORDER_MENU_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
                 findNavController(),
