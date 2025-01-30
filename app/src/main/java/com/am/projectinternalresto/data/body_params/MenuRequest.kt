@@ -22,6 +22,7 @@ data class MenuBody(
 
 @Parcelize
 data class ItemTopping(
+    val id: String,
     val nama: String,
     val price: Int
 ) : Parcelable
@@ -36,6 +37,7 @@ fun MenuBody.toMultipartBody(): Map<String, RequestBody> {
 
 
     itemToppings?.forEachIndexed { index, topping ->
+        map["topping[$index][id]"] = topping.id.toRequestBody("text/plain".toMediaTypeOrNull())
         map["topping[$index][nama]"] = topping.nama.toRequestBody("text/plain".toMediaTypeOrNull())
         map["topping[$index][harga]"] =
             topping.price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
@@ -49,3 +51,5 @@ fun MenuBody.toMultipartImagePart(): MultipartBody.Part? {
         MultipartBody.Part.createFormData("image", it.name, requestBody)
     }
 }
+
+

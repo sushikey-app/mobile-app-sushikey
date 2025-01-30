@@ -102,6 +102,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
 
     private fun setupNavigation() {
         binding.cardPayment.buttonCancel.setOnClickListener {
+//            findNavController().previousBackStackEntry?.savedStateHandle?.set("isClear", true)
             findNavController().popBackStack()
         }
         binding.cardPayment.buttonPayment.setOnClickListener {
@@ -246,7 +247,6 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                                 }
                             }
                         }
-
                         Status.ERROR -> {
                             ProgressHandle.setupVisibilityProgressBar(
                                 binding.cardPayment.progressBar,
@@ -286,6 +286,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                                 if (shouldPrint) {
                                     checkBluetoothPermissionsAndPrint(result.data)
                                 } else {
+                                    findNavController().previousBackStackEntry?.savedStateHandle?.set("isUpdated", true)
                                     findNavController().popBackStack()
                                 }
                             }

@@ -59,16 +59,23 @@ class OrderMenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentOrderMenuBinding.inflate(inflater, container, false)
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("isUpdated")
+            ?.observe(viewLifecycleOwner) { isUpdated ->
+                if (isUpdated) {
+                    clearDataChart()
+                }
+            }
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupInitialUI()
         observeViewModel()
         setupGetDataMenuFromApi()
         setupGetDataCategory()
-
     }
 
     private fun setupInitialUI() {
@@ -228,7 +235,7 @@ class OrderMenuFragment : Fragment() {
                     putParcelable(BUNDLE_DATA_ORDER_TO_PAYMENT, orderSummary)
                 }
             )
-            clearDataChart()
+//            clearDataChart()
         }
     }
 

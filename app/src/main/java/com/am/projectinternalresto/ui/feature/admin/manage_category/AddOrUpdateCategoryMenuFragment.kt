@@ -54,16 +54,30 @@ class AddOrUpdateCategoryMenuFragment : Fragment() {
     private fun setupNavigation() {
         binding.actionHeadline.buttonBack.setOnClickListener { findNavController().popBackStack() }
         binding.buttonSave.setOnClickListener {
-            if (isSaveButtonEnabled) {
-                isSaveButtonEnabled = false
-                binding.buttonSave.isEnabled = false
-                UiHandle.setupHideKeyboard(it)
-                if (dataCategory != null) {
-                    setupPutDataCategoryToApi()
-                } else {
-                    setupPostDataCategoryToApi()
+            UiHandle.setupHideKeyboard(it)
+            when {
+                binding.edtCodeCategory.text.toString()
+                    .isEmpty() -> NotificationHandle.showErrorSnackBar(
+                    requireView(),
+                    "Kode kategori tidak boleh kosong"
+                )
+
+                binding.edtNameCategory.text.toString()
+                    .isEmpty() -> NotificationHandle.showErrorSnackBar(
+                    requireView(),
+                    "Nama kategori tidak boleh kosong"
+                )
+
+                else -> {
+                    if (dataCategory != null) {
+                        setupPutDataCategoryToApi()
+                    } else {
+                        setupPostDataCategoryToApi()
+                    }
                 }
             }
+
+
         }
     }
 
@@ -87,12 +101,14 @@ class AddOrUpdateCategoryMenuFragment : Fragment() {
     ) {
         when (result.status) {
             Status.LOADING -> {
+                UiHandle.setupDisableButtonForLoad(binding.buttonSave, true)
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar, binding.textLoading, true
                 )
             }
 
             Status.SUCCESS -> {
+                UiHandle.setupDisableButtonForLoad(binding.buttonSave, false)
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar, binding.textLoading, false
                 )
@@ -104,6 +120,7 @@ class AddOrUpdateCategoryMenuFragment : Fragment() {
             }
 
             Status.ERROR -> {
+                UiHandle.setupDisableButtonForLoad(binding.buttonSave, false)
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar, binding.textLoading, false
                 )

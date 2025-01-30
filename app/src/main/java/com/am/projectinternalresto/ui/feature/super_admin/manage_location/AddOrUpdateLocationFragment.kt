@@ -70,8 +70,10 @@ class AddOrUpdateLocationFragment : Fragment() {
                 binding.buttonAddLocation.isEnabled = false
                 UiHandle.setupHideKeyboard(it)
                 if (dataLocation != null) {
+                    Log.e("CheckDataLokasi", "data lokasi put : ${dataResultLocation()}")
                     setupPutDataLocationToApi()
                 } else {
+                    Log.e("CheckDataLokasi", "data lokasi post : ${dataResultLocation()}")
                     setupPostDataLocationToApi()
                 }
             }

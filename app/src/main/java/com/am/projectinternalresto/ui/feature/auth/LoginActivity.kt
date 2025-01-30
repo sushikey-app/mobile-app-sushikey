@@ -76,16 +76,14 @@ class LoginActivity : AppCompatActivity() {
             else -> viewModel.login(username, password).observe(this@LoginActivity) { resource ->
                 when (resource.status) {
                     Status.LOADING -> {
-                        binding.cardLogin.buttonLogin.apply {
-                            isEnabled = false
-                            alpha = 0.5f
-                        }
+                        UiHandle.setupDisableButtonForLoad(binding.cardLogin.buttonLogin, true)
                         ProgressHandle.setupVisibilityProgressBar(
                             binding.cardLogin.progressBar, binding.cardLogin.textLoading, true
                         )
                     }
 
                     Status.SUCCESS -> {
+                        UiHandle.setupDisableButtonForLoad(binding.cardLogin.buttonLogin, false)
                         ProgressHandle.setupVisibilityProgressBar(
                             binding.cardLogin.progressBar, binding.cardLogin.textLoading, false
                         )
@@ -101,6 +99,7 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                     Status.ERROR -> {
+                        UiHandle.setupDisableButtonForLoad(binding.cardLogin.buttonLogin, false)
                         ProgressHandle.setupVisibilityProgressBar(
                             binding.cardLogin.progressBar, binding.cardLogin.textLoading, false
                         )

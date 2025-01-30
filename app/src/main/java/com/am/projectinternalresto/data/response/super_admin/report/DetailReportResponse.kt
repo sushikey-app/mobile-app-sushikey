@@ -31,6 +31,8 @@ data class DataItemDetailReport(
 )
 
 data class Pembayaran(
+    @field:SerializedName("pesanan")
+    val orderItemsDetailReport: List<OrderItems?>? = null,
 
     @field:SerializedName("nama_pembeli")
     val namaPembeli: String? = null,

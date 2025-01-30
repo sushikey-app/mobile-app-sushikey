@@ -19,7 +19,6 @@ import com.am.projectinternalresto.ui.feature.admin.manage_menu.ManageMenuViewMo
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
 import com.am.projectinternalresto.ui.feature.staff.order_menu.ManageOrderMenuViewModel
 import com.am.projectinternalresto.ui.widget.chart.Chart
-import com.am.projectinternalresto.ui.widget.dialog_fragment.FilterSalesDialogFragment
 import com.am.projectinternalresto.utils.Formatter
 import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
@@ -106,12 +105,12 @@ class DashboardAdminFragment : Fragment() {
         }
         binding.cardTotalSalesOfflineOrder.apply {
             textTitleContent.text = getString(R.string.text_order_offline)
-            textValueContent.text = Formatter.formatCurrency(data?.offlineOrders ?: 0)
+            textValueContent.text = data?.offlineOrders.toString()
             iconContent.setImageResource(R.drawable.icon_order_offline)
         }
         binding.cardTotalSalesOnlineOrder.apply {
             textTitleContent.text = getString(R.string.text_order_online)
-            textValueContent.text = Formatter.formatCurrency(data?.onlineOrders ?: 0)
+            textValueContent.text = data?.onlineOrders.toString()
             iconContent.setImageResource(R.drawable.icon_order_online)
         }
     }
@@ -137,20 +136,31 @@ class DashboardAdminFragment : Fragment() {
             tabLayout.addTab(tab)
         }
 
+        for (i in 0 until tabLayout.tabCount) {
+            val tab = (tabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
+            val params = tab.layoutParams as ViewGroup.MarginLayoutParams
+            params.setMargins(8, 0, 8, 0)
+            tab.requestLayout()
+        }
+
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val categoryId = tab.tag as String
-                val locationName = tab.text.toString()
                 setupGetMenuFavorite(categoryId)
-                NotificationHandle.showSuccessSnackBar(
-                    requireView(),
-                    "Lokasi: $locationName, ID: $categoryId"
-                )
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+
+        if (tabLayout.tabCount > 0) {
+            val firstTab = tabLayout.getTabAt(0)
+            firstTab?.let {
+                it.select() // Pilih tab pertama
+                val categoryId = it.tag as String
+                setupGetMenuFavorite(categoryId)
+            }
+        }
     }
 
 

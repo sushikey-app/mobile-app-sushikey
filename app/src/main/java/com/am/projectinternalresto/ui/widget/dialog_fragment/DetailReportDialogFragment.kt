@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -79,6 +80,7 @@ class DetailReportDialogFragment(private val idOrderReport: String) : DialogFrag
                         binding.layoutShimmer,
                         false
                     )
+                    Log.e("CheckData", "data : ${result.data?.data}")
                     setupAdapter(result.data?.data)
                     setupView(result.data?.data)
                 }
@@ -104,19 +106,19 @@ class DetailReportDialogFragment(private val idOrderReport: String) : DialogFrag
         binding.textValueStatus.text = data?.pembayaran?.statusPesanan
         binding.textValueDateOrder.text =
             Formatter.formatDatetime(data?.pembayaran?.createdAt ?: "")
-        binding.textValueReasonCancel.text = data?.alasanPembatalan ?: "-"
-        binding.layoutOrder.textValueSubTotal.text =
+//        binding.textValueReasonCancel.text = data?. ?: "-"
+        binding.textValueSubTotal.text =
             Formatter.formatCurrency(data?.pembayaran?.totalHarga ?: 0)
-        binding.layoutOrder.textValuePPN.text = Formatter.formatCurrency(0)
-        binding.layoutOrder.textValueTotal.text =
+        binding.textValuePPN.text = Formatter.formatCurrency(0)
+        binding.textValueTotal.text =
             Formatter.formatCurrency(data?.pembayaran?.totalHarga ?: 0)
     }
 
     private fun setupAdapter(data: DataItemDetailReport?) {
         val adapter = DetailReportOrderAdapter().apply {
-            submitList(data?.pesanan)
+            submitList(data?.pembayaran?.orderItemsDetailReport)
         }
-        binding.layoutOrder.recyclerConfirmOrder.let {
+        binding.recyclerConfirmOrder.let {
             it.adapter = adapter
             it.layoutManager = LinearLayoutManager(requireContext())
         }

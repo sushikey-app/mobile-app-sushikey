@@ -59,6 +59,27 @@ fun showLogoutAlert(context: Context) {
     alertDialog.show()
 }
 
+fun showAlertDeleteData(
+    context: Context,
+    title: String,
+    messageContent: String,
+    callbackOnClickYes: () -> Unit
+) {
+    val alertDialog = MaterialAlertDialogBuilder(context)
+    alertDialog.apply {
+        setTitle("Hapus Data $title")
+        setMessage("Apakah anda yakin menghapus $messageContent ini?")
+        setPositiveButton(context.getString(R.string.yes)) { _, _ ->
+            callbackOnClickYes.invoke()
+        }
+        setNegativeButton(context.getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+    }
+    alertDialog.create()
+    alertDialog.show()
+}
+
 fun showConfirmDeleteReportAlert(context: Context, onYesListener: () -> Unit) {
     val alertDialog = MaterialAlertDialogBuilder(context)
     alertDialog.apply {
