@@ -240,7 +240,23 @@ class MenuRepository(private val apiService: ApiService) {
     fun filterMenuByCategory(token: String, idMenu: String) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
-            val response = apiService.filterMenuByCategory("Bearer $token", idMenu)
+            val response = apiService.filterMenuPesanByCategory("Bearer $token", idMenu)
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!"))
+        }
+    }
+    fun filterMenuPesanByCategory(token: String, idMenu: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.filterMenuPesanByCategory("Bearer $token", idMenu)
             if (response.isSuccessful) {
                 emit(Resource.success(response.body()))
             } else {

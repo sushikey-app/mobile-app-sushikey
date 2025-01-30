@@ -28,7 +28,6 @@ class AddOrUpdateLocationFragment : Fragment() {
     private val authViewModel: AuthViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
     private val dataLocation: DataItemLocation? by lazy { arguments?.getParcelable(Key.BUNDLE_DATA_LOCATION) }
-    private var isSaveButtonEnabled = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -65,16 +64,28 @@ class AddOrUpdateLocationFragment : Fragment() {
     private fun setupNavigation() {
         binding.actionHeadline.buttonBack.setOnClickListener { findNavController().popBackStack() }
         binding.buttonAddLocation.setOnClickListener {
-            if (isSaveButtonEnabled) {
-                isSaveButtonEnabled = false
-                binding.buttonAddLocation.isEnabled = false
                 UiHandle.setupHideKeyboard(it)
-                if (dataLocation != null) {
-                    Log.e("CheckDataLokasi", "data lokasi put : ${dataResultLocation()}")
-                    setupPutDataLocationToApi()
-                } else {
-                    Log.e("CheckDataLokasi", "data lokasi post : ${dataResultLocation()}")
-                    setupPostDataLocationToApi()
+            when {
+                binding.edtNameResto.text.toString()
+                    .isEmpty() -> NotificationHandle.showErrorSnackBar(
+                    requireView(),
+                    "Nama resto tidak boleh kosong"
+                )
+
+                binding.edtLocation.text.toString()
+                    .isEmpty() -> NotificationHandle.showErrorSnackBar(
+                    requireView(),
+                    "Lokasi tidak boleh kosong"
+                )
+
+                else -> {
+                    if (dataLocation != null) {
+                        Log.e("CheckDataLokasi", "data lokasi put : ${dataResultLocation()}")
+                        setupPutDataLocationToApi()
+                    } else {
+                        Log.e("CheckDataLokasi", "data lokasi post : ${dataResultLocation()}")
+                        setupPostDataLocationToApi()
+                    }
                 }
             }
 
@@ -98,12 +109,14 @@ class AddOrUpdateLocationFragment : Fragment() {
     ) {
         when (result.status) {
             Status.LOADING -> {
+                UiHandle.setupDisableButtonForLoad(binding.buttonAddLocation, true)
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar, binding.textLoading, true
                 )
             }
 
             Status.SUCCESS -> {
+                UiHandle.setupDisableButtonForLoad(binding.buttonAddLocation, false)
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar,
                     binding.textLoading,
@@ -122,6 +135,7 @@ class AddOrUpdateLocationFragment : Fragment() {
             }
 
             Status.ERROR -> {
+                UiHandle.setupDisableButtonForLoad(binding.buttonAddLocation, false)
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar, binding.textLoading, false
                 )
@@ -129,8 +143,6 @@ class AddOrUpdateLocationFragment : Fragment() {
                     requireView(),
                     result.message.toString()
                 )
-                isSaveButtonEnabled = true
-                binding.buttonAddLocation.isEnabled = true
             }
         }
     }

@@ -55,7 +55,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     private val authViewModel: AuthViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
     private var unformattedTotalPaid = 0
-    private var paymentMethod = "Cash"
+    private var paymentMethod = "TUNAI"
     private val dataOrderSummary: DummyModel.OrderSummary? by lazy {
         arguments?.getParcelable(
             BUNDLE_DATA_ORDER_TO_PAYMENT

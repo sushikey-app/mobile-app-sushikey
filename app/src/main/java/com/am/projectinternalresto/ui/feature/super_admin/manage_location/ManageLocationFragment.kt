@@ -12,6 +12,7 @@ import com.am.projectinternalresto.service.source.Resource
 import com.am.projectinternalresto.service.source.Status
 import com.am.projectinternalresto.ui.adapter.manage_location.ManageLocationAdapter
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
+import com.am.projectinternalresto.ui.widget.alert.showAlertDeleteData
 import com.am.projectinternalresto.utils.Destination
 import com.am.projectinternalresto.utils.Key
 import com.am.projectinternalresto.utils.Navigation
@@ -95,7 +96,11 @@ class ManageLocationFragment : Fragment() {
                     Bundle().apply { putParcelable(Key.BUNDLE_DATA_LOCATION, dataLocation) }
                 )
             }
-            callbackOnDeleteClickListener { idLocation -> setupPostDeleteData(idLocation) }
+            callbackOnDeleteClickListener { idLocation ->
+                showAlertDeleteData(requireContext(), "Lokasi", "Lokasi") {
+                    setupPostDeleteData(idLocation)
+                }
+            }
         }
 
         binding.cardManageLocation.recyclerViewContentTableLocation.let {

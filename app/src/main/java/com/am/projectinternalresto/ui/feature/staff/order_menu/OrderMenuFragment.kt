@@ -1,6 +1,7 @@
 package com.am.projectinternalresto.ui.feature.staff.order_menu
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -190,6 +191,7 @@ class OrderMenuFragment : Fragment() {
                     val selectedCategory = categories[position - 1]
                     menuAdapter.submitList(emptyList())
                     setupFilterMenuByCategory(selectedCategory.id)
+                    Log.e("CheckDataId", "data ${selectedCategory.id}")
                 }
             }
 
@@ -260,7 +262,7 @@ class OrderMenuFragment : Fragment() {
     }
 
     private fun setupFilterMenuByCategory(idMenu: String) {
-        menuViewModel.filterMenuByCategory(token, idMenu).observe(viewLifecycleOwner) { result ->
+        menuViewModel.filterMenuPesanByCategory(token, idMenu).observe(viewLifecycleOwner) { result ->
             when (result.status) {
                 Status.LOADING -> {
                     setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, true)

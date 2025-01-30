@@ -274,6 +274,12 @@ interface ApiService {
         @Path("id") idCategory: String
     ): Response<MenuResponse>
 
+    @GET("filter-menu-pesan-by-kategori/{id}")
+    suspend fun filterMenuPesanByCategory(
+        @Header("Authorization") bearer: String,
+        @Path("id") idCategory: String
+    ): Response<MenuResponse>
+
     @Multipart
     @POST("menu")
     suspend fun addMenu(

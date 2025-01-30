@@ -28,4 +28,6 @@ class ManageMenuViewModel(private val repository: MenuRepository) : ViewModel() 
     fun searchMenu(token: String, keyword: String) = repository.searchMenu(token, keyword)
     fun filterMenuByCategory(token: String, idMenu: String) =
         repository.filterMenuByCategory(token, idMenu)
+    fun filterMenuPesanByCategory(token: String, idMenu: String) =
+        repository.filterMenuByCategory(token, idMenu)
 }

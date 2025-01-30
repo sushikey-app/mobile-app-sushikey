@@ -28,6 +28,9 @@ data class DataItem(
 	@field:SerializedName("tanggal_pemesanan")
 	val tanggalPemesanan: String? = null,
 
+	@field:SerializedName("total_pembayaran")
+	val totalPaymentUser: Int? = null,
+
 	@field:SerializedName("status_pembayaran")
 	val statusPembayaran: String? = null,
 
@@ -47,26 +50,28 @@ data class DataItem(
 	val statusPesanan: String? = null
 )
 
-data class GOJEK(
-
-	@field:SerializedName("pesanan_dibatalkan")
-	val pesananDibatalkan: Int? = null,
-
-	@field:SerializedName("pesanan_selesai")
-	val pesananSelesai: Int? = null
-)
-
 data class TotalPesanan(
 
 	@field:SerializedName("TRANSFER")
-	val tRANSFER: TRANSFER? = null,
+	val tRANSFER: PaymentOption? = null,
+
+	@field:SerializedName("QRIS")
+	val qris: PaymentOption? = null,
 
 	@field:SerializedName("GOJEK")
-	val gOJEK: GOJEK? = null
+	val gojek: PaymentOption? = null,
+
+	@field:SerializedName("Grab")
+	val grab: PaymentOption? = null,
+
+	@field:SerializedName("TUNAI")
+	val tunai: PaymentOption? = null
 )
 
+data class PaymentOption(
 
-data class TRANSFER(
+	@field:SerializedName("total_pembayaran_pesanan")
+	val totalPayment: Int? = null,
 
 	@field:SerializedName("pesanan_dibatalkan")
 	val pesananDibatalkan: Int? = null,
