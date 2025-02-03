@@ -13,6 +13,7 @@ import com.am.projectinternalresto.service.source.Resource
 import com.am.projectinternalresto.service.source.Status
 import com.am.projectinternalresto.ui.adapter.manage_category.ManageCategoryAdapter
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
+import com.am.projectinternalresto.ui.widget.alert.showAlertDeleteData
 import com.am.projectinternalresto.utils.Destination
 import com.am.projectinternalresto.utils.Key
 import com.am.projectinternalresto.utils.Navigation
@@ -146,7 +147,13 @@ class ManageCategoryFragment : Fragment() {
                 )
             }
             callbackOnDeleteClickListener { idCategory ->
-                setupDeleteCategoryMenu(idCategory)
+                showAlertDeleteData(
+                    requireContext(),
+                    "Kategori",
+                    "kategori"
+                ) {
+                    setupDeleteCategoryMenu(idCategory)
+                }
             }
         }
         binding.cardManageCategory.recyclerViewCategory.let {

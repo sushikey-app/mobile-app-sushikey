@@ -7,26 +7,34 @@
     android:orientation="horizontal"
     tools:context=".ui.feature.admin.main.MainAdminActivity">
 
-    <com.google.android.material.navigationrail.NavigationRailView
-        android:id="@+id/navigationRailsAdmin"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/rails"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        style="@style/CustomNavigationRailViewStyle"
-        app:menu="@menu/menu_navigation_admin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.5"/>
+        android:fillViewport="true">
+
+        <com.google.android.material.navigationrail.NavigationRailView
+            android:id="@+id/navigationRailsAdmin"
+            style="@style/CustomNavigationRailViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            app:menu="@menu/menu_navigation_admin" />
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        app:layout_constraintStart_toEndOf="@id/navigationRailsAdmin" />
+        app:layout_constraintStart_toEndOf="@id/rails" />
 
     <androidx.fragment.app.FragmentContainerView
         android:layout_width="0dp"
         android:id="@+id/navigationHostAdmin"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_height="match_parent"
-        app:layout_constraintStart_toEndOf="@id/navigationRailsAdmin"
+        app:layout_constraintStart_toEndOf="@id/rails"
         app:layout_constraintEnd_toEndOf="parent"
         app:defaultNavHost="true"
         app:layout_constraintTop_toTopOf="parent"

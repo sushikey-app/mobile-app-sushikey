@@ -1,6 +1,7 @@
 package com.am.projectinternalresto.ui.feature.staff.order_menu
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,16 +60,23 @@ class OrderMenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentOrderMenuBinding.inflate(inflater, container, false)
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("isUpdated")
+            ?.observe(viewLifecycleOwner) { isUpdated ->
+                if (isUpdated) {
+                    clearDataChart()
+                }
+            }
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupInitialUI()
         observeViewModel()
         setupGetDataMenuFromApi()
         setupGetDataCategory()
-
     }
 
     private fun setupInitialUI() {
@@ -136,6 +144,8 @@ class OrderMenuFragment : Fragment() {
     // setup ui when edit order
     private fun handleEditOrderState() {
         dataEditingOrderSummary?.let {
+            Log.e("CheckEditingErdoer", "data ${dataEditingOrderSummary?.listCartItems}")
+            Log.e("CheckEditingErdoer", "data2 $dataEditingOrderSummary")
             cartAdapter.submitList(dataEditingOrderSummary?.listCartItems)
             viewModel.initializeCartWithExistingOrder(dataEditingOrderSummary!!)
             binding.cardChart.buttonSave.text = getString(R.string.cancel_order)
@@ -183,6 +193,7 @@ class OrderMenuFragment : Fragment() {
                     val selectedCategory = categories[position - 1]
                     menuAdapter.submitList(emptyList())
                     setupFilterMenuByCategory(selectedCategory.id)
+                    Log.e("CheckDataId", "data ${selectedCategory.id}")
                 }
             }
 
@@ -198,6 +209,10 @@ class OrderMenuFragment : Fragment() {
                 setupCancelOrder()
             } else {
                 showAlertSaveCustomerName(requireContext()) { nameCustomer ->
+                    if (nameCustomer.isEmpty()) {
+                        showErrorSnackBar(requireView(), "Nama tidak boleh kosong")
+                        return@showAlertSaveCustomerName
+                    }
                     setupPostDataSaveOrderToApi(nameCustomer)
                 }
             }
@@ -211,6 +226,10 @@ class OrderMenuFragment : Fragment() {
             totalPurchase = viewModel.totalPurchase.value ?: 0
         )
         showAlertSaveCustomerName(requireContext()) { nameCustomer ->
+            if (nameCustomer.isEmpty()) {
+                showErrorSnackBar(requireView(), "Nama tidak boleh kosong")
+                return@showAlertSaveCustomerName
+            }
             navigateFragment(
                 Destination.ORDER_MENU_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
                 findNavController(),
@@ -220,7 +239,7 @@ class OrderMenuFragment : Fragment() {
                     putParcelable(BUNDLE_DATA_ORDER_TO_PAYMENT, orderSummary)
                 }
             )
-            clearDataChart()
+//            clearDataChart()
         }
     }
 
@@ -245,7 +264,7 @@ class OrderMenuFragment : Fragment() {
     }
 
     private fun setupFilterMenuByCategory(idMenu: String) {
-        menuViewModel.filterMenuByCategory(token, idMenu).observe(viewLifecycleOwner) { result ->
+        menuViewModel.filterMenuPesanByCategory(token, idMenu).observe(viewLifecycleOwner) { result ->
             when (result.status) {
                 Status.LOADING -> {
                     setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, true)
@@ -267,6 +286,7 @@ class OrderMenuFragment : Fragment() {
     private fun setupPostDataSaveOrderToApi(name: String) {
         viewModel.saveDataOrder(token, name).observe(viewLifecycleOwner) { result ->
             handleApiStatus(result, result.message.toString()) {
+
                 clearDataChart()
                 setupGetDataMenuFromApi()
                 showSuccessSnackBar(requireView(), result.data?.message.toString())

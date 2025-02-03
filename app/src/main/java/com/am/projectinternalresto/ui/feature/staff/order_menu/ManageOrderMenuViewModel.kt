@@ -50,10 +50,6 @@ class ManageOrderMenuViewModel(private val repository: OrderRepository) : ViewMo
     fun paymentOrder(token: String, idOrder: String, body: PaymentRequest) =
         repository.paymentOrder(token, idOrder, body)
 
-    fun getHistoryOrder(token: String) = repository.getHistoryOrder(token)
-    fun getDetailHistoryOrder(token: String, idOrder: String) =
-        repository.getDetailHistoryOrder(token, idOrder)
-
     fun initializeCartWithExistingOrder(orderSummary: DummyModel.OrderSummary) {
         _cartItems.value = orderSummary.listCartItems
     }

@@ -1,6 +1,8 @@
 package com.am.projectinternalresto.data.body_params
 
+import android.os.Parcelable
 import android.util.Log
+import kotlinx.parcelize.Parcelize
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -18,10 +20,12 @@ data class MenuBody(
     var itemToppings: List<ItemTopping>? = null
 )
 
+@Parcelize
 data class ItemTopping(
+    val id: String,
     val nama: String,
     val price: Int
-)
+) : Parcelable
 
 
 fun MenuBody.toMultipartBody(): Map<String, RequestBody> {
@@ -33,6 +37,7 @@ fun MenuBody.toMultipartBody(): Map<String, RequestBody> {
 
 
     itemToppings?.forEachIndexed { index, topping ->
+        map["topping[$index][id]"] = topping.id.toRequestBody("text/plain".toMediaTypeOrNull())
         map["topping[$index][nama]"] = topping.nama.toRequestBody("text/plain".toMediaTypeOrNull())
         map["topping[$index][harga]"] =
             topping.price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
@@ -46,3 +51,5 @@ fun MenuBody.toMultipartImagePart(): MultipartBody.Part? {
         MultipartBody.Part.createFormData("image", it.name, requestBody)
     }
 }
+
+

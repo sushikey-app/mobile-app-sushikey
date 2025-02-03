@@ -1,7 +1,7 @@
 package com.am.projectinternalresto.utils
 
 object Key {
-    const val BASE_URL = "http://sushikey.157.173.218.120.sslip.io/api/"
+    const val BASE_URL = "http://api.157.173.218.120.sslip.io/api/"
 
 //    const val BASE_URL = "http://172.20.10.2:8000/api/"
     const val ERROR_MESSAGE = "message"

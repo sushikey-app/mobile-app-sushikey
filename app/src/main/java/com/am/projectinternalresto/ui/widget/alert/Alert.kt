@@ -22,6 +22,7 @@ import com.am.projectinternalresto.data.response.super_admin.location.Location
 import com.am.projectinternalresto.databinding.CustomLayoutDialogPrintReportBinding
 import com.am.projectinternalresto.databinding.CustomLayoutDialogToppingAndNoteBinding
 import com.am.projectinternalresto.service.source.Status
+import com.am.projectinternalresto.service.source.UserPreference
 import com.am.projectinternalresto.ui.adapter.manage_location.SelectToppingAdapter
 import com.am.projectinternalresto.ui.feature.auth.LoginActivity
 import com.am.projectinternalresto.ui.feature.staff.order_menu.ManageOrderMenuViewModel
@@ -41,13 +42,35 @@ fun showLogoutAlert(context: Context) {
         setMessage("Apakah anda yakin keluar?")
         setPositiveButton(context.getString(R.string.yes)) { _, _ ->
             if (context is Activity) {
+                UserPreference.getInstance().clearToken()
                 context.goToActivity(LoginActivity::class.java, withFinish = true)
             } else {
-                // Fallback jika context bukan Activity
+                UserPreference.getInstance().clearToken()
                 val intent = Intent(context.applicationContext, LoginActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 context.startActivity(intent)
             }
+        }
+        setNegativeButton(context.getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+    }
+    alertDialog.create()
+    alertDialog.show()
+}
+
+fun showAlertDeleteData(
+    context: Context,
+    title: String,
+    messageContent: String,
+    callbackOnClickYes: () -> Unit
+) {
+    val alertDialog = MaterialAlertDialogBuilder(context)
+    alertDialog.apply {
+        setTitle("Hapus Data $title")
+        setMessage("Apakah anda yakin menghapus $messageContent ini?")
+        setPositiveButton(context.getString(R.string.yes)) { _, _ ->
+            callbackOnClickYes.invoke()
         }
         setNegativeButton(context.getString(R.string.cancel)) { dialog, _ ->
             dialog.dismiss()
@@ -170,7 +193,7 @@ fun showAlertCancelOrder(context: Context, callbackOnYesCancelOrder: (() -> Unit
             callbackOnYesCancelOrder.invoke()
             dialog.dismiss()
         }
-        setNegativeButton("No") { dialog, _ ->
+        setNegativeButton("Batal") { dialog, _ ->
             dialog.dismiss()
         }
     }
@@ -220,7 +243,8 @@ fun showAlertSaveCustomerName(
     binding.recyclerViewTopping.visibility = View.GONE
 
     binding.textHeadline.text = "Tambah Data Pembeli"
-    binding.textTitleNote.text = "Masukan nama pembeli"
+    binding.textTitleNote.text = "Nama Pembeli"
+    binding.edtNote.hint = "Masukan nama pembeli"
 
     binding.buttonCloseDialog.setOnClickListener {
         builder.dismiss()
@@ -324,6 +348,7 @@ fun showAlertFilterAdminAndStaff(
 
 fun showAlertFilterAndPrintReportSuperAdmin(
     context: Context,
+    title: String,
     viewModel: LocationViewModel,
     token: String,
     callbackOnclickSave: (locationId: String, startDate: Int, startMonth: Int, startYear: Int, endDate: Int, endMonth: Int, endYear: Int) -> Unit
@@ -332,6 +357,8 @@ fun showAlertFilterAndPrintReportSuperAdmin(
     val binding = CustomLayoutDialogPrintReportBinding.inflate(LayoutInflater.from(context))
     val builder = MaterialAlertDialogBuilder(context).create()
     val formatter = MyValueFormatter()
+
+    binding.textHeadline.text = title
 
     var selectedData = FilterData(
         locationId = "",
@@ -346,6 +373,7 @@ fun showAlertFilterAndPrintReportSuperAdmin(
     // Setup UI elements
     setupLocationDropdown(context, viewModel, token, binding) { locationId ->
         selectedData = selectedData.copy(locationId = locationId)
+        if (selectedData != null) UiHandle.setupDisableHintForField(binding.edlLocationReport)
     }
 
     // Setup start date picker

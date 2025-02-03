@@ -19,6 +19,7 @@ import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
 import com.am.projectinternalresto.ui.feature.staff.order_menu.ManageOrderMenuViewModel
 import com.am.projectinternalresto.ui.feature.super_admin.manage_location.LocationViewModel
 import com.am.projectinternalresto.ui.widget.chart.Chart.setupSalesChart
+import com.am.projectinternalresto.utils.Formatter
 import com.am.projectinternalresto.utils.Formatter.formatCurrency
 import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
@@ -118,12 +119,12 @@ class DashboardSuperAdminFragment : Fragment() {
         }
         binding.cardTotalSalesOfflineOrder.apply {
             textTitleContent.text = getString(R.string.text_order_offline)
-            textValueContent.text = data?.offlineOrders.toString()
+            textValueContent.text = formatCurrency(data?.offlineOrders ?: 0)
             iconContent.setImageResource(R.drawable.icon_order_offline)
         }
         binding.cardTotalSalesOnlineOrder.apply {
             textTitleContent.text = getString(R.string.text_order_online)
-            textValueContent.text = data?.onlineOrders.toString()
+            textValueContent.text = formatCurrency(data?.onlineOrders ?: 0)
             iconContent.setImageResource(R.drawable.icon_order_online)
         }
     }

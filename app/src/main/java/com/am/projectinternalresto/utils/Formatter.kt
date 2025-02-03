@@ -32,6 +32,11 @@ object Formatter {
         return dateFormat.format(Date())
     }
 
+    fun getCurrentDateAndTime() : String {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
+        return dateFormat.format(Date())
+    }
+
     fun formatDatetime(date: String): String {
         val formatInput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
         formatInput.timeZone = TimeZone.getTimeZone("UTC")

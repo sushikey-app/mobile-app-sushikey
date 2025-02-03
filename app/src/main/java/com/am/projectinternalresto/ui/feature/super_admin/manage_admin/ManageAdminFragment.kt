@@ -12,6 +12,7 @@ import com.am.projectinternalresto.service.source.Resource
 import com.am.projectinternalresto.service.source.Status
 import com.am.projectinternalresto.ui.adapter.manage_admin.ManageAdminAdapter
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
+import com.am.projectinternalresto.ui.widget.alert.showAlertDeleteData
 import com.am.projectinternalresto.utils.Destination
 import com.am.projectinternalresto.utils.Key
 import com.am.projectinternalresto.utils.Navigation
@@ -93,7 +94,11 @@ class ManageAdminFragment : Fragment() {
                     findNavController(),
                     Bundle().apply { putParcelable(Key.BUNDLE_DATA_ADMIN_OR_SUPER_ADMIN, user) })
             }
-            callbackOnDeleteClickListener { id -> setupDeleteDataAdminOrSuperAdmin(id) }
+            callbackOnDeleteClickListener { id ->
+                showAlertDeleteData(requireContext(), "Admin", "Admin") {
+                    setupDeleteDataAdminOrSuperAdmin(id)
+                }
+            }
         }
 
         binding.cardManageAdmin.recyclerView.let {

@@ -229,7 +229,7 @@ class OrderHistoryFragment : Fragment() {
                 DetailReportDialogFragment.show(childFragmentManager, id)
             }
             callbackOnclickCancelOrders { id ->
-                callbackOnclickToDetail { setupCancelOrder(id) }
+                setupCancelOrder(id)
             }
         }
         binding.cardReport.recyclerViewContentTableLocation.let {

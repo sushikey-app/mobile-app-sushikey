@@ -268,6 +268,18 @@ interface ApiService {
         @Header("Authorization") bearer: String
     ): Response<MenuResponse>
 
+    @GET("filter-menu-by-kategori/{id}")
+    suspend fun filterMenuByCategory(
+        @Header("Authorization") bearer: String,
+        @Path("id") idCategory: String
+    ): Response<MenuResponse>
+
+    @GET("filter-menu-pesan-by-kategori/{id}")
+    suspend fun filterMenuPesanByCategory(
+        @Header("Authorization") bearer: String,
+        @Path("id") idCategory: String
+    ): Response<MenuResponse>
+
     @Multipart
     @POST("menu")
     suspend fun addMenu(
@@ -297,11 +309,6 @@ interface ApiService {
         @Query("keyword") keyword: String
     ): Response<MenuResponse>
 
-    @GET("filter-menu-pesan-by-kategori/{id}")
-    suspend fun filterMenuByCategory(
-        @Header("Authorization") bearer: String,
-        @Path("id") idMenu: String
-    ): Response<MenuResponse>
 
     @GET("pegawai-admin")
     suspend fun getAllDataStaff(@Header("Authorization") bearer: String): Response<StaffResponse>

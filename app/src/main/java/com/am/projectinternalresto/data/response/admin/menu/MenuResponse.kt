@@ -1,5 +1,6 @@
 package com.am.projectinternalresto.data.response.admin.menu
 
+import android.os.Parcel
 import android.os.Parcelable
 import com.am.projectinternalresto.data.response.admin.category.DataItemCategory
 import com.google.gson.annotations.SerializedName
@@ -50,6 +51,7 @@ data class DataItemMenu(
 ) : Parcelable
 
 
+@Parcelize
 data class ToppingItem(
 
     @field:SerializedName("nama")
@@ -62,4 +64,4 @@ data class ToppingItem(
     val harga: Int? = null,
 
     var isSelected: Boolean = false
-)
+) : Parcelable

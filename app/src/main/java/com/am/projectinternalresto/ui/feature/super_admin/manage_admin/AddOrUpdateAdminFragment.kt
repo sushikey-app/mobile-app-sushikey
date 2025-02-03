@@ -154,16 +154,30 @@ class AddOrUpdateAdminFragment : Fragment() {
     private fun setupNavigation() {
         binding.actionHeadline.buttonBack.setOnClickListener { findNavController().popBackStack() }
         binding.buttonSave.setOnClickListener {
-            if (isSaveButtonEnabled) {
-                isSaveButtonEnabled = false
-                binding.buttonSave.isEnabled = false
-                UiHandle.setupHideKeyboard(it)
-                if (dataAdmin != null) {
-                    setupPutDataAdminToApi()
-                } else {
-                    setupPostDataAdminToApi()
+            UiHandle.setupHideKeyboard(it)
+            when {
+                binding.edtName.text.toString().isEmpty() -> NotificationHandle.showErrorSnackBar(
+                    requireView(),
+                    "Nama tidak boleh kosong"
+                )
+
+                binding.edtUsername.text.toString()
+                    .isEmpty() -> NotificationHandle.showErrorSnackBar(
+                    requireView(),
+                    "Username tidak boleh kosong"
+                )
+
+                binding.dropDownRole.text.toString()
+                    .isEmpty() -> NotificationHandle.showErrorSnackBar(
+                    requireView(),
+                    "Role tidak boleh kosong"
+                )
+
+                else -> {
+                    if (dataAdmin != null) setupPutDataAdminToApi() else setupPostDataAdminToApi()
                 }
             }
+
         }
     }
 
@@ -186,12 +200,14 @@ class AddOrUpdateAdminFragment : Fragment() {
     private fun handleStatusApi(result: Resource<AddOrUpdateAdminSuperAdminResponse?>) {
         when (result.status) {
             Status.LOADING -> {
+                UiHandle.setupDisableButtonForLoad(binding.buttonSave, true)
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar, binding.textLoading, true,
                 )
             }
 
             Status.SUCCESS -> {
+                UiHandle.setupDisableButtonForLoad(binding.buttonSave, false)
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar, binding.textLoading, false,
                 )
@@ -209,12 +225,11 @@ class AddOrUpdateAdminFragment : Fragment() {
             }
 
             Status.ERROR -> {
+                UiHandle.setupDisableButtonForLoad(binding.buttonSave, false)
                 ProgressHandle.setupVisibilityProgressBar(
                     binding.progressBar, binding.textLoading, false,
                 )
                 NotificationHandle.showErrorSnackBar(requireView(), result.message.toString())
-                isSaveButtonEnabled = true
-                binding.buttonSave.isEnabled = true
             }
         }
     }

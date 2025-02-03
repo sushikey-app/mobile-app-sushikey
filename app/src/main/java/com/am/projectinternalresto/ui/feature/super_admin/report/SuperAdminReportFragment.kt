@@ -63,6 +63,7 @@ class SuperAdminReportFragment : Fragment() {
         binding.cardReport.buttonFilter.setOnClickListener {
             showAlertFilterAndPrintReportSuperAdmin(
                 requireContext(),
+                "Masukan data yang akan difilter",
                 locationViewModel,
                 token
             ) { locationId, startDate, startMonth, startYear, endDate, endMonth, endYear ->
@@ -96,6 +97,7 @@ class SuperAdminReportFragment : Fragment() {
             } else {
                 showAlertFilterAndPrintReportSuperAdmin(
                     requireContext(),
+                    "Masukan data yang akan dicetak",
                     locationViewModel,
                     token
                 ) { locationId, startDate, startMonth, startYear, endDate, endMonth, endYear ->
@@ -114,36 +116,37 @@ class SuperAdminReportFragment : Fragment() {
                     )
                 }
             }
-
-            binding.cardReport.buttonDelete.setOnClickListener {
-                if (currentLocationId != null) {
+        }
+        binding.cardReport.buttonDelete.setOnClickListener {
+            Log.e("Check", "Isdelete")
+            if (currentLocationId != null) {
+                showConfirmDeleteReportAlert(requireContext()) {
+                    setupDeleteDataReport(
+                        currentLocationId.toString(),
+                        currentStartDate,
+                        currentStartMonth,
+                        currentStartYear,
+                        currentEndDate,
+                        currentEndMonth,
+                        currentEndYear
+                    )
+                }
+            } else {
+                showAlertFilterAndPrintReportSuperAdmin(
+                    requireContext(),
+                    "Masukan data yang akan dihapus",
+                    locationViewModel,
+                    token
+                ) { locationId, startDate, startMonth, startYear, endDate, endMonth, endYear ->
+                    Log.e(
+                        "CheckPrint",
+                        "id : $locationId | $locationId | $startDate | $startMonth | $startYear | $endDate | $endMonth | $endYear"
+                    )
                     showConfirmDeleteReportAlert(requireContext()) {
                         setupDeleteDataReport(
-                            currentLocationId.toString(),
-                            currentStartDate,
-                            currentStartMonth,
-                            currentStartYear,
-                            currentEndDate,
-                            currentEndMonth,
-                            currentEndYear
+                            locationId,
+                            startDate, startMonth, startYear, endDate, endMonth, endYear
                         )
-                    }
-                } else {
-                    showAlertFilterAndPrintReportSuperAdmin(
-                        requireContext(),
-                        locationViewModel,
-                        token
-                    ) { locationId, startDate, startYear, startMonth, endDate, endMonth, endYear ->
-                        Log.e(
-                            "CheckPrint",
-                            "id : $locationId | $locationId | $startDate | $startMonth | $startYear | $endDate | $endMonth | $endYear"
-                        )
-                        showConfirmDeleteReportAlert(requireContext()) {
-                            setupDeleteDataReport(
-                                locationId,
-                                startDate, startMonth, startYear, endDate, endMonth, endYear
-                            )
-                        }
                     }
                 }
             }
@@ -266,6 +269,7 @@ class SuperAdminReportFragment : Fragment() {
                     }
 
                     Status.ERROR -> {
+                        Log.e("Check", "Error : ${result.message}")
                         NotificationHandle.showErrorSnackBar(
                             requireView(),
                             result.message.toString()

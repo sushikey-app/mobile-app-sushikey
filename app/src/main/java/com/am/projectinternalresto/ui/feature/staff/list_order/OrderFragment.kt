@@ -167,7 +167,9 @@ class OrderFragment : Fragment() {
                                                         ?: 0
                                                 )
                                             }
+                                            Log.e("CheckEditingErdoer", "data3 $orderSummary")
                                             navigateFragment(
+
                                                 Destination.ORDER_TO_ORDER_MENU,
                                                 findNavController(),
                                                 Bundle().apply {

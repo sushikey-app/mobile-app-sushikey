@@ -15,6 +15,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.am.projectinternalresto.R
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -23,6 +24,16 @@ object UiHandle {
     fun setupDisableHintForField(vararg editLayout: TextInputLayout) {
         for (edl in editLayout) {
             edl.isHintEnabled = false
+        }
+    }
+
+    fun setupDisableButtonForLoad(button: MaterialButton, isLoad: Boolean) {
+        if (isLoad) {
+            button.isEnabled = false
+            button.alpha = 0.5f
+        } else {
+            button.isEnabled = true
+            button.alpha = 1f
         }
     }
 
