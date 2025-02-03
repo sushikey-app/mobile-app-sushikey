@@ -106,7 +106,11 @@ class DetailReportDialogFragment(private val idOrderReport: String) : DialogFrag
         binding.textValueStatus.text = data?.pembayaran?.statusPesanan
         binding.textValueDateOrder.text =
             Formatter.formatDatetime(data?.pembayaran?.createdAt ?: "")
-//        binding.textValueReasonCancel.text = data?. ?: "-"
+        if (data?.alasanPembatalan != null) {
+            binding.textReasonCancel.visibility = View.VISIBLE
+            binding.textValueReasonCancel.visibility = View.VISIBLE
+            binding.textValueReasonCancel.text = data.alasanPembatalan.toString()
+        }
         binding.textValueSubTotal.text =
             Formatter.formatCurrency(data?.pembayaran?.totalHarga ?: 0)
         binding.textValuePPN.text = Formatter.formatCurrency(0)

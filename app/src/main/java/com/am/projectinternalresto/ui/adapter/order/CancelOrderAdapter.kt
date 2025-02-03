@@ -32,7 +32,8 @@ class CancelOrderAdapter(
         fun bind(data: DataItemCancelOrder) {
             binding.textId.text = data.nomorOrder
             binding.textName.text = data.lokasi?.namaResto
-            binding.textStatus.text = "Menunggu persetujuan"
+            binding.textCustomerName.text = "achmad"
+            binding.textStatus.text = data.statusPesanan.toString()
             binding.buttonDetailOrder.setOnClickListener { onClickDetailOrder?.invoke(data.id.toString()) }
             binding.buttonCancelYes.setOnClickListener { onClickYes?.invoke(data.id.toString()) }
             binding.buttonCancelNo.setOnClickListener { onClickNo?.invoke(data.id.toString()) }

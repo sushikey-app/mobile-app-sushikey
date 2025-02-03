@@ -144,6 +144,8 @@ class OrderMenuFragment : Fragment() {
     // setup ui when edit order
     private fun handleEditOrderState() {
         dataEditingOrderSummary?.let {
+            Log.e("CheckEditingErdoer", "data ${dataEditingOrderSummary?.listCartItems}")
+            Log.e("CheckEditingErdoer", "data2 $dataEditingOrderSummary")
             cartAdapter.submitList(dataEditingOrderSummary?.listCartItems)
             viewModel.initializeCartWithExistingOrder(dataEditingOrderSummary!!)
             binding.cardChart.buttonSave.text = getString(R.string.cancel_order)
@@ -284,6 +286,7 @@ class OrderMenuFragment : Fragment() {
     private fun setupPostDataSaveOrderToApi(name: String) {
         viewModel.saveDataOrder(token, name).observe(viewLifecycleOwner) { result ->
             handleApiStatus(result, result.message.toString()) {
+
                 clearDataChart()
                 setupGetDataMenuFromApi()
                 showSuccessSnackBar(requireView(), result.data?.message.toString())

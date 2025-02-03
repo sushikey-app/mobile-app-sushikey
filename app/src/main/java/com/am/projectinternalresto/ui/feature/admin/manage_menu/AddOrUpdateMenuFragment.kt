@@ -83,7 +83,7 @@ class AddOrUpdateMenuFragment : Fragment() {
         )
         binding.textAddTopping.setOnClickListener {
             addToppingLayout()
-            it.visibility = View.INVISIBLE
+            it.visibility = View.GONE
         }
         binding.edtPriceMenu.setPriceWatcherUtils { price ->
             unformattedPrice = price
@@ -103,7 +103,7 @@ class AddOrUpdateMenuFragment : Fragment() {
                     return
                 }
             }
-            binding.textAddTopping.visibility = View.INVISIBLE
+            binding.textAddTopping.visibility = View.GONE
         }
 
         val newToppingView = layoutInflater.inflate(
@@ -139,14 +139,15 @@ class AddOrUpdateMenuFragment : Fragment() {
         updateToppingButtonsVisibility()
 
         textAddMoreTopping.setOnClickListener {
+            binding.textAddTopping.visibility = View.GONE
             it.visibility = View.GONE
             addToppingLayout()
         }
 
         // Update visibility untuk textAddTopping global
-        if (existingTopping == null) {
-            binding.textAddTopping.visibility = View.VISIBLE
-        }
+//        if (existingTopping == null) {
+//            binding.textAddTopping.visibility = View.VISIBLE
+//        }
     }
 
     // Fungsi baru untuk mengatur visibilitas tombol-tombol "Add More Topping"

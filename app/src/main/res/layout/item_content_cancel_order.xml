@@ -14,7 +14,7 @@
 
         <TextView
             android:id="@+id/textId"
-            style="@style/CustomTextStyle.Body.PopSemiBold"
+            style="@style/CustomTextStyle.Body.PopBold"
             android:layout_marginStart="10dp"
             android:textColor="@color/pink"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,12 +31,22 @@
 
         <TextView
             android:id="@+id/textName"
-            style="@style/CustomTextStyle.Body.PopMedium"
+            style="@style/CustomTextStyle.Body.PopSemiBold"
             android:maxLines="2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="@id/textId"
             app:layout_constraintTop_toBottomOf="@id/textId"
+            tools:text="@string/example_name_staff" />
+
+        <TextView
+            android:id="@+id/textCustomerName"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:maxLines="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/textId"
+            app:layout_constraintTop_toBottomOf="@id/textName"
             tools:text="@string/example_name_staff" />
 
         <com.google.android.material.button.MaterialButton
@@ -48,7 +58,7 @@
             android:layout_weight="1"
             android:text="@string/detail_orders"
             android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/textName" />
+            app:layout_constraintTop_toBottomOf="@id/textCustomerName" />
 
         <LinearLayout
             android:layout_width="match_parent"

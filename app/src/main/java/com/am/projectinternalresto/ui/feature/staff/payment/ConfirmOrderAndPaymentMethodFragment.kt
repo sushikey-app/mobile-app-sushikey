@@ -144,8 +144,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 unformattedTotalPaid = total
             }
         }
-        val disabledPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
-        binding.cardPayment.edtTotalPayment.isEnabled = paymentMethod !in disabledPaymentMethods
+
     }
     private fun setupTabLayoutTypePayment() {
         val tabLayout = binding.cardPayment.tabLayout
@@ -165,6 +164,11 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 paymentMethod = tab.text.toString()
+                val disabledPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
+                binding.cardPayment.edtTotalPayment.apply {
+                    isEnabled = paymentMethod !in disabledPaymentMethods
+                }
+
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -188,7 +192,9 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         val adapter = TotalPaymentOptionAdapter().apply {
             submitList(paymentOption)
             callbackOnClickListener {
-                binding.cardPayment.edtTotalPayment.setText(it)
+                if (paymentMethod == "TUNAI") {
+                    binding.cardPayment.edtTotalPayment.setText(it)
+                }
             }
         }
         binding.cardPayment.recyclerViewOptionPay.let {
@@ -372,7 +378,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 itemText += if (itemText.length + toppings.length + 4 <= 20) {
                     " ($toppings)"
                 } else {
-                    "\n($toppings)"
+                    "\n  ($toppings)"
                 }
             }
 
@@ -380,7 +386,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 itemText += if (itemText.length + note.length + 4 <= 20) {
                     " ($note)"
                 } else {
-                    "\n($note)"
+                    "\n  ($note)"
                 }
             }
 
@@ -416,7 +422,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
 
         items.forEach { (nama, harga, qty) ->
             val totalHarga = harga * qty
-            receiptText += "[L]$qty " + "$nama[R]${formatCurrency(totalHarga)}\n"
+            receiptText += "[L]$qty " + " $nama[R]${formatCurrency(totalHarga)}\n"
         }
 
         val specialPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
