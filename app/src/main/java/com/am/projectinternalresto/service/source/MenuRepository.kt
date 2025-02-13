@@ -1,7 +1,5 @@
 package com.am.projectinternalresto.service.source
 
-//import com.am.projectinternalresto.data.body_params.toMultipartImagePart
-import android.util.Log
 import androidx.lifecycle.liveData
 import com.am.projectinternalresto.data.body_params.CategoryRequest
 import com.am.projectinternalresto.data.body_params.MenuBody
@@ -165,9 +163,7 @@ class MenuRepository(private val apiService: ApiService) {
         val imagePayload = menuBody.toMultipartImagePart()
         try {
             val response = apiService.addMenu("Bearer $token", bodyPayload, imagePayload)
-            Log.d("AddMenu", "menu : $bodyPayload")
             if (response.isSuccessful) {
-                Log.e("Check_menu_repo", "data : ${response.body()}")
                 emit(Resource.success(response.body()))
             } else {
                 response.errorBody()?.let {
@@ -188,9 +184,7 @@ class MenuRepository(private val apiService: ApiService) {
         val imagePayload = menuBody.toMultipartImagePart()
         try {
             val response = apiService.updateMenu("Bearer $token", idMenu, bodyPayload, imagePayload)
-            Log.d("AddMenu", "menu : $bodyPayload")
             if (response.isSuccessful) {
-                Log.e("Check_menu_repo", "data : ${response.body()}")
                 emit(Resource.success(response.body()))
             } else {
                 response.errorBody()?.let {
@@ -238,22 +232,6 @@ class MenuRepository(private val apiService: ApiService) {
     }
 
     fun filterMenuByCategory(token: String, idMenu: String) = liveData(Dispatchers.IO) {
-        emit(Resource.loading(null))
-        try {
-            val response = apiService.filterMenuPesanByCategory("Bearer $token", idMenu)
-            if (response.isSuccessful) {
-                emit(Resource.success(response.body()))
-            } else {
-                response.errorBody()?.let {
-                    val errorMessage = JSONObject(it.string()).getString(ERROR_MESSAGE)
-                    emit(Resource.error(null, errorMessage))
-                }
-            }
-        } catch (exception: Exception) {
-            emit(Resource.error(null, exception.message ?: "Error Occurred!"))
-        }
-    }
-    fun filterMenuPesanByCategory(token: String, idMenu: String) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
             val response = apiService.filterMenuPesanByCategory("Bearer $token", idMenu)

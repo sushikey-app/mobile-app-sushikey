@@ -162,6 +162,7 @@ class ManageOrderMenuViewModel(private val repository: OrderRepository) : ViewMo
     }
 
     fun getCancelOrder(token: String) = repository.getCancelOrder(token)
+    fun getCancelOrderStaff(token: String) = repository.getCancelOrderStaff(token)
     fun cancelOrder(token: String, idOrder: String) = repository.cancelOrder(token, idOrder)
 
     fun confirmCancelOrder(token: String, idOrder: String, statusCancel: String, reason: String?) =

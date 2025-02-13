@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -414,7 +413,6 @@ fun showAlertFilterAndPrintReportSuperAdmin(
     }
 
     binding.buttonSaveReport.setOnClickListener {
-        Log.e("CheckSelectedDate", "data : $selectedData")
         if (isValidDateRange(selectedData)) {
             callbackOnclickSave.invoke(
                 selectedData.locationId,

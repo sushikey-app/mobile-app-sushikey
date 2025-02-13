@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -80,7 +79,6 @@ class DetailReportDialogFragment(private val idOrderReport: String) : DialogFrag
                         binding.layoutShimmer,
                         false
                     )
-                    Log.e("CheckData", "data : ${result.data?.data}")
                     setupAdapter(result.data?.data)
                     setupView(result.data?.data)
                 }

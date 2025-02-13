@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class PrintReportResponse(
 
 	@field:SerializedName("total_pesanan")
-	val totalPesanan: TotalPesanan? = null,
+	val totalPesanan: List<TotalPesanan>? = null,
 
 	@field:SerializedName("data")
 	val data: List<DataItem?>? = null,
@@ -18,6 +18,7 @@ data class PrintReportResponse(
 )
 
 data class DataItem(
+
 
 	@field:SerializedName("nama_pembeli")
 	val namaPembeli: String? = null,

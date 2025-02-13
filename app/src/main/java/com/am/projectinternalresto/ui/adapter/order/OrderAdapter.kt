@@ -33,7 +33,8 @@ class OrderAdapter(
         fun bind(data: DataItemListOrder) {
             binding.textId.text = data.noOrder.toString()
             binding.textName.text = data.nameBuyer.toString()
-            binding.textStatus.text = data.statusOrder.toString()
+            binding.textStatus.text =
+                if (data.reasonStatus != null) data.reasonStatus.toString() else data.statusOrder.toString()
             binding.buttonToDetailOrder.setOnClickListener { onClickToDetailOrder?.invoke(data.id.toString()) }
             binding.buttonChangeStatus.setOnClickListener { onClickChangeStatus?.invoke(data.id.toString()) }
             binding.buttonCancelOrders.setOnClickListener { onClickCancel?.invoke(data.id.toString()) }

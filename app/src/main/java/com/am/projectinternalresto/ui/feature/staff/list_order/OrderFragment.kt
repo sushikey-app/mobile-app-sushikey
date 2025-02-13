@@ -42,8 +42,13 @@ class OrderFragment : Fragment() {
     ): View {
         _binding = FragmentOrderBinding.inflate(inflater, container, false)
         setupView()
+        setupNavigation()
         setupGetDataOrder()
         return binding.root
+    }
+
+    private fun setupNavigation() {
+        binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataOrder() }
     }
 
     private fun setupView() {
@@ -101,8 +106,7 @@ class OrderFragment : Fragment() {
                                                         ?: 0
                                                 )
                                             }
-                                            navigateFragment(
-                                                Destination.ORDER_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
+                                            navigateFragment(Destination.ORDER_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
                                                 findNavController(),
                                                 Bundle().apply {
                                                     putString(
@@ -113,13 +117,11 @@ class OrderFragment : Fragment() {
                                                         Key.BUNDLE_DATA_ORDER_TO_PAYMENT,
                                                         orderSummary
                                                     )
-                                                }
-                                            )
+                                                })
                                         }
                                     }
 
                                     Status.ERROR -> {
-                                        Log.e("Check", "is error")
                                         showErrorSnackBar(requireView(), result.message.toString())
                                     }
                                 }
@@ -129,13 +131,11 @@ class OrderFragment : Fragment() {
             }
             callbackOnClickToDetailOrderListener { id ->
                 if (isPaid) {
-                    navigateFragment(
-                        Destination.ORDER_TO_DETAIL_ORDER,
+                    navigateFragment(Destination.ORDER_TO_DETAIL_ORDER,
                         findNavController(),
                         Bundle().apply {
                             putString(BUNDLE_ID_ORDER, id)
-                        }
-                    )
+                        })
                 } else {
                     id.let { orderId ->
                         viewModel.getDetailOrder(token, orderId)
@@ -167,10 +167,7 @@ class OrderFragment : Fragment() {
                                                         ?: 0
                                                 )
                                             }
-                                            Log.e("CheckEditingErdoer", "data3 $orderSummary")
-                                            navigateFragment(
-
-                                                Destination.ORDER_TO_ORDER_MENU,
+                                            navigateFragment(Destination.ORDER_TO_ORDER_MENU,
                                                 findNavController(),
                                                 Bundle().apply {
                                                     putString(
@@ -180,8 +177,7 @@ class OrderFragment : Fragment() {
                                                     putParcelable(
                                                         Key.BUNDLE_DATA_ORDER_TO_EDIT, orderSummary
                                                     )
-                                                }
-                                            )
+                                                })
                                         }
                                     }
 
@@ -222,6 +218,7 @@ class OrderFragment : Fragment() {
 
             Status.SUCCESS -> {
                 setupVisibilityShimmerLoadingInLinearLayout(shimmerLayout, false)
+                binding.swipeRefreshLayout.isRefreshing = false
                 setupAdapter(result.data, isPaid)
             }
 

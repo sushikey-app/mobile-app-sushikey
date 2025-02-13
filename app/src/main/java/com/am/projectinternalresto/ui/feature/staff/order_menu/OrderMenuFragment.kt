@@ -1,7 +1,6 @@
 package com.am.projectinternalresto.ui.feature.staff.order_menu
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,7 +84,7 @@ class OrderMenuFragment : Fragment() {
         handleEditOrderState()
         setupNavigation()
         UiHandle.setupDisplayDataFromSearchOrGet(
-            editLayout= binding.search.edlSearch,
+            editLayout = binding.search.edlSearch,
             editText = binding.search.edtSearch,
             onSearchDisplayData = { keyword -> setupSearchMenu(keyword) },
             onDisplayDataDefault = { setupGetDataMenuFromApi() }
@@ -144,8 +143,6 @@ class OrderMenuFragment : Fragment() {
     // setup ui when edit order
     private fun handleEditOrderState() {
         dataEditingOrderSummary?.let {
-            Log.e("CheckEditingErdoer", "data ${dataEditingOrderSummary?.listCartItems}")
-            Log.e("CheckEditingErdoer", "data2 $dataEditingOrderSummary")
             cartAdapter.submitList(dataEditingOrderSummary?.listCartItems)
             viewModel.initializeCartWithExistingOrder(dataEditingOrderSummary!!)
             binding.cardChart.buttonSave.text = getString(R.string.cancel_order)
@@ -157,6 +154,7 @@ class OrderMenuFragment : Fragment() {
             when (result.status) {
                 Status.LOADING -> {}
                 Status.SUCCESS -> {
+                    binding.swipeRefreshLayout.isRefreshing = false
                     setupTabLayoutCategory(result.data?.data as List<DataItemCategory>)
                 }
 
@@ -179,7 +177,7 @@ class OrderMenuFragment : Fragment() {
         for (i in 0 until tabLayout.tabCount) {
             val tab = (tabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
             val params = tab.layoutParams as ViewGroup.MarginLayoutParams
-            params.setMargins(10, 0, 10, 0)
+            params.setMargins(5, 0, 5, 0)
             tab.requestLayout()
         }
 
@@ -193,7 +191,6 @@ class OrderMenuFragment : Fragment() {
                     val selectedCategory = categories[position - 1]
                     menuAdapter.submitList(emptyList())
                     setupFilterMenuByCategory(selectedCategory.id)
-                    Log.e("CheckDataId", "data ${selectedCategory.id}")
                 }
             }
 
@@ -203,14 +200,22 @@ class OrderMenuFragment : Fragment() {
     }
 
     private fun setupNavigation() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            setupGetDataMenuFromApi()
+            setupGetDataCategory()
+        }
         binding.cardChart.buttonPay.setOnClickListener { navigateToPayment() }
         binding.cardChart.buttonSave.setOnClickListener {
             if (dataEditingOrderSummary != null) {
                 setupCancelOrder()
             } else {
                 showAlertSaveCustomerName(requireContext()) { nameCustomer ->
-                    if (nameCustomer.isEmpty()) {
+                    if (nameCustomer.isBlank()) {
                         showErrorSnackBar(requireView(), "Nama tidak boleh kosong")
+                        return@showAlertSaveCustomerName
+                    }
+                    if (nameCustomer == "null") {
+                        showErrorSnackBar(requireView(), "Nama tidak boleh null")
                         return@showAlertSaveCustomerName
                     }
                     setupPostDataSaveOrderToApi(nameCustomer)
@@ -252,6 +257,7 @@ class OrderMenuFragment : Fragment() {
 
                 Status.SUCCESS -> {
                     setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, false)
+                    binding.swipeRefreshLayout.isRefreshing = false
                     result.data?.data?.let { menuAdapter.submitList(it) }
                 }
 
@@ -264,23 +270,24 @@ class OrderMenuFragment : Fragment() {
     }
 
     private fun setupFilterMenuByCategory(idMenu: String) {
-        menuViewModel.filterMenuPesanByCategory(token, idMenu).observe(viewLifecycleOwner) { result ->
-            when (result.status) {
-                Status.LOADING -> {
-                    setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, true)
-                }
+        menuViewModel.filterMenuPesanByCategory(token, idMenu)
+            .observe(viewLifecycleOwner) { result ->
+                when (result.status) {
+                    Status.LOADING -> {
+                        setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, true)
+                    }
 
-                Status.SUCCESS -> {
-                    setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, false)
-                    result.data?.data?.let { menuAdapter.submitList(it) }
-                }
+                    Status.SUCCESS -> {
+                        setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, false)
+                        result.data?.data?.let { menuAdapter.submitList(it) }
+                    }
 
-                Status.ERROR -> {
-                    setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, false)
-                    showErrorSnackBar(requireView(), result.message.toString())
+                    Status.ERROR -> {
+                        setupVisibilityShimmerLoadingInLinearLayout(binding.shimmerLayout, false)
+                        showErrorSnackBar(requireView(), result.message.toString())
+                    }
                 }
             }
-        }
     }
 
     private fun setupPostDataSaveOrderToApi(name: String) {

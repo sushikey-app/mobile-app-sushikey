@@ -401,6 +401,11 @@ interface ApiService {
         @Header("Authorization") bearer: String,
     ): Response<ListCancelResponse>
 
+    @GET("pembatalan-pesanan-pegawai")
+    suspend fun getCancelOrderStaff(
+        @Header("Authorization") bearer: String
+    ) : Response<ListCancelResponse>
+
     @PUT("pesanan/cancel/{id}")
     suspend fun cancelOrder(
         @Header("Authorization") bearer: String,

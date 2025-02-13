@@ -32,7 +32,7 @@ object Formatter {
         return dateFormat.format(Date())
     }
 
-    fun getCurrentDateAndTime() : String {
+    fun getCurrentDateAndTime(): String {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
         return dateFormat.format(Date())
     }
@@ -41,15 +41,14 @@ object Formatter {
         val formatInput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
         formatInput.timeZone = TimeZone.getTimeZone("UTC")
 
-        val formatOutput = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
+        val formatOutput = SimpleDateFormat("dd MMMM yyyy | HH.mm", Locale("id", "ID"))
         formatOutput.timeZone = TimeZone.getTimeZone("Asia/Jakarta")
 
-        try {
+        return try {
             val tanggal: Date = formatInput.parse(date) ?: return date
-
-            return formatOutput.format(tanggal)
+            formatOutput.format(tanggal)
         } catch (e: Exception) {
-            return date
+            date
         }
     }
 

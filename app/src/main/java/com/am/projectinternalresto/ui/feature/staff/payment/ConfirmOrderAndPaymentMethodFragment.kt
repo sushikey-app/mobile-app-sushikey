@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -146,6 +145,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         }
 
     }
+
     private fun setupTabLayoutTypePayment() {
         val tabLayout = binding.cardPayment.tabLayout
         tabLayout.addTab(tabLayout.newTab().setText("TUNAI"))
@@ -213,12 +213,13 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         }
 
         if (unformattedTotalPaid < totalPayment && paymentMethod !in specialPaymentMethods) {
-            NotificationHandle.showErrorSnackBar(requireView(), "Nominal pembayaran tidak mencukupi")
+            NotificationHandle.showErrorSnackBar(
+                requireView(),
+                "Nominal pembayaran tidak mencukupi"
+            )
             return
         }
-        Log.e("CHECK", "data $totalPayment")
 
-        Log.e("Check", "Data id : $dataIdOrder")
         if (dataIdOrder != null) {
             viewModel.paymentOrder(token, dataIdOrder.toString(), collectDataPayment())
                 .observe(viewLifecycleOwner) { result ->
@@ -253,6 +254,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                                 }
                             }
                         }
+
                         Status.ERROR -> {
                             ProgressHandle.setupVisibilityProgressBar(
                                 binding.cardPayment.progressBar,
@@ -292,7 +294,10 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                                 if (shouldPrint) {
                                     checkBluetoothPermissionsAndPrint(result.data)
                                 } else {
-                                    findNavController().previousBackStackEntry?.savedStateHandle?.set("isUpdated", true)
+                                    findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                                        "isUpdated",
+                                        true
+                                    )
                                     findNavController().popBackStack()
                                 }
                             }
