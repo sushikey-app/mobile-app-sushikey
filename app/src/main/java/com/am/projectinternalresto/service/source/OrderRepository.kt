@@ -234,6 +234,22 @@ class OrderRepository(private val apiService: ApiService) {
             emit(Resource.error(null, exception.message ?: "Error Occurred!"))
         }
     }
+    fun getCancelOrderStaff(token: String) = liveData(Dispatchers.IO) {
+        emit(Resource.loading(null))
+        try {
+            val response = apiService.getCancelOrderStaff("Bearer $token")
+            if (response.isSuccessful) {
+                emit(Resource.success(response.body()))
+            } else {
+                response.errorBody()?.let {
+                    val errorMessage = JSONObject(it.string()).getString(ERROR_MESSAGE)
+                    emit(Resource.error(null, errorMessage))
+                }
+            }
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!"))
+        }
+    }
 
     fun cancelOrder(token: String, idOrder: String) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))

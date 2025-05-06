@@ -182,7 +182,6 @@ class AddOrUpdateAdminFragment : Fragment() {
     }
 
     private fun setupPostDataAdminToApi() {
-        Log.e("check", "data ${dataResultAdminOrSuperAdmin()}")
         viewModel.addAdminOrSuperAdmin(token, dataResultAdminOrSuperAdmin())
             .observe(viewLifecycleOwner) { result ->
                 handleStatusApi(result)

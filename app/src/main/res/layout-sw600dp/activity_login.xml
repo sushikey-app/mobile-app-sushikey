@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:backgroundTint="@color/white"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/white"
     android:orientation="horizontal"
     tools:context=".ui.feature.auth.LoginActivity">
 
@@ -13,10 +13,18 @@
         layout="@layout/card_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
 
+    <TextView
+        android:id="@+id/textVersionApps"
+        style="@style/CustomTextStyle.Body.PopMedium"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/cardLogin"
+        app:layout_constraintStart_toStartOf="@id/cardLogin"
+        tools:text="version app" />
 </androidx.constraintlayout.widget.ConstraintLayout>

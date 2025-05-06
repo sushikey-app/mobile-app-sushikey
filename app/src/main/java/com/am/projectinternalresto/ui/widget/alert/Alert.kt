@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -414,7 +413,6 @@ fun showAlertFilterAndPrintReportSuperAdmin(
     }
 
     binding.buttonSaveReport.setOnClickListener {
-        Log.e("CheckSelectedDate", "data : $selectedData")
         if (isValidDateRange(selectedData)) {
             callbackOnclickSave.invoke(
                 selectedData.locationId,
@@ -520,4 +518,98 @@ private fun isValidDateRange(data: FilterData): Boolean {
     }
 
     return !endCalendar.before(startCalendar)
+}
+
+fun showFilterFavorite(
+    context: Context,
+    title: String,
+    viewModel: LocationViewModel,
+    token: String,
+    callbackOnclickSave: (locationId: String, startDate: Int, startMonth: Int, startYear: Int, endDate: Int, endMonth: Int, endYear: Int) -> Unit
+) {
+    // Initialize binding and dialog
+    val binding = CustomLayoutDialogPrintReportBinding.inflate(LayoutInflater.from(context))
+    val builder = MaterialAlertDialogBuilder(context).create()
+    val formatter = MyValueFormatter()
+
+    binding.textHeadline.text = title
+
+    var selectedData = FilterData(
+        locationId = "",
+        startDate = 0,
+        startMonth = 0,
+        startYear = 0,
+        endDate = 0,
+        endMonth = 0,
+        endYear = 0
+    )
+
+    // Setup UI elements
+    setupLocationDropdown(context, viewModel, token, binding) { locationId ->
+        selectedData = selectedData.copy(locationId = locationId)
+        if (selectedData != null) UiHandle.setupDisableHintForField(binding.edlLocationReport)
+    }
+
+    // Setup start date picker
+    binding.dropdownInitialDateReport.setOnClickListener {
+        showMonthDatePicker(context) { month, date, year ->
+            selectedData = selectedData.copy(startMonth = month, startDate = date, startYear = year)
+            val monthName = formatter.getFormattedValue(month.toFloat())
+            if (selectedData != null) UiHandle.setupDisableHintForField(binding.edlChooseMonthReport)
+            binding.dropdownInitialDateReport.setText(buildString {
+                append(date)
+                append(" ")
+                append(monthName)
+                append(" ")
+                append(year)
+            })
+        }
+    }
+
+    // Setup end date picker
+    binding.dropdownChooseDeadlineDate.setOnClickListener {
+        showMonthDatePicker(context) { month, date, year ->
+            selectedData = selectedData.copy(endMonth = month, endDate = date, endYear = year)
+            if (selectedData != null) UiHandle.setupDisableHintForField(binding.edlChooseYear)
+            val monthName = formatter.getFormattedValue(month.toFloat())
+            binding.dropdownChooseDeadlineDate.setText(buildString {
+                append(date)
+                append(" ")
+                append(monthName)
+                append(" ")
+                append(year)
+            })
+        }
+    }
+
+    // Setup buttons
+    binding.buttonCloseDialog.setOnClickListener {
+        builder.dismiss()
+    }
+
+    binding.buttonSaveReport.setOnClickListener {
+        if (isValidDateRange(selectedData)) {
+            callbackOnclickSave.invoke(
+                selectedData.locationId,
+                selectedData.startDate,
+                selectedData.startMonth + 1,
+                selectedData.startYear,
+                selectedData.endDate,
+                selectedData.endMonth + 1,
+                selectedData.endYear
+            )
+            builder.dismiss()
+        } else {
+            NotificationHandle.showErrorSnackBar(
+                binding.root, "Periode akhir tidak boleh sebelum periode awal"
+            )
+        }
+    }
+
+    // Show dialog
+    builder.apply {
+        setCanceledOnTouchOutside(false)
+        setView(binding.root)
+        show()
+    }
 }

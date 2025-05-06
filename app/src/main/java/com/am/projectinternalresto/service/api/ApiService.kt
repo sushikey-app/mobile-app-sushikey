@@ -63,12 +63,17 @@ interface ApiService {
         @Header("Authorization") bearer: String
     ): Response<SalesDataResponse>
 
-
     // filter dashboard
     @GET("filter-menu-favorit-super-admin")
     suspend fun getMenuFavoriteSuperAdmin(
         @Header("Authorization") bearer: String,
-        @Query("lokasi_id") locationId: String
+        @Query("lokasi_id") locationId: String,
+        @Query("filter_tanggal_awal") startDate: Int?,
+        @Query("filter_bulan_awal") startMonth: Int?,
+        @Query("filter_tahun_awal") startYear: Int?,
+        @Query("filter_tanggal_akhir") endDate: Int?,
+        @Query("filter_bulan_akhir") endMonth: Int?,
+        @Query("filter_tahun_akhir") endYear: Int?,
     ): Response<MenuFavoriteResponse>
 
     // location
@@ -399,6 +404,11 @@ interface ApiService {
     @GET("pembatalan-pesanan")
     suspend fun getCancelOrder(
         @Header("Authorization") bearer: String,
+    ): Response<ListCancelResponse>
+
+    @GET("pembatalan-pesanan-pegawai")
+    suspend fun getCancelOrderStaff(
+        @Header("Authorization") bearer: String
     ): Response<ListCancelResponse>
 
     @PUT("pesanan/cancel/{id}")

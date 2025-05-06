@@ -1,7 +1,6 @@
 package com.am.projectinternalresto.ui.feature.auth
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.am.projectinternalresto.databinding.ActivityLoginBinding
 import com.am.projectinternalresto.service.source.Status
@@ -21,7 +20,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Log.e("Checklogin", "${viewModel.isLoginUser()} | ${viewModel.isLoginExpired()}")
         if (!viewModel.isLoginUser()) {
             setupView()
         } else if (viewModel.isLoginExpired()) {
@@ -38,6 +36,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
+        val packageInfo = packageManager.getPackageInfo(packageName, 0)
+        val versionApps = packageInfo.versionName
+        binding.textVersionApps.text = buildString {
+            append("Version.")
+            append(versionApps)
+        }
         UiHandle.setupDisableHintForField(
             binding.cardLogin.edlUsername,
             binding.cardLogin.edlPassword

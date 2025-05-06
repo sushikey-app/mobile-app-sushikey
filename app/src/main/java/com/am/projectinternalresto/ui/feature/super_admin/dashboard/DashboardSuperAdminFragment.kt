@@ -1,6 +1,7 @@
 package com.am.projectinternalresto.ui.feature.super_admin.dashboard
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +19,8 @@ import com.am.projectinternalresto.ui.feature.admin.manage_menu.ManageMenuViewMo
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
 import com.am.projectinternalresto.ui.feature.staff.order_menu.ManageOrderMenuViewModel
 import com.am.projectinternalresto.ui.feature.super_admin.manage_location.LocationViewModel
+import com.am.projectinternalresto.ui.widget.alert.showFilterFavorite
 import com.am.projectinternalresto.ui.widget.chart.Chart.setupSalesChart
-import com.am.projectinternalresto.utils.Formatter
 import com.am.projectinternalresto.utils.Formatter.formatCurrency
 import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
@@ -47,9 +48,22 @@ class DashboardSuperAdminFragment : Fragment() {
     }
 
     private fun setupNavigation() {
-//        binding.textFilter.setOnClickListener {
-//            FilterSalesDialogFragment.show(childFragmentManager)
-//        }
+        binding.cardMenuFavorite.buttonFilter.setOnClickListener {
+            showFilterFavorite(
+                requireContext(), "Filter Favorite Menu", locationViewModel, token
+            ) { locationId, startDate, startMonth, startYear, endDate, endMonth, endYear ->
+                Log.e("CHECK_FILTER", "tgl awal : $startDate")
+                Log.e("CHECK_FILTER", "bulan awal : $startMonth")
+                Log.e("CHECK_FILTER", "tahun awal : $startYear")
+                Log.e("CHECK_FILTER", "tgl akhir : $endDate")
+                Log.e("CHECK_FILTER", "bulan akhir : $endMonth")
+                Log.e("CHECK_FILTER", "tahun akhir : $endYear")
+                setupFilterGetMenuFavorite(
+                    locationId, startDate, startMonth, startYear, endDate, endMonth, endYear
+                )
+            }
+        }
+
         binding.swipeRefreshLayout.setOnRefreshListener {
             setupGetDataSales()
             setupGetAllLocation()
@@ -60,6 +74,8 @@ class DashboardSuperAdminFragment : Fragment() {
     private fun setupGetAllLocation() {
         locationViewModel.getLocation(token).observe(viewLifecycleOwner) { result ->
             handleApiStatus(result = result, result.message.toString()) {
+                val dataLocationId = result.data?.data?.firstOrNull()?.id.toString()
+                setupGetMenuFavorite(dataLocationId)
                 setupTabLayout(result.data?.data as List<DataItemLocation>)
             }
         }
@@ -69,9 +85,7 @@ class DashboardSuperAdminFragment : Fragment() {
         menuViewModel.getMenuFavoriteSuperAdmin(token, locationId)
             .observe(viewLifecycleOwner) { result ->
                 when (result.status) {
-                    Status.LOADING -> {
-
-                    }
+                    Status.LOADING -> {}
 
                     Status.SUCCESS -> {
                         setupMenuFavoriteAdapter(result.data)
@@ -79,12 +93,39 @@ class DashboardSuperAdminFragment : Fragment() {
 
                     Status.ERROR -> {
                         NotificationHandle.showErrorSnackBar(
-                            requireView(),
-                            result.message.toString()
+                            requireView(), result.message.toString()
                         )
                     }
                 }
             }
+    }
+
+    private fun setupFilterGetMenuFavorite(
+        locationId: String,
+        startDate: Int,
+        startMonth: Int,
+        startYear: Int,
+        endDate: Int,
+        endMonth: Int,
+        endYear: Int
+    ) {
+        menuViewModel.getMenuFavoriteSuperAdmin(
+            token, locationId, startDate, startMonth, startYear, endDate, endMonth, endYear
+        ).observe(viewLifecycleOwner) { result ->
+            when (result.status) {
+                Status.LOADING -> {}
+
+                Status.SUCCESS -> {
+                    setupMenuFavoriteAdapter(result.data)
+                }
+
+                Status.ERROR -> {
+                    NotificationHandle.showErrorSnackBar(
+                        requireView(), result.message.toString()
+                    )
+                }
+            }
+        }
     }
 
     private fun setupGetDataSales() {

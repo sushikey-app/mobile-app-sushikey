@@ -216,7 +216,7 @@
     <string name="input_your_deadline_date">"Masukan batas tanggal akhir "</string>
     <string name="success_payment">Pembayaran Berhasil</string>
     <string name="done">Selesai</string>
-    <string name="print_struk">Print</string>
+    <string name="print_struk">Cetak Struk</string>
     <string name="total_price">Total Pembayaran</string>
     <string name="price_to_be_pay">Uang yang dibayar</string>
     <string name="price_return">Uang kembalian</string>
@@ -241,4 +241,6 @@
     <string name="cancel_order">Batalkan pesanan</string>
     <string name="choose_initial_date">Pilih tanggal awal</string>
     <string name="choose_deadline_date">Pilih batas tanggal akhir</string>
+    <string name="text_disc_nominal">Diskon \nNominal</string>
+    <string name="text_disc_percent">Diskon \nPersentase</string>
 </resources>

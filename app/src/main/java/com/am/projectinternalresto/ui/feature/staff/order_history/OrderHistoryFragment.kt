@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.am.projectinternalresto.data.response.super_admin.report.ListReportResponse
 import com.am.projectinternalresto.databinding.FragmentReportBinding
@@ -17,6 +18,8 @@ import com.am.projectinternalresto.ui.feature.staff.order_menu.ManageOrderMenuVi
 import com.am.projectinternalresto.ui.feature.super_admin.report.ManageReportViewModel
 import com.am.projectinternalresto.ui.widget.alert.showAlertFilterAdminAndStaff
 import com.am.projectinternalresto.ui.widget.dialog_fragment.DetailReportDialogFragment
+import com.am.projectinternalresto.utils.Destination
+import com.am.projectinternalresto.utils.Navigation
 import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
 import com.am.projectinternalresto.utils.generatePDFReport
@@ -49,13 +52,18 @@ class OrderHistoryFragment : Fragment() {
     }
 
     private fun setupView() {
-        binding.buttonNavigateToCancel.visibility = View.GONE
         binding.cardReport.buttonDelete.visibility = View.GONE
         binding.cardReport.textLocation.visibility = View.GONE
     }
 
     private fun setupNavigation() {
         binding.swipeRefreshLayout.setOnRefreshListener { setupGetDataReport() }
+        binding.buttonNavigateToCancel.setOnClickListener {
+            Navigation.navigateFragment(
+                Destination.HISTORY_ORDER_STAFF_TO_CANCEL_ORDER_STAFF,
+                findNavController()
+            )
+        }
         binding.cardReport.buttonFilter.setOnClickListener {
             showAlertFilterAdminAndStaff(requireContext()) { startDate, startMonth, startYear, endDate, endMonth, endYear ->
                 setupFilterReport(startDate, startMonth, startYear, endDate, endMonth, endYear)
@@ -81,7 +89,7 @@ class OrderHistoryFragment : Fragment() {
             } else {
                 showAlertFilterAdminAndStaff(
                     requireContext(),
-                ) { startDate, endDate, startYear, startMonth, endMonth, endYear ->
+                ) { startDate, startMonth, startYear, endDate, endMonth, endYear ->
                     setupGeneratePdf(startDate, startMonth, startYear, endDate, endMonth, endYear)
                 }
             }

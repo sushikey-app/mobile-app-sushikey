@@ -1,0 +1,30 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item>
+        <selector>
+            <item android:state_checked="true">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/pink" />
+                    <corners android:radius="8dp" />
+                    <size android:width="30dp" android:height="30dp" />
+                </shape>
+            </item>
+
+            <item android:state_checked="false">
+                <shape android:shape="rectangle">
+                    <solid android:color="#FFFFFF" />
+                    <stroke android:width="2dp" android:color="@color/pink" />
+                    <corners android:radius="8dp" />
+                    <size android:width="30dp" android:height="30dp" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+
+    <!-- Checkmark -->
+    <item android:drawable="@drawable/ic_checked"
+        android:state_checked="true"
+        android:gravity="center"
+        android:width="16dp"
+        android:height="16dp"/>
+</layer-list>

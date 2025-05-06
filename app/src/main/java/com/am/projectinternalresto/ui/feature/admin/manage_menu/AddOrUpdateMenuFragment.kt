@@ -48,7 +48,6 @@ class AddOrUpdateMenuFragment : Fragment() {
     private lateinit var adapterDropdownSelectCategoryMenu: SelectCategoryMenuAdapter
     private val dataMenu: DataItemMenu? by lazy { arguments?.getParcelable(Key.BUNDLE_DATA_MENU) }
     private var unformattedPrice: Int? = null
-    private val TOPPING_ID_KEY = 1234682
 
 
     override fun onCreateView(
@@ -122,7 +121,8 @@ class AddOrUpdateMenuFragment : Fragment() {
         val edlTextNameTopping = newToppingView.findViewById<TextInputLayout>(R.id.edlToppingName)
         val edtTextNameTopping = newToppingView.findViewById<TextInputEditText>(R.id.edtToppingName)
         val edlTextPriceTopping = newToppingView.findViewById<TextInputLayout>(R.id.edlToppingPrice)
-        val edtTextPriceTopping = newToppingView.findViewById<TextInputEditText>(R.id.edtToppingPrice)
+        val edtTextPriceTopping =
+            newToppingView.findViewById<TextInputEditText>(R.id.edtToppingPrice)
 
         UiHandle.setupDisableHintForField(edlTextNameTopping, edlTextPriceTopping)
         edtTextPriceTopping.setMinusPrice { }
@@ -163,15 +163,18 @@ class AddOrUpdateMenuFragment : Fragment() {
 
         // Tampilkan textAddMoreTopping hanya pada topping terakhir
         if (binding.layoutToppingContainer.childCount > 0) {
-            val lastToppingView = binding.layoutToppingContainer.getChildAt(binding.layoutToppingContainer.childCount - 1)
+            val lastToppingView =
+                binding.layoutToppingContainer.getChildAt(binding.layoutToppingContainer.childCount - 1)
             if (lastToppingView.tag == "topping_item") {
-                val textAddMoreTopping = lastToppingView.findViewById<TextView>(R.id.textAddMoreTopping)
+                val textAddMoreTopping =
+                    lastToppingView.findViewById<TextView>(R.id.textAddMoreTopping)
                 textAddMoreTopping.visibility = View.VISIBLE
             }
         }
 
         // Atur visibilitas textAddTopping global
-        binding.textAddTopping.visibility = if (binding.layoutToppingContainer.childCount == 0) View.VISIBLE else View.INVISIBLE
+        binding.textAddTopping.visibility =
+            if (binding.layoutToppingContainer.childCount == 0) View.VISIBLE else View.INVISIBLE
     }
 
 
@@ -258,7 +261,6 @@ class AddOrUpdateMenuFragment : Fragment() {
     }
 
     private fun setupPutDataMenuApi() {
-        Log.e("Check_data_menu", "data : ${dataResultMenu()}")
         viewModel.updateMenu(
             token,
             dataMenu?.idMenu.toString(),
@@ -306,8 +308,10 @@ class AddOrUpdateMenuFragment : Fragment() {
         for (i in 0 until binding.layoutToppingContainer.childCount) {
             val toppingView = binding.layoutToppingContainer.getChildAt(i)
             if (toppingView.tag == "topping_item") {
-                val edtTextNameTopping: TextInputEditText = toppingView.findViewById(R.id.edtToppingName)
-                val edtTextPriceTopping: TextInputEditText = toppingView.findViewById(R.id.edtToppingPrice)
+                val edtTextNameTopping: TextInputEditText =
+                    toppingView.findViewById(R.id.edtToppingName)
+                val edtTextPriceTopping: TextInputEditText =
+                    toppingView.findViewById(R.id.edtToppingPrice)
 
                 val name = edtTextNameTopping.text.toString()
                 val priceText = edtTextPriceTopping.text.toString()
@@ -318,7 +322,6 @@ class AddOrUpdateMenuFragment : Fragment() {
                             .replace("\\s+".toRegex(), "")
                         cleanPrice.toInt()
                     } catch (e: NumberFormatException) {
-                        Log.e("ToppingParsing", "Invalid price format: $priceText")
                         0
                     }
 
@@ -327,11 +330,13 @@ class AddOrUpdateMenuFragment : Fragment() {
 
                     // Only add if we haven't processed this ID before
                     if (toppingId.isEmpty() || !processedIds.contains(toppingId)) {
-                        toppings.add(ItemTopping(
-                            id = toppingId,
-                            nama = name,
-                            price = price
-                        ))
+                        toppings.add(
+                            ItemTopping(
+                                id = toppingId,
+                                nama = name,
+                                price = price
+                            )
+                        )
                         if (toppingId.isNotEmpty()) {
                             processedIds.add(toppingId)
                         }
