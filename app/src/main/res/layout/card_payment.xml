@@ -50,6 +50,77 @@
             app:dividerColor="@color/pink"
             app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
+        <LinearLayout
+            android:id="@+id/cardDisc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/dividerBottom">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingVertical="10dp">
+
+                <CheckBox
+                    android:id="@+id/checkboxNominal"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/custom_background_checkbox"
+                    android:button="@null"
+                    android:focusable="true" />
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/text_disc_nominal"
+                    android:textSize="14sp" />
+
+                <CheckBox
+                    android:id="@+id/checkboxPercent"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/custom_background_checkbox"
+                    android:button="@null"
+                    android:focusable="true" />
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/text_disc_percent"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edlDisc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:textColorHint="@color/grey"
+                app:layout_constraintEnd_toEndOf="@id/tabLayout"
+                app:layout_constraintStart_toStartOf="@id/textTotalPayment"
+                app:layout_constraintTop_toBottomOf="@id/textTotalPayment">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtDisc"
+                    android:hint="Silahkan klik sesuai dengan kebutuhan"
+                    style="@style/CustomEditTextStyle"
+                    android:layout_height="55dp"
+                    android:inputType="numberDecimal"
+                    android:padding="10dp"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/textTotalPayment"
             style="@style/CustomTextStyle.Body.PopReg"
@@ -57,7 +128,7 @@
             android:text="@string/total_payment"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/dividerBottom"
-            app:layout_constraintTop_toBottomOf="@id/dividerBottom" />
+            app:layout_constraintTop_toBottomOf="@id/cardDisc" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edlTotalPayment"

@@ -70,10 +70,6 @@ class SuperAdminReportFragment : Fragment() {
                 setupFilterReport(
                     locationId, startDate, startMonth, startYear, endDate, endMonth, endYear
                 )
-                Log.e(
-                    "CheckPrint",
-                    "id : $locationId | $startDate | $startMonth | $endDate | $endMonth"
-                )
                 currentLocationId = locationId
                 currentStartDate = startDate
                 currentStartMonth = startMonth
@@ -101,10 +97,6 @@ class SuperAdminReportFragment : Fragment() {
                     locationViewModel,
                     token
                 ) { locationId, startDate, startMonth, startYear, endDate, endMonth, endYear ->
-                    Log.e(
-                        "CheckPrint",
-                        "id : $locationId | $locationId | $startDate | $startMonth | $endDate | $endMonth"
-                    )
                     setupGeneratePdf(
                         locationId,
                         startDate,
@@ -118,7 +110,6 @@ class SuperAdminReportFragment : Fragment() {
             }
         }
         binding.cardReport.buttonDelete.setOnClickListener {
-            Log.e("Check", "Isdelete")
             if (currentLocationId != null) {
                 showConfirmDeleteReportAlert(requireContext()) {
                     setupDeleteDataReport(
@@ -138,10 +129,6 @@ class SuperAdminReportFragment : Fragment() {
                     locationViewModel,
                     token
                 ) { locationId, startDate, startMonth, startYear, endDate, endMonth, endYear ->
-                    Log.e(
-                        "CheckPrint",
-                        "id : $locationId | $locationId | $startDate | $startMonth | $startYear | $endDate | $endMonth | $endYear"
-                    )
                     showConfirmDeleteReportAlert(requireContext()) {
                         setupDeleteDataReport(
                             locationId,
@@ -226,7 +213,6 @@ class SuperAdminReportFragment : Fragment() {
                             requireView(),
                             result.message.toString()
                         )
-                        Log.e("Check", "error : $result.message")
                     }
                 }
             }
@@ -269,7 +255,6 @@ class SuperAdminReportFragment : Fragment() {
                     }
 
                     Status.ERROR -> {
-                        Log.e("Check", "Error : ${result.message}")
                         NotificationHandle.showErrorSnackBar(
                             requireView(),
                             result.message.toString()

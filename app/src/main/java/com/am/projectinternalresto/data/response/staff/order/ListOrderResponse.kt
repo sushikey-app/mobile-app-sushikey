@@ -21,6 +21,8 @@ data class DataItemListOrder(
 
     @field:SerializedName("metode")
     val methodPayment: String? = null,
+    @field:SerializedName("status_pembatalan")
+    val reasonStatus: String? = null,
 
     @field:SerializedName("uang_dibayarkan")
     val totalPaid: Int? = null,

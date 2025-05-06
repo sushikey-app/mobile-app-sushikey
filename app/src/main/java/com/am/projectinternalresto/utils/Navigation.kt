@@ -20,13 +20,20 @@ object Navigation {
                     args
                 )
 
-                Destination.MANAGE_LOCATION_TO_ADD_OR_UPDATE_LOCATION -> it.navigate(R.id.action_nav_super_admin_location_to_addOrUpdateLocationFragment, args)
+                Destination.MANAGE_LOCATION_TO_ADD_OR_UPDATE_LOCATION -> it.navigate(
+                    R.id.action_nav_super_admin_location_to_addOrUpdateLocationFragment,
+                    args
+                )
 
                 Destination.MANAGE_REPORT_TO_CANCEL_ORDER -> it.navigate(
                     R.id.action_nav_super_admin_report_to_cancelOrderFragment,
                     args
                 )
-                Destination.CANCEL_ORDER_TO_DETAIL_ORDER -> it.navigate(R.id.action_cancelOrderFragment_to_detailHistoryFragment2, args)
+
+                Destination.CANCEL_ORDER_TO_DETAIL_ORDER -> it.navigate(
+                    R.id.action_cancelOrderFragment_to_detailHistoryFragment2,
+                    args
+                )
 
                 /*Navigation from admin*/
                 Destination.MANAGE_MENU_TO_ADD_OR_UPDATE_MENU -> it.navigate(
@@ -76,6 +83,8 @@ object Navigation {
                     R.id.action_nav_staff_order_history_to_detailHistoryFragment,
                     args
                 )
+
+                Destination.HISTORY_ORDER_STAFF_TO_CANCEL_ORDER_STAFF -> it.navigate(R.id.action_nav_staff_order_history_to_cancelOrderStaffFragment)
             }
         }
     }
@@ -98,4 +107,5 @@ enum class Destination {
     ORDER_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
     ORDER_TO_DETAIL_ORDER,
     HISTORY_ORDER_TO_DETAIL_HISTORY_ORDER,
+    HISTORY_ORDER_STAFF_TO_CANCEL_ORDER_STAFF
 }

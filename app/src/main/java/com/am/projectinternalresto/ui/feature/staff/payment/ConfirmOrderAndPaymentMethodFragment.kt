@@ -2,11 +2,11 @@ package com.am.projectinternalresto.ui.feature.staff.payment
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -130,7 +130,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
 
     private fun setupView() {
         UiHandle.setupDisableHintForField(
-            binding.cardPayment.edlTotalPayment
+            binding.cardPayment.edlTotalPayment, binding.cardPayment.edlDisc
         )
         dataOrderSummary?.let { orderSummary ->
             binding.cardConfirmOrder.apply {
@@ -145,7 +145,52 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
             }
         }
 
+        setupCheckbox()
     }
+
+    private fun setupCheckbox() = with(binding.cardPayment) {
+        checkboxNominal.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                checkboxPercent.isChecked = false
+                edtDisc.apply {
+                    isEnabled = true
+                    hint = "Masukkan nominal diskon"
+                    setHintTextColor(ContextCompat.getColor(context, R.color.grey))
+                    background = ContextCompat.getDrawable(context, R.drawable.custom_bg_edit_txt)
+                }
+            } else if (!checkboxPercent.isChecked) {
+                edtDisc.apply {
+                    isEnabled = false
+                    hint = "Silahkan klik sesuai dengan kebutuhan"
+                    backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(requireContext(), R.color.light_grey)
+                    )
+                }
+            }
+        }
+
+        checkboxPercent.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                checkboxNominal.isChecked = false
+                edtDisc.apply {
+                    isEnabled = true
+                    hint = "Masukkan persentase diskon"
+                    setHintTextColor(ContextCompat.getColor(context, R.color.grey))
+                    background = ContextCompat.getDrawable(context, R.drawable.custom_bg_edit_txt)
+                }
+            } else if (!checkboxNominal.isChecked) {
+                edtDisc.apply {
+                    isEnabled = false
+                    hint = "Silahkan klik sesuai dengan kebutuhan"
+                    backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(requireContext(), R.color.light_grey)
+                    )
+                }
+            }
+        }
+    }
+
+
     private fun setupTabLayoutTypePayment() {
         val tabLayout = binding.cardPayment.tabLayout
         tabLayout.addTab(tabLayout.newTab().setText("TUNAI"))
@@ -213,12 +258,12 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         }
 
         if (unformattedTotalPaid < totalPayment && paymentMethod !in specialPaymentMethods) {
-            NotificationHandle.showErrorSnackBar(requireView(), "Nominal pembayaran tidak mencukupi")
+            NotificationHandle.showErrorSnackBar(
+                requireView(), "Nominal pembayaran tidak mencukupi"
+            )
             return
         }
-        Log.e("CHECK", "data $totalPayment")
 
-        Log.e("Check", "Data id : $dataIdOrder")
         if (dataIdOrder != null) {
             viewModel.paymentOrder(token, dataIdOrder.toString(), collectDataPayment())
                 .observe(viewLifecycleOwner) { result ->
@@ -253,6 +298,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                                 }
                             }
                         }
+
                         Status.ERROR -> {
                             ProgressHandle.setupVisibilityProgressBar(
                                 binding.cardPayment.progressBar,
@@ -292,7 +338,9 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                                 if (shouldPrint) {
                                     checkBluetoothPermissionsAndPrint(result.data)
                                 } else {
-                                    findNavController().previousBackStackEntry?.savedStateHandle?.set("isUpdated", true)
+                                    findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                                        "isUpdated", true
+                                    )
                                     findNavController().popBackStack()
                                 }
                             }
@@ -343,11 +391,6 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         try {
             // Cetak pertama
             printReceiptContent(orderResponse)
-            // Jeda sebentar sebelum cetak kedua
-            Thread.sleep(1000)
-            // Cetak kedua
-            printReceiptContent(orderResponse)
-
             NotificationHandle.showSuccessSnackBar(requireView(), "Struk berhasil dicetak")
         } catch (e: Exception) {
             e.printStackTrace()

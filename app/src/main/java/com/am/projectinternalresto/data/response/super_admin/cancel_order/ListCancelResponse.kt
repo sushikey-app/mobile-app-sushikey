@@ -19,8 +19,14 @@ data class DataItemCancelOrder(
     @field:SerializedName("tanggal_pemesanan")
     val tanggalPemesanan: String? = null,
 
+    @field:SerializedName("status_pembatalan")
+    val statusCancel: String? = null,
+
     @field:SerializedName("lokasi")
     val lokasi: Lokasi? = null,
+
+    @field:SerializedName("nama_pembeli")
+    val customerName: String? = null,
 
     @field:SerializedName("nomor_order")
     val nomorOrder: String? = null,

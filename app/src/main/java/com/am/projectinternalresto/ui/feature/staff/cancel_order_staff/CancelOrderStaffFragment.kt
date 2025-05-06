@@ -1,6 +1,7 @@
-package com.am.projectinternalresto.ui.feature.super_admin.cancel_order
+package com.am.projectinternalresto.ui.feature.staff.cancel_order_staff
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +20,7 @@ import com.am.projectinternalresto.utils.NotificationHandle
 import com.am.projectinternalresto.utils.ProgressHandle
 import org.koin.android.ext.android.inject
 
-class CancelOrderFragment : Fragment() {
+class CancelOrderStaffFragment : Fragment() {
     private var _binding: FragmentCancelOrderBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ManageOrderMenuViewModel by inject()
@@ -36,7 +37,7 @@ class CancelOrderFragment : Fragment() {
     }
 
     private fun setupGetCancelOrder() {
-        viewModel.getCancelOrder(token).observe(viewLifecycleOwner) { result ->
+        viewModel.getCancelOrderStaff(token).observe(viewLifecycleOwner) { result ->
             when (result.status) {
                 Status.LOADING -> {
                     ProgressHandle.setupVisibilityShimmerLoadingInLinearLayout(
@@ -65,7 +66,7 @@ class CancelOrderFragment : Fragment() {
     }
 
     private fun setupAdapter(data: ListCancelResponse?) {
-        val adapter = CancelOrderAdapter().apply {
+        val adapter = CancelOrderAdapter(isStaff = true).apply {
             submitList(data?.data)
             callbackClickDetailOrder { id ->
                 DetailReportDialogFragment.show(childFragmentManager, id)

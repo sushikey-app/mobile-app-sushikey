@@ -14,7 +14,9 @@ import com.am.projectinternalresto.utils.Key
 class OrderAdapter(
     private var onClickToDetailOrder: ((idOrder: String) -> Unit)? = null,
     private var onClickChangeStatus: ((idOrder: String) -> Unit)? = null,
-    private var onClickCancel: ((idOrder: String) -> Unit)? = null
+    private var onClickCancel: ((idOrder: String) -> Unit)? = null,
+    private var onClickPrint: ((idOrder: String) -> Unit)? = null
+
 ) : ListAdapter<DataItemListOrder, OrderAdapter.ViewHolder>(DIFF_CALLBACK) {
     fun callbackOnClickToDetailOrderListener(listener: (idOrder: String) -> Unit) {
         onClickToDetailOrder = listener
@@ -28,15 +30,21 @@ class OrderAdapter(
         onClickCancel = listener
     }
 
+    fun callbackOnclickPrint(listener: (idOrder: String) -> Unit) {
+        onClickPrint = listener
+    }
+
     inner class ViewHolder(private val binding: ItemContentPaidOrderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: DataItemListOrder) {
             binding.textId.text = data.noOrder.toString()
             binding.textName.text = data.nameBuyer.toString()
-            binding.textStatus.text = data.statusOrder.toString()
+            binding.textStatus.text =
+                if (data.reasonStatus != null) data.reasonStatus.toString() else data.statusOrder.toString()
             binding.buttonToDetailOrder.setOnClickListener { onClickToDetailOrder?.invoke(data.id.toString()) }
             binding.buttonChangeStatus.setOnClickListener { onClickChangeStatus?.invoke(data.id.toString()) }
             binding.buttonCancelOrders.setOnClickListener { onClickCancel?.invoke(data.id.toString()) }
+            binding.buttonPrint.setOnClickListener { onClickPrint?.invoke(data.id.toString()) }
             if (data.statusPayment == Key.IS_UNPAID_ORDER) {
                 binding.buttonToDetailOrder.text =
                     binding.root.context.getString(R.string.edit_order)

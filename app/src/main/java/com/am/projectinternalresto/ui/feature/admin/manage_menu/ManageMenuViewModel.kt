@@ -19,8 +19,18 @@ class ManageMenuViewModel(private val repository: MenuRepository) : ViewModel() 
 
     fun deleteMenu(token: String, idMenu: String) = repository.deleteMenu(token, idMenu)
 
-    fun getMenuFavoriteSuperAdmin(token: String, locationId: String) =
-        repository.getMenuFavoriteSuperAdmin(token, locationId)
+    fun getMenuFavoriteSuperAdmin(
+        token: String,
+        locationId: String,
+        startDate: Int? = null,
+        startMonth: Int? = null,
+        startYear: Int? = null,
+        endDate: Int? = null,
+        endMonth: Int? = null,
+        endYear: Int? = null
+    ) = repository.getMenuFavoriteSuperAdmin(
+        token, locationId, startDate, startMonth, startYear, endDate, endMonth, endYear
+    )
 
     fun getMenuFavoriteAdmin(token: String, categoryId: String) =
         repository.getMenuFavoriteAdmin(token, categoryId)

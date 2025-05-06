@@ -1,7 +1,6 @@
 package com.am.projectinternalresto.ui.feature.super_admin.manage_location
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +38,6 @@ class AddOrUpdateLocationFragment : Fragment() {
     }
 
     private fun setupDisplay() {
-        Log.e("Check", "data location : $dataLocation")
         if (dataLocation != null) {
             binding.edtNameResto.setText(dataLocation?.outletName)
             binding.edtLocation.setText(dataLocation?.locationOutlet)
@@ -64,7 +62,7 @@ class AddOrUpdateLocationFragment : Fragment() {
     private fun setupNavigation() {
         binding.actionHeadline.buttonBack.setOnClickListener { findNavController().popBackStack() }
         binding.buttonAddLocation.setOnClickListener {
-                UiHandle.setupHideKeyboard(it)
+            UiHandle.setupHideKeyboard(it)
             when {
                 binding.edtNameResto.text.toString()
                     .isEmpty() -> NotificationHandle.showErrorSnackBar(
@@ -80,10 +78,8 @@ class AddOrUpdateLocationFragment : Fragment() {
 
                 else -> {
                     if (dataLocation != null) {
-                        Log.e("CheckDataLokasi", "data lokasi put : ${dataResultLocation()}")
                         setupPutDataLocationToApi()
                     } else {
-                        Log.e("CheckDataLokasi", "data lokasi post : ${dataResultLocation()}")
                         setupPostDataLocationToApi()
                     }
                 }

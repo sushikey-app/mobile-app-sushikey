@@ -82,7 +82,7 @@ class AdminReportFragment : Fragment() {
             } else {
                 showAlertFilterAdminAndStaff(
                     requireContext(),
-                ) { startDate, endDate, startYear, startMonth, endMonth, endYear ->
+                ) { startDate, startMonth, startYear, endDate, endMonth, endYear ->
                     setupGeneratePdf(startDate, startMonth, startYear, endDate, endMonth, endYear)
                 }
             }
