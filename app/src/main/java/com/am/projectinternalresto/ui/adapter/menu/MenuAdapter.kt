@@ -1,7 +1,9 @@
 package com.am.projectinternalresto.ui.adapter.menu
 
 import android.annotation.SuppressLint
+import android.graphics.Paint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -25,11 +27,36 @@ class MenuAdapter(private var onClickAddToCart: ((data: DataItemMenu) -> Unit)? 
             Glide.with(binding.root.context).load(dataMenu.imageMenu).into(binding.imageMenu)
             binding.textCategory.text = dataMenu.category?.nameCategory
             binding.textName.text = dataMenu.nameMenu
-            binding.textPrice.text = Formatter.formatCurrency(dataMenu.price ?: 0)
+
+            val originalPrice = dataMenu.price ?: 0
+            val discount = dataMenu.disc ?: 0 // pastikan `discount` adalah nullable Int?
+
+            if (discount > 0) {
+                val discountedPrice = originalPrice - discount
+
+                binding.textPriceDisc.apply {
+                    visibility = View.VISIBLE
+                    text = Formatter.formatCurrency(discountedPrice)
+                }
+
+                binding.textPrice.apply {
+                    text = Formatter.formatCurrency(originalPrice)
+                    paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                }
+            } else {
+                binding.textPriceDisc.visibility = View.GONE
+                binding.textPrice.apply {
+                    text = Formatter.formatCurrency(originalPrice)
+                    paintFlags =
+                        paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv() // hapus coret jika sebelumnya aktif
+                }
+            }
+
             binding.root.setOnClickListener {
                 onClickAddToCart?.invoke(dataMenu)
             }
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

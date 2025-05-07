@@ -113,8 +113,9 @@ class OrderFragment : Fragment() {
                                                 DummyModel.OrderSummary(
                                                     orderId = orderDetails.payment?.id,
                                                     listCartItems = it,
-                                                    totalPurchase = orderDetails.payment?.totalPrice
-                                                        ?: 0
+                                                    totalPurchase = orderDetails.payment?.totalPrice ?: 0,
+                                                    //TODO :: CHECK INI
+                                                    totalDisc = 0
                                                 )
                                             }
                                             navigateFragment(Destination.ORDER_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
@@ -207,7 +208,8 @@ class OrderFragment : Fragment() {
                     DummyModel.OrderSummary(
                         orderId = orderDetails.payment?.id,
                         listCartItems = it,
-                        totalPurchase = orderDetails.payment?.totalPrice ?: 0
+                        totalPurchase = orderDetails.payment?.totalPrice ?: 0,
+                        totalDisc = 0
                     )
                 }
                 navigateFragment(

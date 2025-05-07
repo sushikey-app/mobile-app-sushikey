@@ -57,12 +57,24 @@
             android:id="@+id/textPrice"
             style="@style/CustomTextStyle.Body.PopMedium"
             android:layout_marginEnd="10dp"
-            android:text="@string/example_price"
+            app:layout_constraintTop_toBottomOf="@id/textName"
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="@id/textName"
-            app:layout_constraintTop_toBottomOf="@id/textName" />
+            tools:text="@string/example_price" />
+
+        <TextView
+            android:id="@+id/textPriceDisc"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_marginEnd="10dp"
+            android:textSize="11sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/textName"
+            app:layout_constraintTop_toBottomOf="@id/textPrice"
+            tools:text="@string/example_price" />
 
 
         <ImageView
@@ -72,7 +84,7 @@
             android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             android:contentDescription="@null"
-            app:layout_constraintTop_toBottomOf="@id/textPrice"
+            app:layout_constraintTop_toBottomOf="@id/textPriceDisc"
             android:src="@drawable/icon_plus" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

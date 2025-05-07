@@ -243,4 +243,8 @@
     <string name="choose_deadline_date">Pilih batas tanggal akhir</string>
     <string name="text_disc_nominal">Diskon \nNominal</string>
     <string name="text_disc_percent">Diskon \nPersentase</string>
+    <string name="diskon">Diskon</string>
+    <string name="price_disc">Harga Diskon</string>
+    <string name="diskon_rupiah">Diskon Rupiah</string>
+    <string name="disc_rp">Diskon\nRupiah</string>
 </resources>

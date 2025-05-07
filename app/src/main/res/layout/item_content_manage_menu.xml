@@ -18,7 +18,7 @@
             android:layout_weight="0.3"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/number_one"
+            tools:text="@string/number_one"
             android:textSize="14sp" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingHorizontal="10dp"
-            android:text="@string/example_category"
+            tools:text="@string/example_category"
             android:textSize="14sp" />
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingHorizontal="10dp"
-            android:text="@string/example_name_menu"
+            tools:text="@string/example_name_menu"
             android:textSize="14sp" />
 
         <TextView
@@ -51,8 +51,30 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingHorizontal="10dp"
-            android:text="@string/example_price"
+            tools:text="@string/example_price"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textDisc"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="10dp"
+            android:textSize="14sp"
+            tools:text="@string/example_price" />
+
+        <TextView
+            android:id="@+id/textPriceDisc"
+            style="@style/CustomTextStyle.Body.PopMedium"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="10dp"
+            android:textSize="14sp"
+            tools:text="@string/example_price" />
 
         <include
             layout="@layout/custom_action_button"
