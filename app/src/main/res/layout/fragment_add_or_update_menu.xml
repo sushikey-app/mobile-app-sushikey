@@ -106,13 +106,63 @@
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--Disc Menu-->
+        <TextView
+            android:id="@+id/textDiscMenu"
+            style="@style/CustomTextStyle.Body.PopSemiBold"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/diskon_rupiah"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/EdlPriceMenu" />
+
+        <LinearLayout
+            android:id="@+id/cardDisc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/EdlPriceMenu"
+            app:layout_constraintStart_toStartOf="@id/textCategory"
+            app:layout_constraintTop_toBottomOf="@id/textDiscMenu">
+
+            <CheckBox
+                android:id="@+id/checkboxDisc"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/custom_background_checkbox"
+                android:button="@null"
+                android:focusable="true" />
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edlDisc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:textColorHint="@color/grey"
+                app:layout_constraintEnd_toEndOf="@id/tabLayout"
+                app:layout_constraintStart_toStartOf="@id/textTotalPayment"
+                app:layout_constraintTop_toBottomOf="@id/textTotalPayment">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtDisc"
+                    style="@style/CustomEditTextStyle"
+                    android:layout_height="55dp"
+                    android:inputType="numberDecimal"
+                    android:padding="10dp"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
         <TextView
             android:id="@+id/textAddTopping"
             style="@style/CustomTextStyle.Body.PopSemiBold"
             android:text="@string/add_topping"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="@id/textPriceMenu"
-            app:layout_constraintTop_toBottomOf="@id/EdlPriceMenu" />
+            app:layout_constraintTop_toBottomOf="@id/cardDisc" />
 
         <LinearLayout
             android:id="@+id/layoutToppingContainer"
@@ -123,7 +173,7 @@
             app:layout_constraintBottom_toTopOf="@id/textPhoto"
             app:layout_constraintEnd_toEndOf="@id/EdlPriceMenu"
             app:layout_constraintStart_toStartOf="@id/textAddTopping"
-            app:layout_constraintTop_toBottomOf="@id/EdlPriceMenu">
+            app:layout_constraintTop_toBottomOf="@id/cardDisc">
 
             <!-- Topping items will be added here dynamically -->
 

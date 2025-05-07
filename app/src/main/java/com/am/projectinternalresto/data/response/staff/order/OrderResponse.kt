@@ -120,6 +120,12 @@ data class Menu(
     val nomorMenu: String? = null,
 
     @field:SerializedName("lokasi_id")
-    val lokasiId: String? = null
+    val lokasiId: String? = null,
+
+    @field:SerializedName("harga_diskon")
+    val discPrice: Int? = null,
+
+    @field:SerializedName("diskon")
+    val disc: Int? = null,
 )
 

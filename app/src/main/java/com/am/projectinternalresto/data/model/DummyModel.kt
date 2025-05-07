@@ -45,6 +45,7 @@ sealed class DummyModel {
     data class OrderSummary(
         val orderId: String? = null,
         val listCartItems: @RawValue List<CartItem>,
-        val totalPurchase: Int
+        val totalPurchase: Int,
+        val totalDisc: Int
     ) : Parcelable
 }

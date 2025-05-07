@@ -1,5 +1,6 @@
 package com.am.projectinternalresto.ui.feature.staff.order_menu
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,10 +25,13 @@ class ManageOrderMenuViewModel(private val repository: OrderRepository) : ViewMo
         }
     }
     val totalPurchase: LiveData<Int> = _totalPurchase
-
-//    // Tambahkan LiveData untuk menyimpan stok item
-//    private val _itemStock = MutableLiveData<Map<String, Int>>()
-//    val itemStock: LiveData<Map<String, Int>> = _itemStock
+    private val _totalDisc = MediatorLiveData<Int>().apply {
+        addSource(_cartItems) { items ->
+            Log.e("CHECK_DATA", "items : $items")
+            value = calculateTotalDisc(items)
+        }
+    }
+    val totalDisc: LiveData<Int> = _totalDisc
 
     fun getDataSales(token: String) = repository.getDataSales(token)
     fun getDataSalesAdmin(token: String) = repository.getDataSalesAdmin(token)
@@ -108,27 +112,14 @@ class ManageOrderMenuViewModel(private val repository: OrderRepository) : ViewMo
         val index = currentList.indexOfFirst { it.id == itemId }
         if (index != -1) {
             val item = currentList[index]
-//            val currentStock = _itemStock.value?.get(item.menuItem.idMenu) ?: 0
             val newQty = if (increment) item.qty + 1 else item.qty - 1
-
-//            if (increment && item.qty >= currentStock) {
-//                // Tidak bisa menambah lagi karena melebihi stok
-//                return false
-//            }
 
             if (newQty > 0) {
                 currentList[index] = item.copy(qty = newQty)
                 _cartItems.value = currentList
-                // Update stok
-//                updateItemStock(
-//                    item.menuItem.idMenu.toString(),
-//                    if (increment) currentStock - 1 else currentStock + 1
-//                )
             } else {
                 currentList.removeAt(index)
                 _cartItems.value = currentList
-                // Kembalikan stok
-//                updateItemStock(item.menuItem.idMenu.toString(), currentStock + 1)
             }
             return true
         }
@@ -137,11 +128,20 @@ class ManageOrderMenuViewModel(private val repository: OrderRepository) : ViewMo
 
     private fun calculateTotalPurchase(items: List<DummyModel.CartItem>?): Int {
         return items?.sumOf { cartItem ->
-            val basePrice = cartItem.menuItem.price ?: 0
+            val discPrice =
+                if (cartItem.menuItem.discPrice != 0 && cartItem.menuItem.discPrice != null) cartItem.menuItem.discPrice else cartItem.menuItem.price
+            val basePrice = discPrice ?: 0
             val toppingPrice = cartItem.selectedToppings.sumOf { it.harga ?: 0 }
             (basePrice + toppingPrice) * cartItem.qty
         } ?: 0
     }
+
+    private fun calculateTotalDisc(items: List<DummyModel.CartItem>?): Int {
+        return items?.sumOf { cartItem ->
+            cartItem.menuItem.disc?.times(cartItem.qty) ?: 0
+        } ?: 0
+    }
+
 
     private fun createSaveOrderRequest(nameCustomer: String): SaveOrderRequest {
         val itemOrder = _cartItems.value?.map { items ->

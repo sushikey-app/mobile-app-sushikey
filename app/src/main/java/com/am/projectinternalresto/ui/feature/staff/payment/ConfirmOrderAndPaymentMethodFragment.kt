@@ -6,7 +6,10 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +58,10 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     private val authViewModel: AuthViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
     private var unformattedTotalPaid = 0
+    private var unformattedTotalDisc: Int? = null
     private var paymentMethod = "TUNAI"
+    private var discTextWatcher: TextWatcher? = null
+    private var discountType: String? = ""
     private val dataOrderSummary: DummyModel.OrderSummary? by lazy {
         arguments?.getParcelable(
             BUNDLE_DATA_ORDER_TO_PAYMENT
@@ -135,7 +141,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         dataOrderSummary?.let { orderSummary ->
             binding.cardConfirmOrder.apply {
                 textValueSubTotal.text = formatCurrency(orderSummary.totalPurchase)
-                textValuePPN.text = formatCurrency(0)
+                textValuePPN.text = formatCurrency(orderSummary.totalDisc)
                 textValueTotal.text = formatCurrency(orderSummary.totalPurchase)
             }
         }
@@ -149,6 +155,17 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     }
 
     private fun setupCheckbox() = with(binding.cardPayment) {
+
+        // Kondisi awal
+        edtDisc.apply {
+            isEnabled = false
+            hint = "Silahkan klik sesuai dengan kebutuhan"
+            backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.light_grey)
+            )
+        }
+        discountType = ""
+
         checkboxNominal.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 checkboxPercent.isChecked = false
@@ -157,6 +174,15 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                     hint = "Masukkan nominal diskon"
                     setHintTextColor(ContextCompat.getColor(context, R.color.grey))
                     background = ContextCompat.getDrawable(context, R.drawable.custom_bg_edit_txt)
+                    backgroundTintList = null
+                    text?.clear()
+
+                    // Tambahkan watcher rupiah
+                    discTextWatcher?.let { removeTextChangedListener(it) }
+                    discTextWatcher = setPriceWatcherUtils { disc ->
+                        unformattedTotalDisc = disc
+                        discountType = "Rupiah"
+                    }
                 }
             } else if (!checkboxPercent.isChecked) {
                 edtDisc.apply {
@@ -165,7 +191,13 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                     backgroundTintList = ColorStateList.valueOf(
                         ContextCompat.getColor(requireContext(), R.color.light_grey)
                     )
+                    text?.clear()
+                    discTextWatcher?.let { removeTextChangedListener(it) }
+                    discTextWatcher = null
+                    unformattedTotalDisc = 0
+
                 }
+                discountType = ""
             }
         }
 
@@ -177,7 +209,24 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                     hint = "Masukkan persentase diskon"
                     setHintTextColor(ContextCompat.getColor(context, R.color.grey))
                     background = ContextCompat.getDrawable(context, R.drawable.custom_bg_edit_txt)
+                    backgroundTintList = null
+                    text?.clear()
+
+                    // Hapus formatter dan pakai watcher biasa
+                    discTextWatcher?.let { removeTextChangedListener(it) }
+                    discTextWatcher = object : TextWatcher {
+                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                            unformattedTotalDisc = s.toString().toIntOrNull() ?: 0
+                            discountType = "Presentase"
+                        }
+                        override fun afterTextChanged(s: Editable?) {}
+                    }
+                    addTextChangedListener(discTextWatcher)
+
                 }
+                discountType = "Presentase"
+
             } else if (!checkboxNominal.isChecked) {
                 edtDisc.apply {
                     isEnabled = false
@@ -186,6 +235,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                         ContextCompat.getColor(requireContext(), R.color.light_grey)
                     )
                 }
+                discountType = ""
             }
         }
     }
@@ -282,6 +332,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                                 binding.cardPayment.textLoading,
                                 false
                             )
+
                             PaymentSuccessDialog.show(
                                 childFragmentManager,
                                 result.data
@@ -313,6 +364,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                     }
                 }
         } else {
+            Log.e("CHECK_DATA", "data : ${collectDataOrderAndPayment()}")
             viewModel.payFromOrderContinuation(token, collectDataOrderAndPayment())
                 .observe(viewLifecycleOwner) { result ->
                     when (result.status) {
@@ -336,6 +388,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                                 result.data
                             ) { shouldPrint ->
                                 if (shouldPrint) {
+//                                    Log.e("CHECK_DATA", "data : ${result.data}")
                                     checkBluetoothPermissionsAndPrint(result.data)
                                 } else {
                                     findNavController().previousBackStackEntry?.savedStateHandle?.set(
@@ -363,10 +416,13 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     }
 
     private fun collectDataPayment(): PaymentRequest {
+        val discValue: Int? = unformattedTotalDisc.toString().toIntOrNull()
         return PaymentRequest(
             nameBuyer = dataCustomerName.toString(),
             methodPayment = paymentMethod,
-            totalPaid = unformattedTotalPaid
+            totalPaid = unformattedTotalPaid,
+            typeDisc = discountType.toString(),
+            disc = discValue
         )
     }
 
@@ -378,12 +434,14 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 note = items.note,
                 topping = items.selectedToppings.map { topping -> ToppingItemRequest(topping.id.toString()) })
         } ?: emptyList()
-
+        val discValue: Int? = unformattedTotalDisc.toString().toIntOrNull()
         return OrderRequest(
             nameBuyer = dataCustomerName.toString(),
             methodPayment = paymentMethod,
             totalPaid = unformattedTotalPaid,
-            order = itemOrder
+            order = itemOrder,
+            typeDisc = discountType.toString(),
+            disc = discValue
         )
     }
 

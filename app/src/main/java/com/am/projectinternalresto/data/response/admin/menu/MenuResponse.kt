@@ -1,6 +1,5 @@
 package com.am.projectinternalresto.data.response.admin.menu
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.am.projectinternalresto.data.response.admin.category.DataItemCategory
 import com.google.gson.annotations.SerializedName
@@ -42,6 +41,12 @@ data class DataItemMenu(
 
     @field:SerializedName("harga")
     val price: Int? = null,
+
+    @field:SerializedName("harga_diskon")
+    val discPrice: Int? = null,
+
+    @field:SerializedName("diskon")
+    val disc: Int? = null,
 
     @field:SerializedName("id")
     val idMenu: String? = null,

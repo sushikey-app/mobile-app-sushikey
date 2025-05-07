@@ -17,8 +17,10 @@ class DetailOrderAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: OrderItem) {
             val toppingText = data.topping?.joinToString(", ") { it?.nama ?: "" }
-            val toppingPrice = data.topping?.sumOf { it?.harga ?: 0 }
-            val totalItemPrice = (data.menu?.harga ?: 0) + toppingPrice!!
+            val toppingPrice = data.topping?.sumOf { it?.harga ?: 0 } ?: 0
+            val priceDisc =
+                if (data.menu?.discPrice != 0 && data.menu?.discPrice != null) data.menu.discPrice else data.menu?.harga
+            val totalItemPrice = (priceDisc ?: 0) + toppingPrice
 
             binding.buttonMinus.visibility = View.INVISIBLE
             binding.buttonPlus.visibility = View.INVISIBLE
@@ -27,7 +29,7 @@ class DetailOrderAdapter :
             binding.itemMenuOrder.textNameMenu.text = data.menu?.nama.toString()
             binding.textQty.text = data.qty.toString()
             binding.itemMenuOrder.textPriceItemMenu.text =
-                Formatter.formatCurrency(data.menu?.harga ?: 0)
+                Formatter.formatCurrency(priceDisc ?: 0)
             binding.itemMenuOrder.textValueTopping.text = toppingText
             binding.itemMenuOrder.textValueNote.text = data.note
             binding.textPrice.text = Formatter.formatCurrency(totalItemPrice ?: 0)
