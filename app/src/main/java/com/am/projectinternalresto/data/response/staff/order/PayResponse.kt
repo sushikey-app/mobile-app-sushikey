@@ -69,7 +69,13 @@ data class PaymentItem(
     val typePesanan: String? = null,
 
     @field:SerializedName("status_pesanan")
-    val statusPesanan: String? = null
+    val statusPesanan: String? = null,
+
+    @field:SerializedName("subtotal")
+    val subtotal: Int,
+
+    @field:SerializedName("harga_diskon")
+    val totalDisc: Int
 )
 
 data class DataItemPay(
@@ -95,4 +101,4 @@ data class ToppingItem(
     @field:SerializedName("harga")
     val harga: Int? = null,
 
-)
+    )

@@ -1,6 +1,7 @@
 package com.am.projectinternalresto.ui.feature.staff.order_menu
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,7 +72,6 @@ class OrderMenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupInitialUI()
         observeViewModel()
         setupGetDataMenuFromApi()
@@ -228,7 +228,8 @@ class OrderMenuFragment : Fragment() {
         val orderSummary = DummyModel.OrderSummary(
             orderId = editingOrderId,
             listCartItems = viewModel.cartItems.value ?: emptyList(),
-            totalPurchase = viewModel.totalPurchase.value ?: 0
+            totalPurchase = viewModel.totalPurchase.value ?: 0,
+            totalDisc = viewModel.totalDisc.value ?: 0
         )
         showAlertSaveCustomerName(requireContext()) { nameCustomer ->
             if (nameCustomer.isEmpty()) {
@@ -331,6 +332,9 @@ class OrderMenuFragment : Fragment() {
         }
         viewModel.totalPurchase.observe(viewLifecycleOwner) { total ->
             binding.cardChart.textTotal.text = Formatter.formatCurrency(total)
+        }
+        viewModel.totalDisc.observe(viewLifecycleOwner){total ->
+            Log.e("CHECK_DATA", total.toString())
         }
     }
 

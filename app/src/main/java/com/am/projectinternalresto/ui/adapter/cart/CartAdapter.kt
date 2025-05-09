@@ -19,7 +19,8 @@ class CartAdapter(
         fun bind(dataCart: DummyModel.CartItem) {
             val toppingText = dataCart.selectedToppings.joinToString(", ") { it.nama ?: "" }
             val toppingPrice = dataCart.selectedToppings.sumOf { it.harga ?: 0 }
-            val totalItemPrice = (dataCart.menuItem.price ?: 0) + toppingPrice
+            val priceDisc = if (dataCart.menuItem.discPrice != 0 && dataCart.menuItem.discPrice != null) dataCart.menuItem.discPrice else dataCart.menuItem.price
+            val totalItemPrice = (priceDisc ?: 0) + toppingPrice
 
             Glide.with(binding.root.context).load(dataCart.menuItem.imageMenu)
                 .into(binding.itemMenuOrder.imageMenu)
@@ -27,7 +28,7 @@ class CartAdapter(
                 textNameMenu.text = dataCart.menuItem.nameMenu
                 textValueTopping.text = toppingText.ifEmpty { "-" }
                 textValueNote.text = dataCart.note.ifEmpty { "-" }
-                textPriceItemMenu.text = formatCurrency(dataCart.menuItem.price ?: 0)
+                textPriceItemMenu.text = formatCurrency(priceDisc ?: 0)
             }
             binding.textQty.text = dataCart.qty.toString()
             binding.textPrice.text = formatCurrency(totalItemPrice * dataCart.qty)

@@ -12,10 +12,18 @@ import org.json.JSONObject
 
 class MenuRepository(private val apiService: ApiService) {
 
-    fun getMenuFavoriteSuperAdmin(token: String, locationId: String) = liveData(Dispatchers.IO) {
+    fun getMenuFavoriteSuperAdmin(
+        token: String, locationId: String,
+        startDate: Int?, startMonth: Int?, startYear: Int?,
+        endDate: Int?, endMonth: Int?, endYear: Int?
+    ) = liveData(Dispatchers.IO) {
         emit(Resource.loading(null))
         try {
-            val response = apiService.getMenuFavoriteSuperAdmin("Bearer $token", locationId)
+            val response = apiService.getMenuFavoriteSuperAdmin(
+                "Bearer $token", locationId,
+                startDate, startMonth, startYear,
+                endDate, endMonth, endYear
+            )
             if (response.isSuccessful) {
                 emit(Resource.success(response.body()))
             } else {

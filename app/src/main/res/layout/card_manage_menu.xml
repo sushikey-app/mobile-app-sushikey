@@ -109,7 +109,6 @@
                     android:text="@string/name_menu"
                     android:textSize="14sp" />
 
-
                 <TextView
                     style="@style/CustomTextStyle.Body.PopSemiBold"
                     android:layout_width="0dp"
@@ -124,10 +123,31 @@
                     style="@style/CustomTextStyle.Body.PopSemiBold"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="10dp"
+                    android:text="@string/diskon"
+                    android:textSize="14sp" />
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:text="@string/price_disc"
+                    android:textSize="14sp" />
+
+
+                <TextView
+                    style="@style/CustomTextStyle.Body.PopSemiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/action"
                     android:paddingHorizontal="10dp"
+                    android:text="@string/action"
                     android:textSize="14sp" />
             </TableRow>
         </TableLayout>

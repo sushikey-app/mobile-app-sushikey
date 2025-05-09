@@ -1,5 +1,6 @@
 package com.am.projectinternalresto.ui.feature.admin.manage_menu
 
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.am.projectinternalresto.R
@@ -48,6 +50,7 @@ class AddOrUpdateMenuFragment : Fragment() {
     private lateinit var adapterDropdownSelectCategoryMenu: SelectCategoryMenuAdapter
     private val dataMenu: DataItemMenu? by lazy { arguments?.getParcelable(Key.BUNDLE_DATA_MENU) }
     private var unformattedPrice: Int? = null
+    private var unformattedDisc: Int? = null
 
 
     override fun onCreateView(
@@ -55,6 +58,7 @@ class AddOrUpdateMenuFragment : Fragment() {
     ): View {
         _binding = FragmentAddOrUpdateMenuBinding.inflate(inflater, container, false)
         setupDisplay()
+        setupCheckbox()
         setupGetCategoryMenuFromApi()
         setupNavigation()
         return binding.root
@@ -87,10 +91,53 @@ class AddOrUpdateMenuFragment : Fragment() {
         binding.edtPriceMenu.setPriceWatcherUtils { price ->
             unformattedPrice = price
         }
+        binding.edtDisc.setPriceWatcherUtils { disc ->
+            unformattedDisc = disc
+        }
 
         // Atur visibilitas tombol "Add Topping" berdasarkan jumlah topping yang ada
         updateToppingButtonsVisibility()
     }
+
+    private fun setupCheckbox() = with(binding) {
+        val discountValue = dataMenu?.disc ?: 0 // Pastikan ini sesuai dengan tipe aslinya
+        val hasDiscount = discountValue > 0
+
+        checkboxDisc.isChecked = hasDiscount
+        edtDisc.apply {
+            isEnabled = hasDiscount
+            setText(if (hasDiscount) discountValue.toString() else "")
+            hint = if (hasDiscount) {
+                "Masukkan diskon (Rupiah)"
+            } else {
+                "Silahkan klik untuk mengaktifkan diskon"
+            }
+            setHintTextColor(ContextCompat.getColor(context, R.color.grey))
+            background = ContextCompat.getDrawable(context, R.drawable.custom_bg_edit_txt)
+            backgroundTintList = if (hasDiscount) null else ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.light_grey)
+            )
+        }
+
+        checkboxDisc.setOnCheckedChangeListener { _, isChecked ->
+            edtDisc.apply {
+                isEnabled = isChecked
+                hint = if (isChecked) {
+                    "Masukkan diskon (Rupiah)"
+                } else {
+                    "Silahkan klik untuk mengaktifkan diskon"
+                }
+                setHintTextColor(ContextCompat.getColor(context, R.color.grey))
+                background = ContextCompat.getDrawable(context, R.drawable.custom_bg_edit_txt)
+                backgroundTintList = if (isChecked) null else ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.light_grey)
+                )
+                if (!isChecked) setText("")
+            }
+        }
+    }
+
+
 
     private fun addToppingLayout(existingTopping: ToppingItem? = null) {
         // Check untuk mencegah duplikasi topping yang sudah ada
@@ -201,7 +248,6 @@ class AddOrUpdateMenuFragment : Fragment() {
 
                 else -> {
                     if (dataMenu != null) {
-
                         setupPutDataMenuApi()
                     } else {
                         setupPostDataMenuToApi()
@@ -354,6 +400,7 @@ class AddOrUpdateMenuFragment : Fragment() {
             idCategory = selectIdCategoryMenu ?: dataMenu?.category?.id.toString(),
             nameMenu = binding.edtNameMenu.text.toString(),
             price = unformattedPrice ?: dataMenu?.price!!,
+            disc = unformattedDisc ?: dataMenu?.disc,
             image = uriSelectedImage?.let { Formatter.uriToFile(it, requireContext()) },
             itemToppings = collectToppingData()
         )

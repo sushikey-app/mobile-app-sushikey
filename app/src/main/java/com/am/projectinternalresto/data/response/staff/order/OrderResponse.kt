@@ -38,6 +38,9 @@ data class Payment(
     @field:SerializedName("nama_pembeli")
     val buyerName: String? = null,
 
+    @field:SerializedName("uang_dibayarkan")
+    val moneyPaid: Int? = null,
+
     @field:SerializedName("metode")
     val paymentMethod: String? = null,
 
@@ -117,6 +120,12 @@ data class Menu(
     val nomorMenu: String? = null,
 
     @field:SerializedName("lokasi_id")
-    val lokasiId: String? = null
+    val lokasiId: String? = null,
+
+    @field:SerializedName("harga_diskon")
+    val discPrice: Int? = null,
+
+    @field:SerializedName("diskon")
+    val disc: Int? = null,
 )
 
