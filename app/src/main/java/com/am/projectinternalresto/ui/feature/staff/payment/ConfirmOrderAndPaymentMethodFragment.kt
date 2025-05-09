@@ -108,7 +108,6 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
 
     private fun setupNavigation() {
         binding.cardPayment.buttonCancel.setOnClickListener {
-//            findNavController().previousBackStackEntry?.savedStateHandle?.set("isClear", true)
             findNavController().popBackStack()
         }
         binding.cardPayment.buttonPayment.setOnClickListener {
@@ -135,14 +134,23 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     }
 
     private fun setupView() {
+        setupCheckbox()
         UiHandle.setupDisableHintForField(
             binding.cardPayment.edlTotalPayment, binding.cardPayment.edlDisc
         )
         dataOrderSummary?.let { orderSummary ->
             binding.cardConfirmOrder.apply {
                 textValueSubTotal.text = formatCurrency(orderSummary.totalPurchase)
-                textValuePPN.text = formatCurrency(orderSummary.totalDisc)
-                textValueTotal.text = formatCurrency(orderSummary.totalPurchase)
+                if (discountType == "Rupiah"){
+                    val disc = orderSummary.totalPurchase - unformattedTotalDisc.toString().toIntOrNull()!!
+                    textValuePPN.text = formatCurrency(unformattedTotalDisc.toString().toIntOrNull()!!)
+                    textValueTotal.text = formatCurrency(disc)
+                }else {
+                    val disc = orderSummary.totalPurchase * binding.cardPayment.edtDisc.text.toString().toInt()
+                    textValuePPN.text = formatCurrency(disc)
+                    textValueTotal.text = formatCurrency(disc)
+                }
+
             }
         }
         binding.cardPayment.apply {
@@ -150,8 +158,6 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 unformattedTotalPaid = total
             }
         }
-
-        setupCheckbox()
     }
 
     private fun setupCheckbox() = with(binding.cardPayment) {
@@ -218,14 +224,14 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                             unformattedTotalDisc = s.toString().toIntOrNull() ?: 0
-                            discountType = "Presentase"
+                            discountType = "Persentase"
                         }
                         override fun afterTextChanged(s: Editable?) {}
                     }
                     addTextChangedListener(discTextWatcher)
 
                 }
-                discountType = "Presentase"
+                discountType = "Persentase"
 
             } else if (!checkboxNominal.isChecked) {
                 edtDisc.apply {
@@ -418,7 +424,6 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     private fun collectDataPayment(): PaymentRequest {
         val discValue: Int? = unformattedTotalDisc.toString().toIntOrNull()
         return PaymentRequest(
-            nameBuyer = dataCustomerName.toString(),
             methodPayment = paymentMethod,
             totalPaid = unformattedTotalPaid,
             typeDisc = discountType.toString(),

@@ -101,7 +101,7 @@ class OrderFragment : Fragment() {
                                                         quota = item?.menu?.kuota,
                                                         noMenu = item?.menu?.nomorMenu,
                                                         nameMenu = item?.menu?.nama,
-                                                        price = item?.menu?.harga,
+                                                        price = item?.menu?.discPrice ?: item?.menu?.harga,
                                                         idMenu = item?.menu?.id
                                                     ),
                                                     qty = item?.qty ?: 0,
@@ -197,7 +197,7 @@ class OrderFragment : Fragment() {
                             quota = item?.menu?.kuota,
                             noMenu = item?.menu?.nomorMenu,
                             nameMenu = item?.menu?.nama,
-                            price = item?.menu?.harga,
+                            price = item?.menu?.discPrice ?: item?.menu?.harga,
                             idMenu = item?.menu?.id
                         ),
                         qty = item?.qty ?: 0,
