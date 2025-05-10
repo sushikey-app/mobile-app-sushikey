@@ -1,5 +1,7 @@
 package com.am.projectinternalresto.data.response.super_admin.report
 
+import android.view.MenuItem
+import com.am.projectinternalresto.data.response.staff.order.Menu
 import com.am.projectinternalresto.data.response.staff.order.ToppingItem
 import com.google.gson.annotations.SerializedName
 
@@ -49,6 +51,12 @@ data class Pembayaran(
     @field:SerializedName("total_harga")
     val totalHarga: Int? = null,
 
+    @field:SerializedName("subtotal")
+    val subtotal: Int? = null,
+
+    @field:SerializedName("harga_diskon")
+    val disc: Int? = null,
+
     @field:SerializedName("lokasi_id")
     val lokasiId: String? = null,
 
@@ -71,7 +79,8 @@ data class Pembayaran(
     val statusPembayaran: String? = null,
 
     @field:SerializedName("id")
-    val id: String? = null
+    val id: String? = null,
+
 )
 
 data class OrderItems(

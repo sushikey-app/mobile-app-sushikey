@@ -19,7 +19,6 @@ data class PrintReportResponse(
 
 data class DataItem(
 
-
 	@field:SerializedName("nama_pembeli")
 	val namaPembeli: String? = null,
 
@@ -31,6 +30,12 @@ data class DataItem(
 
 	@field:SerializedName("total_pembayaran")
 	val totalPaymentUser: Int? = null,
+
+	@field:SerializedName("subtotal")
+	val subtotal: Int? = null,
+
+	@field:SerializedName("harga_diskon")
+	val disc: Int? = null,
 
 	@field:SerializedName("status_pembayaran")
 	val statusPembayaran: String? = null,
@@ -48,7 +53,8 @@ data class DataItem(
 	val pesanan: List<PesananItem?>? = null,
 
 	@field:SerializedName("status_pesanan")
-	val statusPesanan: String? = null
+	val statusPesanan: String? = null,
+
 )
 
 data class TotalPesanan(

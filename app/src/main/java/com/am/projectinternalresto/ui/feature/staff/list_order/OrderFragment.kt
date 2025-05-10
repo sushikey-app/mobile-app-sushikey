@@ -101,7 +101,8 @@ class OrderFragment : Fragment() {
                                                         quota = item?.menu?.kuota,
                                                         noMenu = item?.menu?.nomorMenu,
                                                         nameMenu = item?.menu?.nama,
-                                                        price = item?.menu?.discPrice ?: item?.menu?.harga,
+                                                        price = item?.menu?.discPrice
+                                                            ?: item?.menu?.harga,
                                                         idMenu = item?.menu?.id
                                                     ),
                                                     qty = item?.qty ?: 0,
@@ -113,12 +114,14 @@ class OrderFragment : Fragment() {
                                                 DummyModel.OrderSummary(
                                                     orderId = orderDetails.payment?.id,
                                                     listCartItems = it,
-                                                    totalPurchase = orderDetails.payment?.totalPrice ?: 0,
+                                                    totalPurchase = orderDetails.payment?.totalPrice
+                                                        ?: 0,
                                                     //TODO :: CHECK INI
                                                     totalDisc = 0
                                                 )
                                             }
-                                            navigateFragment(Destination.ORDER_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
+                                            navigateFragment(
+                                                Destination.ORDER_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
                                                 findNavController(),
                                                 Bundle().apply {
                                                     putString(
@@ -143,7 +146,8 @@ class OrderFragment : Fragment() {
             }
             callbackOnClickToDetailOrderListener { id ->
                 if (isPaid) {
-                    navigateFragment(Destination.ORDER_TO_DETAIL_ORDER,
+                    navigateFragment(
+                        Destination.ORDER_TO_DETAIL_ORDER,
                         findNavController(),
                         Bundle().apply {
                             putString(BUNDLE_ID_ORDER, id)
@@ -292,8 +296,17 @@ class OrderFragment : Fragment() {
 
         val logoHex = PrinterTextParserImg.bitmapToHexadecimalString(printer, resizedBitmap)
 
-        var receiptText =
-            "[C]<img>$logoHex</img>\n" + "[C]===============================\n" + "[L]No. Order: ${orderResponse?.payment?.noOrder}\n" + "[L]Nama: ${orderResponse?.payment?.buyerName}\n" + "[L]Nama Kasir: ${orderResponse?.staffName}\n" + "[L]Lokasi Resto: ${orderResponse?.locationName}\n" + "[C]===============================\n" + "[L]Qty Menu[R]Total\n" + "[C]-------------------------------\n"
+        var receiptText = "[C]<img>$logoHex</img>\n" +
+                "[C]===============================\n" +
+                "[L]No. Order: ${orderResponse?.payment?.noOrder}\n" +
+                "[L]Nama: ${orderResponse?.payment?.buyerName}\n" +
+                "[L]Nama Kasir: ${orderResponse?.staffName}\n" +
+                "[L]Metode Pembayaran: ${orderResponse?.payment?.paymentMethod}\n" +
+                "[L]Lokasi Resto: ${orderResponse?.locationName}\n" +
+                "[C]===============================\n" +
+                "[L]Qty Menu[R]Total\n" +
+                "[C]-------------------------------\n"
+
 
         items.forEach { (nama, harga, qty) ->
             val totalHarga = harga * qty
@@ -320,12 +333,14 @@ class OrderFragment : Fragment() {
             )
         }
 
-        receiptText += "[C]-------------------------------\n" + "[L]Total[R] ${
-            formatCurrency(
-                totalKeseluruhan
-            )
-        }\n" + "[L]${orderResponse?.payment?.paymentMethod}[R] $cash\n" + "[L]Kembalian[R] $cashBack\n" + "[C]===============================\n" + "[L]Tanggal: ${Formatter.getCurrentDateAndTime()}\n" + "[L]Terima kasih!"
-
+        receiptText += "[C]-------------------------------\n" +
+                "[L]SubTotal[R] ${formatCurrency(orderResponse?.payment?.subtotal ?: 0)}\n" +
+                "[L]Diskon[R] ${formatCurrency(orderResponse?.payment?.disc ?: 0)}\n" +
+                "[L]Total[R] ${formatCurrency(orderResponse?.payment?.totalPrice ?: 0)}\n" +
+                "[L]Kembalian[R] $cashBack\n" +
+                "[C]===============================\n" +
+                "[L]Tanggal: ${Formatter.getCurrentDateAndTime()}\n" +
+                "[L]Terima kasih!"
         printer.printFormattedText(receiptText)
     }
 

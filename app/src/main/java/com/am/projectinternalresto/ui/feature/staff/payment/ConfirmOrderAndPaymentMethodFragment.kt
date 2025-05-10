@@ -328,6 +328,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         val specialPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
         val totalPayment = dataOrderSummary?.totalPurchase ?: 0 // Total yang harus dibayar
 
+
         if (unformattedTotalPaid == 0 && paymentMethod !in specialPaymentMethods) {
             NotificationHandle.showErrorSnackBar(requireView(), "Masukkan nominal pembayaran")
             return
@@ -336,6 +337,23 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         if (unformattedTotalPaid < totalPayment && paymentMethod !in specialPaymentMethods) {
             NotificationHandle.showErrorSnackBar(
                 requireView(), "Nominal pembayaran tidak mencukupi"
+            )
+            return
+        }
+
+        if (discountType == "Persentase" && (binding.cardPayment.edtDisc.text.toString().toInt()
+                ?: 0) > 100
+        ) {
+            NotificationHandle.showErrorSnackBar(
+                requireView(), "Diskon tidak boleh lebih dari 100%"
+            )
+            return
+        }
+        if (discountType == "Rupiah" && (unformattedTotalDisc
+                ?: 0) > getUnformattedAmount(binding.cardConfirmOrder.textValueTotal.text.toString())
+        ) {
+            NotificationHandle.showErrorSnackBar(
+                requireView(), "Diskon tidak boleh lebih dari total harga"
             )
             return
         }
@@ -577,12 +595,20 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         receiptText += "[C]-------------------------------\n" +
                 "[L]SubTotal[R] ${formatCurrency(orderResponse?.data?.payment?.subtotal ?: 0)}\n" +
                 "[L]Diskon[R] ${formatCurrency(orderResponse?.data?.payment?.totalDisc ?: 0)}\n" +
-                "[L]${orderResponse?.data?.payment?.metode}[R] $cash\n" +
+                "[L]Total[R] ${formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)}\n" +
                 "[L]Kembalian[R] $cashBack\n" +
                 "[C]===============================\n" +
                 "[L]Tanggal: ${Formatter.getCurrentDateAndTime()}\n" +
                 "[L]Terima kasih!"
 
         printer.printFormattedText(receiptText)
+    }
+    fun getUnformattedAmount(text: String): Int {
+        // Hapus "Rp", spasi, dan koma/titik
+        val cleanText = text.replace("Rp", "")
+            .replace(",", "")
+            .replace(".", "")
+            .trim()
+        return cleanText.toIntOrNull() ?: 0
     }
 }
