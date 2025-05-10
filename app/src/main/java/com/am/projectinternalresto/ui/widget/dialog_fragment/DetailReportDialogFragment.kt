@@ -110,8 +110,8 @@ class DetailReportDialogFragment(private val idOrderReport: String) : DialogFrag
             binding.textValueReasonCancel.text = data.alasanPembatalan.toString()
         }
         binding.textValueSubTotal.text =
-            Formatter.formatCurrency(data?.pembayaran?.totalHarga ?: 0)
-        binding.textValuePPN.text = Formatter.formatCurrency(0)
+            Formatter.formatCurrency(data?.pembayaran?.subtotal ?: 0)
+        binding.textValuePPN.text = Formatter.formatCurrency(data?.pembayaran?.disc ?: 0)
         binding.textValueTotal.text =
             Formatter.formatCurrency(data?.pembayaran?.totalHarga ?: 0)
     }

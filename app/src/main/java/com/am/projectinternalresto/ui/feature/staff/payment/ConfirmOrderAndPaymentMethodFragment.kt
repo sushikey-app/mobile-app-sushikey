@@ -108,7 +108,6 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
 
     private fun setupNavigation() {
         binding.cardPayment.buttonCancel.setOnClickListener {
-//            findNavController().previousBackStackEntry?.savedStateHandle?.set("isClear", true)
             findNavController().popBackStack()
         }
         binding.cardPayment.buttonPayment.setOnClickListener {
@@ -135,28 +134,28 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     }
 
     private fun setupView() {
+        setupCheckbox()
         UiHandle.setupDisableHintForField(
             binding.cardPayment.edlTotalPayment, binding.cardPayment.edlDisc
         )
+
         dataOrderSummary?.let { orderSummary ->
             binding.cardConfirmOrder.apply {
                 textValueSubTotal.text = formatCurrency(orderSummary.totalPurchase)
-                textValuePPN.text = formatCurrency(orderSummary.totalDisc)
-                textValueTotal.text = formatCurrency(orderSummary.totalPurchase)
+                // PPN dan Total akan dihitung ulang melalui updateDiscountCalculation
             }
         }
+
         binding.cardPayment.apply {
             edtTotalPayment.setPriceWatcherUtils { total ->
                 unformattedTotalPaid = total
             }
         }
 
-        setupCheckbox()
+        updateDiscountCalculation()
     }
 
     private fun setupCheckbox() = with(binding.cardPayment) {
-
-        // Kondisi awal
         edtDisc.apply {
             isEnabled = false
             hint = "Silahkan klik sesuai dengan kebutuhan"
@@ -164,6 +163,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 ContextCompat.getColor(requireContext(), R.color.light_grey)
             )
         }
+
         discountType = ""
 
         checkboxNominal.setOnCheckedChangeListener { _, isChecked ->
@@ -177,27 +177,15 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                     backgroundTintList = null
                     text?.clear()
 
-                    // Tambahkan watcher rupiah
                     discTextWatcher?.let { removeTextChangedListener(it) }
                     discTextWatcher = setPriceWatcherUtils { disc ->
                         unformattedTotalDisc = disc
                         discountType = "Rupiah"
+                        updateDiscountCalculation()
                     }
                 }
             } else if (!checkboxPercent.isChecked) {
-                edtDisc.apply {
-                    isEnabled = false
-                    hint = "Silahkan klik sesuai dengan kebutuhan"
-                    backgroundTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(requireContext(), R.color.light_grey)
-                    )
-                    text?.clear()
-                    discTextWatcher?.let { removeTextChangedListener(it) }
-                    discTextWatcher = null
-                    unformattedTotalDisc = 0
-
-                }
-                discountType = ""
+                clearDiscField()
             }
         }
 
@@ -212,30 +200,68 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                     backgroundTintList = null
                     text?.clear()
 
-                    // Hapus formatter dan pakai watcher biasa
                     discTextWatcher?.let { removeTextChangedListener(it) }
                     discTextWatcher = object : TextWatcher {
-                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                            unformattedTotalDisc = s.toString().toIntOrNull() ?: 0
-                            discountType = "Presentase"
+                        override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                        ) {
                         }
+
+                        override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {
+                            unformattedTotalDisc = s.toString().toIntOrNull() ?: 0
+                            discountType = "Persentase"
+                            updateDiscountCalculation()
+                        }
+
                         override fun afterTextChanged(s: Editable?) {}
                     }
                     addTextChangedListener(discTextWatcher)
-
                 }
-                discountType = "Presentase"
-
             } else if (!checkboxNominal.isChecked) {
-                edtDisc.apply {
-                    isEnabled = false
-                    hint = "Silahkan klik sesuai dengan kebutuhan"
-                    backgroundTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(requireContext(), R.color.light_grey)
-                    )
+                clearDiscField()
+            }
+        }
+    }
+
+    private fun clearDiscField() = with(binding.cardPayment.edtDisc) {
+        isEnabled = false
+        hint = "Silahkan klik sesuai dengan kebutuhan"
+        backgroundTintList = ColorStateList.valueOf(
+            ContextCompat.getColor(requireContext(), R.color.light_grey)
+        )
+        text?.clear()
+        discTextWatcher?.let { removeTextChangedListener(it) }
+        discTextWatcher = null
+        unformattedTotalDisc = 0
+        discountType = ""
+        updateDiscountCalculation()
+    }
+
+    private fun updateDiscountCalculation() {
+        dataOrderSummary?.let { orderSummary ->
+            val subtotal = orderSummary.totalPurchase
+            val discount = when (discountType) {
+                "Rupiah" -> unformattedTotalDisc ?: 0
+                "Persentase" -> {
+                    val percent = unformattedTotalDisc ?: 0
+                    subtotal * percent / 100
                 }
-                discountType = ""
+
+                else -> 0
+            }
+            val total = subtotal - discount
+            binding.cardConfirmOrder.apply {
+                textValueSubTotal.text = formatCurrency(subtotal)
+                textValuePPN.text = formatCurrency(discount)
+                textValueTotal.text = formatCurrency(total)
             }
         }
     }
@@ -302,6 +328,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         val specialPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
         val totalPayment = dataOrderSummary?.totalPurchase ?: 0 // Total yang harus dibayar
 
+
         if (unformattedTotalPaid == 0 && paymentMethod !in specialPaymentMethods) {
             NotificationHandle.showErrorSnackBar(requireView(), "Masukkan nominal pembayaran")
             return
@@ -310,6 +337,23 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         if (unformattedTotalPaid < totalPayment && paymentMethod !in specialPaymentMethods) {
             NotificationHandle.showErrorSnackBar(
                 requireView(), "Nominal pembayaran tidak mencukupi"
+            )
+            return
+        }
+
+        if (discountType == "Persentase" && (binding.cardPayment.edtDisc.text.toString().toInt()
+                ?: 0) > 100
+        ) {
+            NotificationHandle.showErrorSnackBar(
+                requireView(), "Diskon tidak boleh lebih dari 100%"
+            )
+            return
+        }
+        if (discountType == "Rupiah" && (unformattedTotalDisc
+                ?: 0) > getUnformattedAmount(binding.cardConfirmOrder.textValueTotal.text.toString())
+        ) {
+            NotificationHandle.showErrorSnackBar(
+                requireView(), "Diskon tidak boleh lebih dari total harga"
             )
             return
         }
@@ -418,7 +462,6 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     private fun collectDataPayment(): PaymentRequest {
         val discValue: Int? = unformattedTotalDisc.toString().toIntOrNull()
         return PaymentRequest(
-            nameBuyer = dataCustomerName.toString(),
             methodPayment = paymentMethod,
             totalPaid = unformattedTotalPaid,
             typeDisc = discountType.toString(),
@@ -429,7 +472,8 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     private fun collectDataOrderAndPayment(
     ): OrderRequest {
         val itemOrder = dataOrderSummary?.listCartItems?.map { items ->
-            OrderItemRequest(menuId = items.menuItem.idMenu.toString(),
+            OrderItemRequest(
+                menuId = items.menuItem.idMenu.toString(),
                 qty = items.qty,
                 note = items.note,
                 topping = items.selectedToppings.map { topping -> ToppingItemRequest(topping.id.toString()) })
@@ -460,6 +504,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     }
 
     // Memisahkan logika cetak ke fungsi terpisah
+    // TODO :: CHECK print data
     private fun printReceiptContent(orderResponse: PayResponse?) {
         val items = mutableListOf<Triple<String, Int, Int>>()
 
@@ -516,6 +561,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 "[L]No. Order: ${orderResponse?.data?.payment?.nomorOrder}\n" +
                 "[L]Nama: ${orderResponse?.data?.payment?.namaPembeli}\n" +
                 "[L]Nama Kasir: ${orderResponse?.data?.staffName}\n" +
+                "[L]Metode Pembayaran: ${orderResponse?.data?.payment?.metode}\n" +
                 "[L]Lokasi Resto: ${orderResponse?.data?.locationName}\n" +
                 "[C]===============================\n" +
                 "[L]Qty Menu[R]Total\n" +
@@ -547,13 +593,22 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
         }
 
         receiptText += "[C]-------------------------------\n" +
-                "[L]Total[R] ${formatCurrency(totalKeseluruhan)}\n" +
-                "[L]${orderResponse?.data?.payment?.metode}[R] $cash\n" +
+                "[L]SubTotal[R] ${formatCurrency(orderResponse?.data?.payment?.subtotal ?: 0)}\n" +
+                "[L]Diskon[R] ${formatCurrency(orderResponse?.data?.payment?.totalDisc ?: 0)}\n" +
+                "[L]Total[R] ${formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)}\n" +
                 "[L]Kembalian[R] $cashBack\n" +
                 "[C]===============================\n" +
                 "[L]Tanggal: ${Formatter.getCurrentDateAndTime()}\n" +
                 "[L]Terima kasih!"
 
         printer.printFormattedText(receiptText)
+    }
+    fun getUnformattedAmount(text: String): Int {
+        // Hapus "Rp", spasi, dan koma/titik
+        val cleanText = text.replace("Rp", "")
+            .replace(",", "")
+            .replace(".", "")
+            .trim()
+        return cleanText.toIntOrNull() ?: 0
     }
 }

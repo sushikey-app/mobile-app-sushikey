@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
 import com.am.projectinternalresto.R
@@ -26,8 +27,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 fun generatePDFReport(context: Context, response: PrintReportResponse): Uri? {
-    // Show loading notification
-    val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    val notificationManager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val loadingNotificationId = 2
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -53,97 +54,76 @@ fun generatePDFReport(context: Context, response: PrintReportResponse): Uri? {
     val filePath = context.getExternalFilesDir(null)?.absolutePath + File.separator + fileName
 
     try {
+        // Hapus file jika sudah ada
+        val file = File(filePath)
+        if (file.exists()) file.delete()
+
         val writer = PdfWriter(FileOutputStream(filePath))
         val pdf = PdfDocument(writer)
         val document = Document(pdf)
 
-        // Add title
         val title = Paragraph("LAPORAN PESANAN")
         title.setTextAlignment(TextAlignment.CENTER)
         title.setBold()
         document.add(title)
         document.add(Paragraph("\n"))
 
-        // Create main table
-        val table = Table(UnitValue.createPercentArray(floatArrayOf(15f, 15f, 10f, 15f, 20f, 15f, 10f)))
+        val table = Table(UnitValue.createPercentArray(floatArrayOf(15f, 15f, 5f, 20f, 20f, 10f, 10f)))
         table.width = UnitValue.createPercentValue(100f)
 
-        // Add table headers
         val headers = arrayOf(
-            "Tanggal",
-            "No Order",
-            "Qty",
-            "Potongan",
-            "Total Pembayaran",
-            "Status",
-            "Pembayaran"
+            "Tanggal", "No Order", "Qty", "Potongan",
+            "Total Pembayaran", "Status", "Metode"
         )
         headers.forEach { header ->
             table.addHeaderCell(Cell().add(Paragraph(header).setBold()))
         }
 
-        // Track totals for summary
         var totalAmount = 0
         val paymentMethodCounts = mutableMapOf<String, Int>()
         val paymentMethodTotals = mutableMapOf<String, Int>()
 
-        // Add table rows
         response.data?.forEach { order ->
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val date = dateFormat.parse(order?.tanggalPemesanan ?: "")
-            val formattedDate = date?.let { dateFormat.format(it) }
+            val formattedDate = date?.let { dateFormat.format(it) } ?: ""
 
             val totalQty = order?.pesanan?.sumOf { it?.qty ?: 0 } ?: 0
-            val totalPayment = order?.totalPaymentUser
+            val totalPayment = order?.totalPaymentUser ?: 0
+            val disc = order?.disc ?: 0
+            val formattedDisc = Formatter.formatCurrency(disc)
+
+            Log.e("CHECKSTRUK", "data : $disc")
 
             table.addCell(formattedDate)
             table.addCell(order?.nomorOrder ?: "")
             table.addCell(totalQty.toString())
-            table.addCell("Rp ${NumberFormat.getNumberInstance(Locale("id", "ID")).format(0)}")
+            table.addCell(Cell().add(Paragraph(formattedDisc).setFontSize(10f)))
             table.addCell("Rp ${NumberFormat.getNumberInstance(Locale("id", "ID")).format(totalPayment)}")
             table.addCell(order?.statusPesanan ?: "")
             table.addCell(order?.metode ?: "")
 
-            totalAmount += totalPayment ?: 0
-
-            // Update payment method counts and totals
+            totalAmount += totalPayment
             val method = order?.metode ?: ""
             paymentMethodCounts[method] = (paymentMethodCounts[method] ?: 0) + 1
-            paymentMethodTotals[method] = (paymentMethodTotals[method] ?: 0) + (totalPayment ?: 0)
+            paymentMethodTotals[method] = (paymentMethodTotals[method] ?: 0) + totalPayment
         }
 
-        // Add total row
-        table.addCell(
-            Cell(1, 6).add(
-                Paragraph("Total").setTextAlignment(TextAlignment.RIGHT).setBold()
-            )
-        )
-        table.addCell(
-            Cell().add(
-                Paragraph(
-                    "Rp ${NumberFormat.getNumberInstance(Locale("id", "ID")).format(totalAmount)}"
-                ).setBold()
-            )
-        )
-
+        table.addCell(Cell(1, 6).add(Paragraph("Total").setTextAlignment(TextAlignment.RIGHT).setBold()))
+        table.addCell(Cell().add(Paragraph("Rp ${NumberFormat.getNumberInstance(Locale("id", "ID")).format(totalAmount)}").setBold()))
         document.add(table)
         document.add(Paragraph("\n"))
 
-        // Add summary section
         val summaryTitle = Paragraph("RANGKUMAN")
         summaryTitle.setBold()
         document.add(summaryTitle)
 
-        // Create summary table with three columns
         val summaryTable = Table(UnitValue.createPercentArray(floatArrayOf(30f, 35f, 35f)))
         summaryTable.width = UnitValue.createPercentValue(100f)
-
-        // Add summary table headers
         summaryTable.addHeaderCell(Cell().add(Paragraph("Metode Pembayaran").setBold()))
         summaryTable.addHeaderCell(Cell().add(Paragraph("Jumlah Transaksi").setBold()))
         summaryTable.addHeaderCell(Cell().add(Paragraph("Total Pembayaran").setBold()))
 
-        // Add payment method summary with totals
         paymentMethodCounts.forEach { (method, count) ->
             summaryTable.addCell(method)
             summaryTable.addCell(count.toString())
@@ -153,23 +133,20 @@ fun generatePDFReport(context: Context, response: PrintReportResponse): Uri? {
         document.add(summaryTable)
         document.close()
 
-        // Create URI for PDF file
-        val file = File(filePath)
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
 
-        // Remove loading notification and show completion notification
         notificationManager.cancel(loadingNotificationId)
         sendNotification(context, "PDF Report Generated", "Your report is ready to view", uri)
 
         return uri
     } catch (e: Exception) {
-        // Remove loading notification and show error notification
         notificationManager.cancel(loadingNotificationId)
         sendNotification(context, "Error", "Failed to generate PDF report", null)
         e.printStackTrace()
         return null
     }
 }
+
 
 
 private fun sendNotification(context: Context, title: String, message: String, pdfUri: Uri?) {

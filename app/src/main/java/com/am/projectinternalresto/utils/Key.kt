@@ -4,7 +4,7 @@ package com.am.projectinternalresto.utils
 object Key {
     const val BASE_URL = "http://api.157.173.218.120.sslip.io/api/"
 
-//    const val BASE_URL = "http://192.168.110.240:8000/api/"
+//    const val BASE_URL = "http://192.168.20.83:8000/api/"
     const val ERROR_MESSAGE = "message"
     const val IS_PAID_ORDER = "Sudah Bayar"
     const val IS_UNPAID_ORDER = "Belum Bayar"

@@ -60,8 +60,14 @@ data class Payment(
     val typeOrder: String? = null,
 
     @field:SerializedName("status_pesanan")
-    val statusOrder: String? = null
-)
+    val statusOrder: String? = null,
+
+    @field:SerializedName("subtotal")
+    val subtotal: Int? = null,
+
+    @field:SerializedName("harga_diskon")
+    val disc: Int? = null,
+    )
 
 data class OrderItem(
 

@@ -18,7 +18,8 @@ class DetailReportOrderAdapter :
         fun bind(data: OrderItems) {
             val toppingText = data.topping?.joinToString(", ") { it?.nama ?: "" }
             val toppingPrice = data.topping?.sumOf { it?.harga ?: 0 }
-            val totalItemPrice = (data.hargaPesanan ?: 0) + toppingPrice!!
+            val price = data.menu?.discPrice ?: data.menu?.harga
+            val totalItemPrice = (price ?: 0) + toppingPrice!!
 
             binding.buttonMinus.visibility = View.INVISIBLE
             binding.buttonPlus.visibility = View.INVISIBLE
@@ -28,7 +29,7 @@ class DetailReportOrderAdapter :
             binding.itemMenuOrder.textNameMenu.text = data.menu?.nama
             binding.textQty.text = data.qty.toString()
             binding.itemMenuOrder.textPriceItemMenu.text =
-                Formatter.formatCurrency(data.menu?.harga ?: 0)
+                Formatter.formatCurrency(price ?: 0)
             binding.itemMenuOrder.textValueTopping.text = toppingText
             binding.itemMenuOrder.textValueNote.text = data.note
             binding.textPrice.text = Formatter.formatCurrency(totalItemPrice)

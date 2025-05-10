@@ -54,8 +54,9 @@ class DetailOrderFragment : Fragment() {
         binding.textValueStatusOrder.text = data?.payment?.statusOrder.toString()
         binding.textValueDateOrders.text = Formatter.getCurrentDate()
         binding.layoutOrderItems.textValueSubTotal.text =
-            Formatter.formatCurrency(data?.payment?.totalPrice ?: 0)
-        binding.layoutOrderItems.textValuePPN.text = Formatter.formatCurrency(0)
+            Formatter.formatCurrency(data?.payment?.subtotal ?: 0)
+        binding.layoutOrderItems.textValuePPN.text =
+            Formatter.formatCurrency(data?.payment?.disc ?: 0)
         binding.layoutOrderItems.textValueTotal.text =
             Formatter.formatCurrency(data?.payment?.totalPrice ?: 0)
     }

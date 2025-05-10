@@ -150,7 +150,6 @@ class OrderHistoryFragment : Fragment() {
                                 requireView(),
                                 "PDF Berhasil Dibuat"
                             )
-
                             openPdf(pdfUri)
                         } else {
                             NotificationHandle.showErrorSnackBar(
