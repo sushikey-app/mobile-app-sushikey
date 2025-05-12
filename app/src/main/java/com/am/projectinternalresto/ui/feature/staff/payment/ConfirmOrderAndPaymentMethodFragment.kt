@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,6 +92,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 )
             }
         }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -299,9 +299,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
     }
 
     private fun setupItemOrderAdapter() {
-        val orderItemsAdapter = CartAdapter { itemId, increment ->
-            viewModel.updateQuantity(itemId, increment)
-        }
+        val orderItemsAdapter = CartAdapter(isPayment = true) { _, _ -> }
         orderItemsAdapter.submitList(dataOrderSummary?.listCartItems)
         binding.cardConfirmOrder.recyclerConfirmOrder.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -326,7 +324,8 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
 
     private fun setupPostDataPayment() {
         val specialPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
-        val totalPayment = dataOrderSummary?.totalPurchase ?: 0 // Total yang harus dibayar
+        val totalPayment =
+            getUnformattedAmount(binding.cardConfirmOrder.textValueTotal.text.toString())
 
 
         if (unformattedTotalPaid == 0 && paymentMethod !in specialPaymentMethods) {
@@ -408,7 +407,6 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                     }
                 }
         } else {
-            Log.e("CHECK_DATA", "data : ${collectDataOrderAndPayment()}")
             viewModel.payFromOrderContinuation(token, collectDataOrderAndPayment())
                 .observe(viewLifecycleOwner) { result ->
                     when (result.status) {
@@ -476,7 +474,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 menuId = items.menuItem.idMenu.toString(),
                 qty = items.qty,
                 note = items.note,
-                topping = items.selectedToppings.map { topping -> ToppingItemRequest(topping.id.toString()) })
+                topping = items.selectedToppings.map { topping -> ToppingItemRequest(topping?.id.toString()) })
         } ?: emptyList()
         val discValue: Int? = unformattedTotalDisc.toString().toIntOrNull()
         return OrderRequest(
@@ -514,9 +512,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
             val toppings = item?.topping?.joinToString(", ") { it?.nama ?: "" }
 
             // Hitung total harga item termasuk topping
-            val basePrice = item?.hargaPesanan ?: 0
-            val toppingPrice = item?.topping?.sumOf { it?.harga ?: 0 } ?: 0
-            val totalItemPrice = basePrice + toppingPrice
+            val totalItemPrice = item?.hargaPesanan ?: 0
             val qty = item?.qty ?: 0
 
             var itemText = menuName
@@ -532,7 +528,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 itemText += if (itemText.length + note.length + 4 <= 20) {
                     " ($note)"
                 } else {
-                    "\n  ($note)"
+                    "\n ($note)"
                 }
             }
 
@@ -567,21 +563,35 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 "[L]Qty Menu[R]Total\n" +
                 "[C]-------------------------------\n"
 
+        val maxLineChar = 30 // panjang baris printer thermal
+
         items.forEach { (nama, harga, qty) ->
-            val totalHarga = harga * qty
-            receiptText += "[L]$qty " + " $nama[R]${formatCurrency(totalHarga)}\n"
+            val lines = nama.split("\n")
+            val firstLine = "$qty ${lines[0]}"
+
+            val priceStr = formatCurrency(harga)
+            val spaceAvailable = maxLineChar - priceStr.length
+
+            // Jika nama (firstLine) muat dalam 1 baris bersama harga
+            if (firstLine.length <= spaceAvailable) {
+                receiptText += "[L]${firstLine.padEnd(spaceAvailable)}[R]$priceStr\n"
+            } else {
+                // Nama terlalu panjang, cetak terpisah
+                receiptText += "[L]$firstLine\n"
+                receiptText += "[R]$priceStr\n"
+            }
+
+            // Tambahkan baris-baris tambahan (catatan, topping)
+            if (lines.size > 1) {
+                for (i in 1 until lines.size) {
+                    receiptText += "[L]  ${lines[i]}\n"
+                }
+            }
         }
 
         val specialPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
-
-        val totalKeseluruhan = items.sumOf { it.second * it.third }
-
-        val cash = if (orderResponse?.data?.payment?.metode in specialPaymentMethods) {
-            formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)
-        } else {
-            formatCurrency(orderResponse?.data?.payment?.uangDibayarkan ?: 0)
-        }
-
+        val typePayment =
+            if (orderResponse?.data?.payment?.metode !in specialPaymentMethods) "Uang Dibayarkan" else "Jumlah Dibayarkan"
         val cashBack = if (orderResponse?.data?.payment?.metode in specialPaymentMethods) {
             formatCurrency(0)
         } else {
@@ -596,6 +606,7 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
                 "[L]SubTotal[R] ${formatCurrency(orderResponse?.data?.payment?.subtotal ?: 0)}\n" +
                 "[L]Diskon[R] ${formatCurrency(orderResponse?.data?.payment?.totalDisc ?: 0)}\n" +
                 "[L]Total[R] ${formatCurrency(orderResponse?.data?.payment?.totalHarga ?: 0)}\n" +
+                "[L]$typePayment[R] ${formatCurrency(orderResponse?.data?.payment?.uangDibayarkan ?: 0)}\n" +
                 "[L]Kembalian[R] $cashBack\n" +
                 "[C]===============================\n" +
                 "[L]Tanggal: ${Formatter.getCurrentDateAndTime()}\n" +
@@ -603,7 +614,8 @@ class ConfirmOrderAndPaymentMethodFragment : Fragment() {
 
         printer.printFormattedText(receiptText)
     }
-    fun getUnformattedAmount(text: String): Int {
+
+    private fun getUnformattedAmount(text: String): Int {
         // Hapus "Rp", spasi, dan koma/titik
         val cleanText = text.replace("Rp", "")
             .replace(",", "")

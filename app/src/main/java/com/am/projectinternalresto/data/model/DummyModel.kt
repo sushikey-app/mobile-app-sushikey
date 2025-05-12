@@ -35,9 +35,10 @@ sealed class DummyModel {
 
     data class CartItem(
         val id: String = UUID.randomUUID().toString(),
+        val idOrder: String? = null,
         val menuItem: DataItemMenu,
         var qty: Int,
-        val selectedToppings: List<ToppingItem> = emptyList(),
+        val selectedToppings: List<ToppingItem?> = emptyList(),
         val note: String = ""
     )
 

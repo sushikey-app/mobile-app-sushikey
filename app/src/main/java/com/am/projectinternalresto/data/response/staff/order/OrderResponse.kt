@@ -82,6 +82,8 @@ data class OrderItem(
 
     @field:SerializedName("id")
     val id: String? = null,
+    @field:SerializedName("harga_pesanan")
+    val hargaPesanan: Int? = null,
 
     @field:SerializedName("menu")
     val menu: Menu? = null,

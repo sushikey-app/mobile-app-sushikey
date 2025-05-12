@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_nav_staff_order_to_detailOrderFragment2"
             app:destination="@id/detailOrderFragment" />
+        <action
+            android:id="@+id/action_nav_staff_order_to_nav_update_menu_order"
+            app:destination="@id/nav_update_menu_order" />
     </fragment>
     <fragment
         android:id="@+id/nav_staff_order_history"
@@ -63,4 +66,13 @@
         android:id="@+id/cancelOrderStaffFragment"
         android:name="com.am.projectinternalresto.ui.feature.staff.cancel_order_staff.CancelOrderStaffFragment"
         android:label="CancelOrderStaffFragment" />
+    <fragment
+        android:id="@+id/nav_update_menu_order"
+        android:name="com.am.projectinternalresto.ui.feature.staff.order_menu_updated.UpdateMenuOrderFragment"
+        android:label="fragment_update_menu_order"
+        tools:layout="@layout/fragment_order_menu" >
+        <action
+            android:id="@+id/action_nav_update_menu_order_to_confirmOrderAndPaymentMethodFragment"
+            app:destination="@id/confirmOrderAndPaymentMethodFragment" />
+    </fragment>
 </navigation>

@@ -1,7 +1,6 @@
 package com.am.projectinternalresto.ui.adapter.order
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -49,7 +48,6 @@ class OrderAdapter(
                 binding.buttonToDetailOrder.text =
                     binding.root.context.getString(R.string.edit_order)
                 binding.buttonChangeStatus.text = binding.root.context.getString(R.string.pay)
-                binding.buttonCancelOrders.visibility = View.GONE
             }
         }
     }

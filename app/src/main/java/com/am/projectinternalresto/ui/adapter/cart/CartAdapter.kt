@@ -1,6 +1,8 @@
 package com.am.projectinternalresto.ui.adapter.cart
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,13 +14,15 @@ import com.bumptech.glide.Glide
 
 @Suppress("UNCHECKED_CAST")
 class CartAdapter(
+    private var isPayment: Boolean = false,
     private val onQuantityChanged: (itemId: String, increment: Boolean) -> Unit,
 ) : ListAdapter<DummyModel.CartItem, CartAdapter.ViewHolder>(DIFF_CALLBACK) {
     inner class ViewHolder(private val binding: ItemContentOrderInformationBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(dataCart: DummyModel.CartItem) {
-            val toppingText = dataCart.selectedToppings.joinToString(", ") { it.nama ?: "" }
-            val toppingPrice = dataCart.selectedToppings.sumOf { it.harga ?: 0 }
+            val toppingText = dataCart.selectedToppings.joinToString(", ") { it?.nama ?: "" }
+            val toppingPrice = dataCart.selectedToppings.sumOf { it?.harga ?: 0 }
             val priceDisc = if (dataCart.menuItem.discPrice != 0 && dataCart.menuItem.discPrice != null) dataCart.menuItem.discPrice else dataCart.menuItem.price
             val totalItemPrice = (priceDisc ?: 0) + toppingPrice
 
@@ -38,8 +42,14 @@ class CartAdapter(
             binding.buttonMinus.setOnClickListener {
                 onQuantityChanged(dataCart.id, false)
             }
+
+            if (isPayment) {
+                binding.buttonPlus.visibility = View.INVISIBLE
+                binding.buttonMinus.visibility = View.INVISIBLE
+            }
         }
 
+        @SuppressLint("SetTextI18n")
         fun updateQuantityAndPrice(newQty: Int, pricePerItem: Int?) {
             binding.textQty.text = newQty.toString()
             binding.textPrice.text = formatCurrency(pricePerItem?.times(newQty) ?: 0)

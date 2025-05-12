@@ -1,12 +1,16 @@
 package com.am.projectinternalresto.ui.feature.staff.list_order
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -14,16 +18,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.am.projectinternalresto.R
 import com.am.projectinternalresto.data.model.DummyModel
 import com.am.projectinternalresto.data.response.admin.menu.DataItemMenu
-import com.am.projectinternalresto.data.response.admin.menu.ToppingItem
 import com.am.projectinternalresto.data.response.staff.order.DataItemOrder
 import com.am.projectinternalresto.data.response.staff.order.ListOrderResponse
-import com.am.projectinternalresto.data.response.staff.order.OrderResponse
 import com.am.projectinternalresto.databinding.FragmentOrderBinding
 import com.am.projectinternalresto.service.source.Resource
 import com.am.projectinternalresto.service.source.Status
 import com.am.projectinternalresto.ui.adapter.order.OrderAdapter
 import com.am.projectinternalresto.ui.feature.auth.AuthViewModel
 import com.am.projectinternalresto.ui.feature.staff.order_menu.ManageOrderMenuViewModel
+import com.am.projectinternalresto.ui.widget.alert.showAlertDeleteData
 import com.am.projectinternalresto.utils.Destination
 import com.am.projectinternalresto.utils.Formatter
 import com.am.projectinternalresto.utils.Formatter.formatCurrency
@@ -47,6 +50,30 @@ class OrderFragment : Fragment() {
     private val authViewModel: AuthViewModel by inject()
     private val viewModel: ManageOrderMenuViewModel by inject()
     private val token: String by lazy { authViewModel.getTokenUser().toString() }
+    private val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        arrayOf(
+            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_CONNECT
+        )
+    } else {
+        arrayOf(
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN
+        )
+    }
+
+    private val requestMultiplePermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            if (permissions.all { it.value }) {
+//                printReceipt()
+            } else {
+                // Permissions not granted, show error message
+                NotificationHandle.showErrorSnackBar(
+                    requireView(),
+                    "Izin Bluetooth diperlukan untuk mencetak struk."
+                )
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -87,61 +114,7 @@ class OrderFragment : Fragment() {
                     setupPostChangeStatusOrder(id)
                 } else {
                     // payment for edit order
-                    id.let { orderId ->
-                        viewModel.getDetailOrder(token, orderId)
-                            .observe(viewLifecycleOwner) { result ->
-                                when (result.status) {
-                                    Status.LOADING -> {}
-                                    Status.SUCCESS -> {
-                                        result.data?.data.let { orderDetails ->
-                                            val orderSummary = orderDetails?.order?.map { item ->
-                                                DummyModel.CartItem(
-                                                    menuItem = DataItemMenu(
-                                                        imageMenu = item?.menu?.image,
-                                                        quota = item?.menu?.kuota,
-                                                        noMenu = item?.menu?.nomorMenu,
-                                                        nameMenu = item?.menu?.nama,
-                                                        price = item?.menu?.discPrice
-                                                            ?: item?.menu?.harga,
-                                                        idMenu = item?.menu?.id
-                                                    ),
-                                                    qty = item?.qty ?: 0,
-                                                    selectedToppings = (item?.topping
-                                                        ?: emptyList()) as List<ToppingItem>,
-                                                    note = item?.note ?: ""
-                                                )
-                                            }?.let {
-                                                DummyModel.OrderSummary(
-                                                    orderId = orderDetails.payment?.id,
-                                                    listCartItems = it,
-                                                    totalPurchase = orderDetails.payment?.totalPrice
-                                                        ?: 0,
-                                                    //TODO :: CHECK INI
-                                                    totalDisc = 0
-                                                )
-                                            }
-                                            navigateFragment(
-                                                Destination.ORDER_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
-                                                findNavController(),
-                                                Bundle().apply {
-                                                    putString(
-                                                        BUNDLE_ID_ORDER,
-                                                        orderDetails?.payment?.id.toString()
-                                                    )
-                                                    putParcelable(
-                                                        Key.BUNDLE_DATA_ORDER_TO_PAYMENT,
-                                                        orderSummary
-                                                    )
-                                                })
-                                        }
-                                    }
-
-                                    Status.ERROR -> {
-                                        showErrorSnackBar(requireView(), result.message.toString())
-                                    }
-                                }
-                            }
-                    }
+                    setupDetailOrderProcessing(id, false)
                 }
             }
             callbackOnClickToDetailOrderListener { id ->
@@ -153,15 +126,23 @@ class OrderFragment : Fragment() {
                             putString(BUNDLE_ID_ORDER, id)
                         })
                 } else {
-                    setupGetDetail(false, id)
+                    navigateFragment(Destination.ORDER_TO_ORDER_MENU_UPDATED,
+                        findNavController(),
+                        Bundle().apply { putString(BUNDLE_ID_ORDER, id) })
                 }
             }
             callbackOnclickCancelListener { id ->
-                setupCancelOrder(id)
+                showAlertDeleteData(
+                    requireContext(),
+                    "Batalkan Pesanan",
+                    "Apakah Anda yakin ingin membatalkan pesanan ini"
+                ) {
+                    setupCancelOrder(id)
+                }
             }
 
             callbackOnclickPrint { id ->
-                setupGetDetail(true, id)
+                setupDetailOrderProcessing(id, true)
             }
         }
 
@@ -178,72 +159,110 @@ class OrderFragment : Fragment() {
         }
     }
 
-    private fun setupGetDetail(printStuck: Boolean, orderId: String) {
+
+    private fun setupDetailOrderProcessing(orderId: String, isPrintReceipt: Boolean = false) {
         viewModel.getDetailOrder(token, orderId).observe(viewLifecycleOwner) { result ->
             when (result.status) {
                 Status.LOADING -> {}
-                Status.SUCCESS -> handleSuccess(printStuck, result.data)
+                Status.SUCCESS -> {
+                    if (isPrintReceipt) {
+                        // Handle receipt printing
+                        checkBluetoothPermissionsAndPrint(result.data?.data)
+                    } else {
+                        // navigate to payment
+                        handlePaymentProcess(orderId, result.data?.data)
+                    }
+                }
                 Status.ERROR -> showErrorSnackBar(requireView(), result.message.toString())
             }
         }
     }
 
-    // TODO :: CHECK FUNCTION GET DETAIL AND PRINT
-    private fun handleSuccess(detailForPrint: Boolean, orderResponse: OrderResponse?) {
-        if (detailForPrint)
-            printReceipt(orderResponse?.data)
-        else
-            orderResponse?.data?.let { orderDetails ->
-                val orderSummary = orderDetails.order?.map { item ->
-                    DummyModel.CartItem(
-                        menuItem = DataItemMenu(
-                            imageMenu = item?.menu?.image,
-                            quota = item?.menu?.kuota,
-                            noMenu = item?.menu?.nomorMenu,
-                            nameMenu = item?.menu?.nama,
-                            price = item?.menu?.discPrice ?: item?.menu?.harga,
-                            idMenu = item?.menu?.id
-                        ),
-                        qty = item?.qty ?: 0,
-                        selectedToppings = (item?.topping ?: emptyList()) as List<ToppingItem>,
-                        note = item?.note ?: ""
-                    )
-                }?.let {
-                    DummyModel.OrderSummary(
-                        orderId = orderDetails.payment?.id,
-                        listCartItems = it,
-                        totalPurchase = orderDetails.payment?.totalPrice ?: 0,
-                        totalDisc = 0
-                    )
-                }
-                navigateFragment(
-                    Destination.ORDER_TO_ORDER_MENU,
-                    findNavController(),
-                    Bundle().apply {
-                        putString(
-                            BUNDLE_ID_ORDER, orderDetails.payment?.id.toString()
-                        )
-                        putParcelable(
-                            Key.BUNDLE_DATA_ORDER_TO_EDIT, orderSummary
-                        )
-                    })
-            }
+    private fun handlePaymentProcess(idOrder: String, orderDetails: DataItemOrder?) {
+        if (orderDetails == null) {
+            showErrorSnackBar(requireView(), "No order details found")
+            return
+        }
+        val orderSummary = createOrderSummary(orderDetails)
+        navigateToPaymentMethod(idOrder, orderSummary)
     }
 
+    private fun hasBluetoothPermissions(): Boolean {
+        return bluetoothPermissions.all {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                it
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun checkBluetoothPermissionsAndPrint(data: DataItemOrder?) {
+        if (hasBluetoothPermissions()) {
+            printReceipt(data)
+        } else {
+            requestMultiplePermissions.launch(bluetoothPermissions)
+        }
+    }
+
+
     private fun printReceipt(orderResponse: DataItemOrder?) {
-        Log.e("CHECK_NAMA", "nama resto : ${orderResponse?.locationName.toString()}")
-        Log.e("CHECK_NAMA", "nama resto : $orderResponse")
         try {
             // Cetak pertama
             printReceiptContent(orderResponse)
-            NotificationHandle.showSuccessSnackBar(requireView(), "Struk berhasil dicetak")
+            showSuccessSnackBar(requireView(), "Struk berhasil dicetak")
         } catch (e: Exception) {
             e.printStackTrace()
-            NotificationHandle.showErrorSnackBar(
+            showErrorSnackBar(
                 requireView(), "Gagal mencetak struk: ${e.message}"
             )
         }
     }
+
+    private fun createOrderSummary(orderDetails: DataItemOrder): DummyModel.OrderSummary? {
+        val cartItems = orderDetails.order?.mapNotNull { item ->
+            item?.let {
+                DummyModel.CartItem(
+                    menuItem = DataItemMenu(
+                        imageMenu = it.menu?.image,
+                        quota = it.menu?.kuota,
+                        noMenu = it.menu?.nomorMenu,
+                        nameMenu = it.menu?.nama,
+                        price = it.menu?.discPrice ?: it.menu?.harga,
+                        idMenu = it.menu?.id
+                    ),
+                    qty = it.qty ?: 0,
+                    selectedToppings = (it.topping ?: emptyList()),
+                    note = it.note ?: ""
+                )
+            }
+        }
+
+        return cartItems?.let {
+            DummyModel.OrderSummary(
+                orderId = orderDetails.payment?.id,
+                listCartItems = it,
+                totalPurchase = orderDetails.payment?.totalPrice ?: 0,
+                totalDisc = 0
+            )
+        }
+    }
+
+    private fun navigateToPaymentMethod(
+        idOrder: String, orderSummary: DummyModel.OrderSummary?
+    ) {
+        if (orderSummary == null) {
+            showErrorSnackBar(requireView(), "Failed to create order summary")
+            return
+        }
+
+        navigateFragment(Destination.ORDER_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
+            findNavController(),
+            Bundle().apply {
+                putString(BUNDLE_ID_ORDER, idOrder)
+                putParcelable(Key.BUNDLE_DATA_ORDER_TO_PAYMENT, orderSummary)
+            })
+    }
+
 
     // Memisahkan logika cetak ke fungsi terpisah
     private fun printReceiptContent(orderResponse: DataItemOrder?) {
@@ -255,9 +274,7 @@ class OrderFragment : Fragment() {
             val toppings = item?.topping?.joinToString(", ") { it?.nama ?: "" }
 
             // Hitung total harga item termasuk topping
-            val basePrice = item?.menu?.harga ?: 0
-            val toppingPrice = item?.topping?.sumOf { it?.harga ?: 0 } ?: 0
-            val totalItemPrice = basePrice + toppingPrice
+            val totalItemPrice = item?.hargaPesanan ?: 0
             val qty = item?.qty ?: 0
 
             var itemText = menuName
@@ -265,7 +282,7 @@ class OrderFragment : Fragment() {
                 itemText += if (itemText.length + toppings.length + 4 <= 20) {
                     " ($toppings)"
                 } else {
-                    "\n  ($toppings)"
+                    "\n ($toppings)"
                 }
             }
 
@@ -273,18 +290,16 @@ class OrderFragment : Fragment() {
                 itemText += if (itemText.length + note.length + 4 <= 20) {
                     " ($note)"
                 } else {
-                    "\n  ($note)"
+                    "\n($note)"
                 }
             }
 
             items.add(Triple(itemText, totalItemPrice, qty))
         }
 
-        val printerConnection = BluetoothPrintersConnections.selectFirstPaired()
-
-        if (printerConnection == null) {
-            throw Exception("Printer tidak ditemukan!")
-        }
+        val printerConnection = BluetoothPrintersConnections.selectFirstPaired() ?: throw Exception(
+            "Printer tidak ditemukan!"
+        )
 
         val printer = EscPosPrinter(printerConnection, 203, 48f, 32)
 
@@ -308,21 +323,36 @@ class OrderFragment : Fragment() {
                 "[C]-------------------------------\n"
 
 
+        val maxLineChar = 30 // panjang baris printer thermal
+
         items.forEach { (nama, harga, qty) ->
-            val totalHarga = harga * qty
-            receiptText += "[L]$qty " + " $nama[R]${formatCurrency(totalHarga)}\n"
+            val lines = nama.split("\n")
+            val firstLine = "$qty ${lines[0]}"
+
+            val priceStr = formatCurrency(harga)
+            val spaceAvailable = maxLineChar - priceStr.length
+
+            // Jika nama (firstLine) muat dalam 1 baris bersama harga
+            if (firstLine.length <= spaceAvailable) {
+                receiptText += "[L]${firstLine.padEnd(spaceAvailable)}[R]$priceStr\n"
+            } else {
+                // Nama terlalu panjang, cetak terpisah
+                receiptText += "[L]$firstLine\n"
+                receiptText += "[R]$priceStr\n"
+            }
+
+            // Tambahkan baris-baris tambahan (catatan, topping)
+            if (lines.size > 1) {
+                for (i in 1 until lines.size) {
+                    receiptText += "[L]  ${lines[i]}\n"
+                }
+            }
         }
+
 
         val specialPaymentMethods = setOf("QRIS", "TRANSFER", "GOJEK", "GRAB")
-
-        val totalKeseluruhan = items.sumOf { it.second * it.third }
-
-        val cash = if (orderResponse?.payment?.paymentMethod in specialPaymentMethods) {
-            formatCurrency(orderResponse?.payment?.totalPrice ?: 0)
-        } else {
-            formatCurrency(orderResponse?.payment?.moneyPaid ?: 0)
-        }
-
+        val typePayment =
+            if (orderResponse?.payment?.paymentMethod !in specialPaymentMethods) "Uang Dibayarkan" else "Jumlah Dibayarkan"
         val cashBack = if (orderResponse?.payment?.paymentMethod in specialPaymentMethods) {
             formatCurrency(0)
         } else {
@@ -337,6 +367,7 @@ class OrderFragment : Fragment() {
                 "[L]SubTotal[R] ${formatCurrency(orderResponse?.payment?.subtotal ?: 0)}\n" +
                 "[L]Diskon[R] ${formatCurrency(orderResponse?.payment?.disc ?: 0)}\n" +
                 "[L]Total[R] ${formatCurrency(orderResponse?.payment?.totalPrice ?: 0)}\n" +
+                "[L]$typePayment[R] ${formatCurrency(orderResponse?.payment?.moneyPaid ?: 0)}\n" +
                 "[L]Kembalian[R] $cashBack\n" +
                 "[C]===============================\n" +
                 "[L]Tanggal: ${Formatter.getCurrentDateAndTime()}\n" +

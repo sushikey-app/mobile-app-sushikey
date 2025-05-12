@@ -67,6 +67,7 @@ class OrderMenuFragment : Fragment() {
                 }
             }
 
+
         return binding.root
     }
 
@@ -294,7 +295,6 @@ class OrderMenuFragment : Fragment() {
     private fun setupPostDataSaveOrderToApi(name: String) {
         viewModel.saveDataOrder(token, name).observe(viewLifecycleOwner) { result ->
             handleApiStatus(result, result.message.toString()) {
-
                 clearDataChart()
                 setupGetDataMenuFromApi()
                 showSuccessSnackBar(requireView(), result.data?.message.toString())

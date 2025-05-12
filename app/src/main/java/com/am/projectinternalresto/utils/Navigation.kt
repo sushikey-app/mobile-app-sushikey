@@ -85,6 +85,15 @@ object Navigation {
                 )
 
                 Destination.HISTORY_ORDER_STAFF_TO_CANCEL_ORDER_STAFF -> it.navigate(R.id.action_nav_staff_order_history_to_cancelOrderStaffFragment)
+                Destination.ORDER_TO_ORDER_MENU_UPDATED -> it.navigate(
+                    R.id.action_nav_staff_order_to_nav_update_menu_order,
+                    args
+                )
+
+                Destination.ORDER_MENU_UPDATED_PAYMENT_METHOD -> it.navigate(
+                    R.id.action_nav_update_menu_order_to_confirmOrderAndPaymentMethodFragment,
+                    args
+                )
             }
         }
     }
@@ -104,8 +113,10 @@ enum class Destination {
 
     ORDER_MENU_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
     ORDER_TO_ORDER_MENU,
+    ORDER_TO_ORDER_MENU_UPDATED,
+    ORDER_MENU_UPDATED_PAYMENT_METHOD,
     ORDER_TO_CONFIRM_ORDER_AND_PAYMENT_METHOD,
     ORDER_TO_DETAIL_ORDER,
     HISTORY_ORDER_TO_DETAIL_HISTORY_ORDER,
-    HISTORY_ORDER_STAFF_TO_CANCEL_ORDER_STAFF
+    HISTORY_ORDER_STAFF_TO_CANCEL_ORDER_STAFF,
 }

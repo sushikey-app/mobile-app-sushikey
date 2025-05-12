@@ -1,9 +1,11 @@
 package com.am.projectinternalresto.service.source
 
+import android.util.Log
 import androidx.lifecycle.liveData
 import com.am.projectinternalresto.data.body_params.OrderRequest
 import com.am.projectinternalresto.data.body_params.PaymentRequest
 import com.am.projectinternalresto.data.body_params.SaveOrderRequest
+import com.am.projectinternalresto.data.body_params.UpdateOrderRequest
 import com.am.projectinternalresto.service.api.ApiService
 import com.am.projectinternalresto.utils.Key.ERROR_MESSAGE
 import kotlinx.coroutines.Dispatchers
@@ -154,6 +156,7 @@ class OrderRepository(private val apiService: ApiService) {
             emit(Resource.loading(null))
             try {
                 val response = apiService.paymentOrder("Bearer $token", idOrder, body)
+                Log.e("CHECK_REPO", "data bayar : $body")
                 if (response.isSuccessful) {
                     emit(Resource.success(response.body()))
                 } else {
@@ -290,6 +293,25 @@ class OrderRepository(private val apiService: ApiService) {
                 }
             } catch (exception: Exception) {
                 emit(Resource.error(null, exception.message ?: "Error Occurred!!"))
+            }
+        }
+
+    fun updateOrder(token: String, idPayment: String, payload: UpdateOrderRequest) =
+        liveData(Dispatchers.IO) {
+            emit(Resource.loading(null))
+            try {
+                val response = apiService.updateOrder("Bearer $token", idPayment, payload)
+
+                if (response.isSuccessful) {
+                    emit(Resource.success(response.body()))
+                } else {
+                    response.let {
+                        val errorMessage = JSONObject(it.message()).getString(ERROR_MESSAGE)
+                        emit(Resource.error(null, errorMessage))
+                    }
+                }
+            } catch (e: Exception) {
+                emit(Resource.error(null, e.message ?: "Error Occurred"))
             }
         }
 }

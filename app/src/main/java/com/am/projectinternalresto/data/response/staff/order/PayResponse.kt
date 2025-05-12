@@ -36,7 +36,9 @@ data class OrderPayItems(
     val topping: List<ToppingItem?>? = null,
 
     @field:SerializedName("harga_pesanan")
-    val hargaPesanan: Int? = null
+    val hargaPesanan: Int? = null,
+
+
 )
 
 data class PaymentItem(

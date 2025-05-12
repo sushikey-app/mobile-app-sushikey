@@ -10,6 +10,8 @@ import com.am.projectinternalresto.data.body_params.OrderRequest
 import com.am.projectinternalresto.data.body_params.PaymentRequest
 import com.am.projectinternalresto.data.body_params.SaveOrderRequest
 import com.am.projectinternalresto.data.body_params.ToppingItemRequest
+import com.am.projectinternalresto.data.body_params.UpdateOrderItem
+import com.am.projectinternalresto.data.body_params.UpdateOrderRequest
 import com.am.projectinternalresto.data.model.DummyModel
 import com.am.projectinternalresto.data.response.admin.menu.DataItemMenu
 import com.am.projectinternalresto.data.response.admin.menu.ToppingItem
@@ -131,7 +133,7 @@ class ManageOrderMenuViewModel(private val repository: OrderRepository) : ViewMo
             val discPrice =
                 if (cartItem.menuItem.discPrice != 0 && cartItem.menuItem.discPrice != null) cartItem.menuItem.discPrice else cartItem.menuItem.price
             val basePrice = discPrice ?: 0
-            val toppingPrice = cartItem.selectedToppings.sumOf { it.harga ?: 0 }
+            val toppingPrice = cartItem.selectedToppings.sumOf { it?.harga ?: 0 }
             (basePrice + toppingPrice) * cartItem.qty
         } ?: 0
     }
@@ -148,7 +150,7 @@ class ManageOrderMenuViewModel(private val repository: OrderRepository) : ViewMo
             OrderItemRequest(menuId = items.menuItem.idMenu.toString(),
                 qty = items.qty,
                 note = items.note,
-                topping = items.selectedToppings.map { topping -> ToppingItemRequest(topping.id.toString()) })
+                topping = items.selectedToppings.map { topping -> ToppingItemRequest(topping?.id.toString()) })
         } ?: emptyList()
 
         return SaveOrderRequest(
@@ -167,4 +169,23 @@ class ManageOrderMenuViewModel(private val repository: OrderRepository) : ViewMo
 
     fun confirmCancelOrder(token: String, idOrder: String, statusCancel: String, reason: String?) =
         repository.confirmCancelOrder(token, idOrder, statusCancel, reason)
+
+    fun updateOrder(token: String, idPayment: String, payload: UpdateOrderRequest) =
+        repository.updateOrder(token, idPayment, payload)
+
+    fun mappingDataResultUpdateMenu(): UpdateOrderRequest {
+        val items = _cartItems.value.orEmpty().map { cartItem ->
+            UpdateOrderItem(
+                id = cartItem.idOrder,
+                menu_id = cartItem.menuItem.idMenu.toString(),
+                qty = cartItem.qty,
+                note = cartItem.note,
+                topping = cartItem.selectedToppings.map { topping ->
+                    ToppingItem(id = topping?.id)
+                }
+            )
+        }
+        return UpdateOrderRequest(pesanan = items)
+    }
+
 }

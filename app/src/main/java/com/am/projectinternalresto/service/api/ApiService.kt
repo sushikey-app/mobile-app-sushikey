@@ -8,6 +8,7 @@ import com.am.projectinternalresto.data.body_params.OrderRequest
 import com.am.projectinternalresto.data.body_params.PaymentRequest
 import com.am.projectinternalresto.data.body_params.SaveOrderRequest
 import com.am.projectinternalresto.data.body_params.StaffRequest
+import com.am.projectinternalresto.data.body_params.UpdateOrderRequest
 import com.am.projectinternalresto.data.response.GeneralResponse
 import com.am.projectinternalresto.data.response.admin.category.AddOrUpdateCategoryResponse
 import com.am.projectinternalresto.data.response.admin.category.CategoryResponse
@@ -20,6 +21,7 @@ import com.am.projectinternalresto.data.response.staff.order.CancelResponse
 import com.am.projectinternalresto.data.response.staff.order.ListOrderResponse
 import com.am.projectinternalresto.data.response.staff.order.OrderResponse
 import com.am.projectinternalresto.data.response.staff.order.PayResponse
+import com.am.projectinternalresto.data.response.staff.order.UpdateOrderResponse
 import com.am.projectinternalresto.data.response.staff.riwayat_order.HistoryOrderResponse
 import com.am.projectinternalresto.data.response.super_admin.cancel_order.ListCancelResponse
 import com.am.projectinternalresto.data.response.super_admin.dashboard.MenuFavoriteResponse
@@ -343,7 +345,6 @@ interface ApiService {
         @Path("id") idStaff: String,
     ): Response<GeneralResponse>
 
-
     // staff
     @GET("pesan")
     suspend fun getDataOrder(@Header("Authorization") bearer: String): Response<MenuResponse>
@@ -425,5 +426,12 @@ interface ApiService {
         @Field("status") status: String,
         @Field("alasan_pembatalan") reason: String,
     ): Response<CancelResponse>
+
+    @PUT("edit-pesanan/{id}")
+    suspend fun updateOrder(
+        @Header("Authorization") bearer: String,
+        @Path("id") idPayment: String,
+        @Body payload: UpdateOrderRequest
+    ): Response<UpdateOrderResponse>
 
 }
